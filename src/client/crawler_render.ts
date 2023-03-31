@@ -50,6 +50,7 @@ import {
   textureBindArray,
 } from 'glov/client/textures';
 import * as ui from 'glov/client/ui';
+import { dataErrorEx } from 'glov/common/data_error';
 import { isInteger, lerp, ridx } from 'glov/common/util';
 import {
   ROVec2,
@@ -179,7 +180,8 @@ export type CrawlerDrawableOpts2 = {
 export type CrawlerDrawable = (
   rot: ROVec4, pos: ROVec3,
   visual: VisualOpts | undefined,
-  opts: CrawlerDrawableOpts2
+  opts: CrawlerDrawableOpts2,
+  debug_id: string,
 ) => void;
 export type CrawlerThumbnailPair = [
   Sprite,
@@ -338,7 +340,8 @@ const null_null = [null, null] as const;
 function simpleGetSpriteParam(
   visual: VisualOpts | undefined,
   opts: CrawlerDrawableOpts2,
-  sprite_key?: 'sprite' | 'sprite_centered' | 'sprite_centered_x',
+  debug_id: string,
+  sprite_key: 'sprite' | 'sprite_centered' | 'sprite_centered_x',
 ): SpriteParamPair | readonly [null, null] {
   let sprite;
   let frame;
@@ -378,8 +381,14 @@ function simpleGetSpriteParam(
       tile = frameFromAnim(tile, times, total_time);
     }
     frame = spritesheet.tiles[tile];
-    assert(frame !== undefined, tile);
-    sprite = spritesheet[sprite_key || 'sprite'];
+    if (frame === undefined) {
+      dataErrorEx({
+        msg: `Unknown frame ${spritesheet_name}: "${tile}" referenced in "${debug_id}"`,
+        per_frame: true,
+      });
+      frame = 0;
+    }
+    sprite = spritesheet[sprite_key];
     if (visual_opts.color) {
       color = v4mul(temp_color, color, visual_opts.color);
     }
@@ -401,7 +410,7 @@ const dummy_opts: CrawlerDrawableOpts2 = {
   draw_dist_sq: 0,
 };
 function simpleGetThumbnail(visual: VisualOpts | undefined, desc: WallDesc | CellDesc): CrawlerThumbnailPair {
-  let [sprite, param] = simpleGetSpriteParam(visual, dummy_opts);
+  let [sprite, param] = simpleGetSpriteParam(visual, dummy_opts, desc.id, 'sprite');
   assert(sprite && param);
   return [sprite, {
     frame: param.frame,
@@ -426,8 +435,11 @@ let temp_pos = vec3();
 let temp_right = vec3();
 let temp_down = vec3();
 let temp_size = vec2();
-function drawSimpleWall(rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2): void {
-  let [sprite, param] = simpleGetSpriteParam(visual, opts);
+function drawSimpleWall(
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string
+): void {
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite');
   if (!sprite) {
     return;
   }
@@ -466,9 +478,10 @@ type SimpleBillboardRenderOpts = {
   face_camera?: boolean;
 } & SimpleVisualOpts;
 function drawSimpleBillboard(
-  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string,
 ): void {
-  let [sprite, param] = simpleGetSpriteParam(visual, opts, 'sprite_centered_x');
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite_centered_x');
   if (!sprite) {
     return;
   }
@@ -500,8 +513,11 @@ function drawSimpleBillboard(
 const floor_detail_offs = vec3(0, 0, FLOOR_DETAIL_Z);
 const floor_face_right = vec3(1, 0, 0);
 const floor_face_down = vec3(0, -1, 0);
-function drawSimpleFloor(rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2): void {
-  let [sprite, param] = simpleGetSpriteParam(visual, opts);
+function drawSimpleFloor(
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string
+): void {
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite');
   if (!sprite) {
     return;
   }
@@ -530,8 +546,11 @@ function drawSimpleFloor(rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefine
 
 const ceiling_face_right = vec3(1, 0, 0);
 const ceiling_face_down = vec3(0, 1, 0);
-function drawSimpleCeiling(rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2): void {
-  let [sprite, param] = simpleGetSpriteParam(visual, opts);
+function drawSimpleCeiling(
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string,
+): void {
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite');
   if (!sprite) {
     return;
   }
@@ -566,9 +585,10 @@ type SimpleCornerFloorRenderOpts = {
 
 const temp_uvs = vec4();
 function drawSimpleCornerFloor(
-  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string
 ): void {
-  let [sprite, param] = simpleGetSpriteParam(visual, opts);
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite');
   if (!sprite) {
     return;
   }
@@ -716,9 +736,12 @@ function createPillar(opts: SimplePillarRenderOpts, rect: ROVec4): Geom {
   return geomCreateQuads(simpleFormat(), pillar, true);
 }
 let pillar_geoms: Partial<Record<string, Geom>> = {};
-function drawSimplePillar(rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2): void {
+function drawSimplePillar(
+  rot: ROVec4, pos: ROVec3, visual: VisualOpts | undefined, opts: CrawlerDrawableOpts2,
+  debug_id: string
+): void {
   assert(visual); // At least need quadrants
-  let [sprite, param] = simpleGetSpriteParam(visual, opts);
+  let [sprite, param] = simpleGetSpriteParam(visual, opts, debug_id, 'sprite');
   if (!sprite) {
     return;
   }
@@ -883,7 +906,7 @@ function drawCell(
         let visual = visuals[jj];
         let drawable = drawables[visual.type];
         assert(drawable);
-        drawable(unit_quat, draw_pos, visual.opts, opts);
+        drawable(unit_quat, draw_pos, visual.opts, opts, cell_desc.id);
       }
     }
   }
@@ -897,7 +920,7 @@ function drawCell(
         let visual = visuals[jj];
         let drawable = drawables[visual.type];
         assert(drawable);
-        drawable(wall_rots[ii], draw_pos, visual.opts, opts);
+        drawable(wall_rots[ii], draw_pos, visual.opts, opts, wall_desc.id);
       }
     }
   }
@@ -912,7 +935,7 @@ function drawCell(
           let visual = visuals[jj];
           let drawable = drawables[visual.type];
           assert(drawable);
-          drawable(wall_rots[ii], draw_pos, visual.opts, opts);
+          drawable(wall_rots[ii], draw_pos, visual.opts, opts, cell_desc.id);
         }
       }
     }

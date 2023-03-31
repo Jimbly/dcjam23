@@ -7,7 +7,8 @@ import {
   crawlerRenderStartup,
 } from './crawler_render';
 
-const spritesheet_crawlertest = require('./img/crawlertest');
+const spritesheet_demo = require('./img/demo');
+const spritesheet_jam = require('./img/jam');
 const spritesheet_whitebox = require('./img/whitebox');
 
 export function renderResetFilter(): void {
@@ -17,7 +18,8 @@ export function renderResetFilter(): void {
     force_mipmaps: true,
   };
   spritesheet_whitebox.sprite.texs[0].setSamplerState(ss);
-  spritesheet_crawlertest.sprite.texs[0].setSamplerState(ss);
+  spritesheet_demo.sprite.texs[0].setSamplerState(ss);
+  spritesheet_jam.sprite.texs[0].setSamplerState(ss);
 }
 
 export function renderAppStartup(): void {
@@ -37,8 +39,9 @@ export function renderAppStartup(): void {
       need_split_near: true,
     }],
     spritesheets: {
-      default: spritesheet_crawlertest,
-      demo: spritesheet_crawlertest,
+      default: spritesheet_jam,
+      jam: spritesheet_jam,
+      demo: spritesheet_demo,
       whitebox: spritesheet_whitebox,
     },
     split_dist: 2.8,
