@@ -111,7 +111,6 @@ export type DrawableSpriteOpts = {
   anim_data: SpriteAnimationParam;
   sprite_data: (TextureOptions | TextureOptionsAsStrings) & SpriteParamBase & { name: string };
   sprite: Sprite; // assigned at load time
-  sprite_near_data?: (TextureOptions | TextureOptionsAsStrings) & SpriteParamBase & { name: string };
   sprite_near?: Sprite; // assigned at load time
   scale: number;
   tint_colors?: [JSVec4, JSVec4, JSVec4][];

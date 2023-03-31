@@ -301,12 +301,12 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
       opts.sprite_data.wrap_s = lookupGLDefine(opts.sprite_data.wrap_s);
       opts.sprite_data.wrap_t = lookupGLDefine(opts.sprite_data.wrap_t);
       opts.sprite = spriteCreate(opts.sprite_data);
-      if (opts.sprite_near_data) {
-        opts.sprite_near_data.filter_min = lookupGLDefine(opts.sprite_near_data.filter_min);
-        opts.sprite_near_data.filter_mag = lookupGLDefine(opts.sprite_near_data.filter_mag);
-        opts.sprite_near_data.wrap_s = lookupGLDefine(opts.sprite_near_data.wrap_s);
-        opts.sprite_near_data.wrap_t = lookupGLDefine(opts.sprite_near_data.wrap_t);
-        opts.sprite_near = spriteCreate(opts.sprite_near_data);
+      if (opts.sprite_data.filter_min !== gl.NEAREST) {
+        opts.sprite_near = spriteCreate({
+          ...opts.sprite_data,
+          filter_min: gl.NEAREST,
+          filter_mag: gl.NEAREST,
+        });
       }
     },
     alloc_state: function (opts: DrawableSpriteOpts, ent: Entity) {
