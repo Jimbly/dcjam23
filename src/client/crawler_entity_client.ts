@@ -311,11 +311,10 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
       }
       if (opts.hybrid) {
         assert(opts.sprite_near);
-        opts.sprite = spriteCreate({
+        opts.sprite_hybrid = spriteCreate({
           ...opts.sprite_data,
           texs: [opts.sprite.texs[0], opts.sprite_near.texs[0]],
         });
-        opts.sprite_near = undefined;
       }
     },
     alloc_state: function (opts: DrawableSpriteOpts, ent: Entity) {

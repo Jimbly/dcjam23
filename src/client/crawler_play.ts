@@ -98,6 +98,9 @@ declare module 'glov/client/settings' {
   export let pixely: 0 | 1 | 2 | 3;
   export let entity_split: 0 | 1;
   export let entity_nosplit_use_near: 0 | 1;
+  export let hybrid: 0 | 1;
+  export let hybrid_base: number;
+  export let hybrid_scalar: number;
   export let time_scale: number;
   export let use_fbos: 0 | 1;
 }
@@ -172,6 +175,21 @@ settings.register({
   entity_nosplit_use_near: { // always should be 1, just remove?
     default_value: 1,
     type: cmd_parse.TYPE_INT,
+    range: [0, 1],
+  },
+  hybrid: {
+    default_value: 0,
+    type: cmd_parse.TYPE_INT,
+    range: [0, 1],
+  },
+  hybrid_base: {
+    default_value: 0.75,
+    type: cmd_parse.TYPE_FLOAT,
+    range: [-1, 2],
+  },
+  hybrid_scalar: {
+    default_value: 0.125,
+    type: cmd_parse.TYPE_FLOAT,
     range: [0, 1],
   },
   time_scale: {

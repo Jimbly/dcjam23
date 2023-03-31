@@ -62,6 +62,9 @@ export function main(): void {
     settings.set('entity_nosplit_use_near', 1);
   } else if ('CRT filter') {
     settings.set('pixely', 2);
+    settings.set('hybrid', 1);
+    settings.set('hybrid_base', 0.75);
+    settings.set('hybrid_scalar', 0.125);
     settings.set('filter', 0);
     settings.set('entity_split', 0);
     settings.set('entity_nosplit_use_near', 1);
