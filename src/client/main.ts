@@ -60,11 +60,16 @@ export function main(): void {
     settings.set('filter', 0);
     settings.set('entity_split', 0);
     settings.set('entity_nosplit_use_near', 1);
-  } else if ('split logic') {
+  } else if ('CRT filter') {
+    settings.set('pixely', 2);
+    settings.set('filter', 0);
+    settings.set('entity_split', 0);
+    settings.set('entity_nosplit_use_near', 1);
+  } else if (!'split logic') {
     settings.set('pixely', 1);
     settings.set('filter', 0);
     settings.set('entity_split', 1);
-  } else if ('split logic filter') {
+  } else if (!'split logic filter') {
     settings.set('pixely', 1);
     settings.set('filter', 1);
     settings.set('entity_split', 1);
@@ -89,7 +94,7 @@ export function main(): void {
   if (!engine.startup({
     game_width,
     game_height,
-    pixely: true,
+    pixely,
     font,
     viewport_postprocess: true,
     antialias: false,

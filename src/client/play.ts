@@ -1,3 +1,4 @@
+import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
 import {
   ALIGN,
@@ -99,7 +100,7 @@ import {
   render_width,
 } from './globals';
 import { levelGenTest } from './level_gen_test';
-import { renderAppStartup, renderResetFilter } from './render_app';
+import { renderAppStartup } from './render_app';
 import {
   statusTick,
 } from './status';
@@ -490,10 +491,10 @@ export function play(dt: number): void {
   if (keyDownEdge(KEYS.F3)) {
     settings.set('show_fps', 1 - settings.show_fps);
   }
-  if (keyDownEdge(KEYS.F)) {
-    settings.set('filter', 1 - settings.filter);
-    renderResetFilter();
-  }
+  // if (keyDownEdge(KEYS.F)) {
+  //   settings.set('filter', 1 - settings.filter);
+  //   renderResetFilter();
+  // }
 
   profilerStopStart('playerMotion');
   playerMotion();
@@ -561,6 +562,14 @@ function playInitEarly(room: ClientChannelWorker): void {
 
   playInitShared(true);
 }
+
+settings.register({
+  ai_pause: {
+    default_value: 0,
+    type: cmd_parse.TYPE_INT,
+    range: [0, 1],
+  },
+});
 
 export function playStartup(): void {
   ({ font } = ui);

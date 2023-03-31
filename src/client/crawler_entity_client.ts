@@ -150,6 +150,10 @@ export function crawlerEntityManager(): ClientEntityManagerInterface<Entity> {
   return entity_manager;
 }
 
+export function crawlerEntityManagerOffline(): ClientEntityManagerInterface<Entity> {
+  return entity_manager_offline;
+}
+
 export function crawlerEntityManagerOnline(): ClientEntityManagerInterface<Entity> {
   return entity_manager_online;
 }

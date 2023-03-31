@@ -10,6 +10,7 @@ import {
   registerShader,
 } from 'glov/client/effects';
 import * as engine from 'glov/client/engine';
+import { ClientEntityManagerInterface } from 'glov/client/entity_manager_client';
 import { fetch } from 'glov/client/fetch';
 import { framebufferEnd } from 'glov/client/framebuffer';
 import {
@@ -62,6 +63,7 @@ import {
   crawlerEntitiesInit,
   crawlerEntitiesOnEntStart,
   crawlerEntityManager,
+  crawlerEntityManagerOffline,
   crawlerEntityManagerOnline,
   crawlerMyActionSend,
   crawlerMyEnt,
@@ -256,7 +258,9 @@ export function crawlerSaveGame(): void {
   let ent_list: DataObject[] = [];
   for (let ent_id_str in entities) {
     let ent = entities[ent_id_str]!;
-    ent_list.push(ent.data as unknown as DataObject);
+    if (!ent.fading_out) {
+      ent_list.push(ent.data as unknown as DataObject);
+    }
   }
   local_game_data.entities = ent_list;
   local_game_data.script_data = script_api.localDataGet();
@@ -347,11 +351,13 @@ function beforeUnload(): void {
   }
 }
 
-function populateLevelFromInitialEntities(floor_id: number, level: CrawlerLevel): number {
+function populateLevelFromInitialEntities(
+  entity_manager: ClientEntityManagerInterface,
+  floor_id: number, level: CrawlerLevel
+): number {
   let ret = 0;
   if (level.initial_entities) {
     let initial_entities = clone(level.initial_entities);
-    let entity_manager = crawlerEntityManager();
     assert(!entity_manager.isOnline());
     for (let ii = 0; ii < initial_entities.length; ++ii) {
       initial_entities[ii].floor = floor_id;
@@ -371,7 +377,7 @@ function crawlerOnInitHaveLevel(floor_id: number): void {
       assert(level);
       local_game_data.floors_inited = local_game_data.floors_inited || {};
       local_game_data.floors_inited[floor_id] = true;
-      populateLevelFromInitialEntities(floor_id, level);
+      populateLevelFromInitialEntities(crawlerEntityManagerOffline(), floor_id, level);
     }
   }
 }
@@ -387,7 +393,7 @@ cmd_parse.register({
     let level = game_state.level;
     assert(level);
     level.resetState();
-    let entity_manager = crawlerEntityManager();
+    let entity_manager = crawlerEntityManagerOffline();
     let ents = entity_manager.entitiesFind((ent) => ent.data.floor === floor_id, true);
     let count = 0;
     for (let ii = 0; ii < ents.length; ++ii) {
@@ -397,7 +403,7 @@ cmd_parse.register({
         entity_manager.deleteEntity(ent.id, 'reset');
       }
     }
-    let added = populateLevelFromInitialEntities(floor_id, level);
+    let added = populateLevelFromInitialEntities(entity_manager, floor_id, level);
     resp_func(null, `${count} entities deleted, ${added} entities spawned`);
   },
 });
@@ -514,6 +520,7 @@ export function crawlerPlayInitHybridBuild(room: ClientChannelWorker): void {
 export function crawlerBuildModeActivate(build_mode: boolean): void {
   buildModeSetActive(build_mode);
   if (build_mode) {
+    settings.set('pixely', 3);
     if (game_state.level_provider === getLevelForFloorFromWebFS) {
       // One-time switch to server-provided levels and connect to the room
       assert(!crawl_room);
@@ -529,11 +536,13 @@ export function crawlerBuildModeActivate(build_mode: boolean): void {
       assert.equal(onlineMode(), OnlineMode.ONLINE_ONLY);
     }
   } else {
+    settings.set('pixely', 2);
     if (onlineMode() === OnlineMode.ONLINE_BUILD) {
       crawlerEntitiesInit(OnlineMode.OFFLINE);
       controller.buildModeSwitch({
         entity_manager: crawlerEntityManager(),
       });
+      crawlerSaveGame();
     }
   }
 }
