@@ -18,6 +18,7 @@ import {
   quat,
   unit_quat,
 } from 'glov/client/quat';
+import * as settings from 'glov/client/settings';
 import * as ui from 'glov/client/ui';
 import { EntityID } from 'glov/common/types';
 import {
@@ -166,7 +167,9 @@ export function drawableSpriteDraw2D(this: EntityDrawableSprite, param: EntityDr
   }
   let { sprite } = ent.drawable_sprite_opts;
   let use_near = true; // slightly better for 2D
-  if (use_near && ent.drawable_sprite_opts.sprite_near) {
+  if (ent.drawable_sprite_opts.sprite_near && (use_near ||
+    !settings.entity_split && settings.entity_nosplit_use_near)
+  ) {
     sprite = ent.drawable_sprite_opts.sprite_near;
   }
   let frame = anim.getFrame();
@@ -202,7 +205,9 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     ent.drawable_sprite_state.anim_update_frame = getFrameIndex();
   }
   let { scale, sprite } = ent.drawable_sprite_opts;
-  if (use_near && ent.drawable_sprite_opts.sprite_near) {
+  if (ent.drawable_sprite_opts.sprite_near && (use_near ||
+    !settings.entity_split && settings.entity_nosplit_use_near)
+  ) {
     sprite = ent.drawable_sprite_opts.sprite_near;
   }
   let tint_colors = ent.drawable_sprite_opts.tint_colors;

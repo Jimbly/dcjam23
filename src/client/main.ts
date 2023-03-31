@@ -49,6 +49,27 @@ export function main(): void {
     });
   }
 
+  // Default style
+  if (!'simple hires') {
+    settings.set('pixely', 0);
+    settings.set('filter', 0);
+    settings.set('entity_split', 0);
+    settings.set('entity_nosplit_use_near', 1);
+  } else if (!'simple lowres') {
+    settings.set('pixely', 1);
+    settings.set('filter', 0);
+    settings.set('entity_split', 0);
+    settings.set('entity_nosplit_use_near', 1);
+  } else if ('split logic') {
+    settings.set('pixely', 1);
+    settings.set('filter', 0);
+    settings.set('entity_split', 1);
+  } else if ('split logic filter') {
+    settings.set('pixely', 1);
+    settings.set('filter', 1);
+    settings.set('entity_split', 1);
+  }
+
   const font_info_04b03x2 = require('./img/font/04b03_8x2.json');
   const font_info_04b03x1 = require('./img/font/04b03_8x1.json');
   const font_info_palanquin32 = require('./img/font/palanquin32.json');
@@ -62,10 +83,6 @@ export function main(): void {
     font = { info: font_info_palanquin32, texture: 'font/palanquin32' };
   }
   settings.set('use_fbos', 1); // Needed for our effects
-  // Default style
-  settings.set('pixely', 1);
-  settings.set('filter', 0);
-  settings.set('entity_split', 1);
 
   spritesheetTextureOpts('whitebox', { force_mipmaps: true });
 

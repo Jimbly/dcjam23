@@ -95,6 +95,7 @@ declare module 'glov/client/settings' {
   export let filter: 0 | 1;
   export let pixely: 0 | 1 | 2 | 3;
   export let entity_split: 0 | 1;
+  export let entity_nosplit_use_near: 0 | 1;
   export let time_scale: number;
   export let use_fbos: 0 | 1;
 }
@@ -162,6 +163,11 @@ settings.register({
     },
   },
   entity_split: { // only with pixely=1
+    default_value: 1,
+    type: cmd_parse.TYPE_INT,
+    range: [0, 1],
+  },
+  entity_nosplit_use_near: { // always should be 1, just remove?
     default_value: 1,
     type: cmd_parse.TYPE_INT,
     range: [0, 1],
