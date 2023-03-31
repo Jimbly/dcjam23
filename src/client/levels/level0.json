@@ -1614,7 +1614,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "open",
         "solid",
         "open"
       ]
@@ -1623,7 +1623,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "open",
         "open",
         "open"
       ]
@@ -1755,21 +1755,21 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "solid",
-        "open",
-        "solid"
+        "solid",
+        "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "solid",
         "solid",
         "open",
-        "solid"
+        "open"
       ]
     },
     {
@@ -2376,9 +2376,25 @@
         11,
         0
       ]
+    },
+    {
+      "type": "demo_tt_naga",
+      "pos": [
+        0,
+        9,
+        0
+      ]
+    },
+    {
+      "type": "demo_tt_knight",
+      "pos": [
+        0,
+        12,
+        0
+      ]
     }
   ],
   "state": {},
-  "vstyle": "",
+  "vstyle": "demo",
   "seed": "32845502"
 }

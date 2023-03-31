@@ -37,6 +37,7 @@ import {
   v2lengthSq,
   v2scale,
   v2sub,
+  v3copy,
   v3set,
   v4set,
   vec2,
@@ -168,14 +169,24 @@ export function drawableSpriteDraw2D(this: EntityDrawableSprite, param: EntityDr
   if (use_near && ent.drawable_sprite_opts.sprite_near) {
     sprite = ent.drawable_sprite_opts.sprite_near;
   }
+  let frame = anim.getFrame();
+  let aspect = sprite.uidata && sprite.uidata.aspect ? sprite.uidata.aspect[frame] : 1;
+  let { w, h } = param;
+  if (aspect < 1) {
+    w = h * aspect;
+  } else {
+    h = w * aspect;
+  }
   sprite.draw({
     ...param,
+    w, h,
     x: param.x + param.w * 0.5,
     y: param.y + param.h,
-    frame: anim.getFrame(),
+    frame,
   });
 }
 
+let temp_pos = vec3();
 export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityDrawSubOpts): void {
   let ent = this;
   let {
@@ -203,11 +214,18 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     shader_params.tint2 = tint_colors[costume][2];
   }
   let shader = crawlerRenderGetShader(tinted ? ShaderType.TintedSpriteFragment : ShaderType.SpriteFragment);
+  let frame = anim ? anim.getFrame() : 0;
+  let aspect = sprite.uidata && sprite.uidata.aspect ? sprite.uidata.aspect[frame] : 1;
+  if (aspect !== 1) {
+    v3copy(temp_pos, draw_pos);
+    temp_pos[2] += (1/aspect - 1) * scale * DIM;
+    draw_pos = temp_pos;
+  }
   sprite.draw3D({
     pos: draw_pos,
-    frame: anim ? anim.getFrame() : 0,
+    frame,
     color,
-    size: [scale * DIM, scale * DIM],
+    size: [scale * DIM * aspect, scale * DIM],
     bucket: BUCKET_ALPHA,
     facing: FACE_XY,
     vshader: crawlerRenderGetShader(ShaderType.SpriteVertex),
