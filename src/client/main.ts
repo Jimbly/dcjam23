@@ -119,6 +119,14 @@ export function main(): void {
       // scrollbar_handle_grabber: { name: 'scrollbar_handle_grabber', ws: [11], hs: [11] },
       // scrollbar_handle: { name: 'scrollbar_handle', ws: [11], hs: [3, 5, 3] },
     },
+    ui_sounds: {
+      user_join: 'user_join',
+      user_leave: 'user_leave',
+      msg_in: 'msg_in',
+      msg_err: 'msg_err',
+      msg_out_err: 'msg_out_err',
+      msg_out: 'msg_out',
+    },
   })) {
     return;
   }
