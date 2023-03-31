@@ -1,7 +1,5 @@
-
 import * as engine from 'glov/client/engine.js';
 import { localStorageGet } from 'glov/client/local_storage.js';
-import { netSubs } from 'glov/client/net.js';
 import * as ui from 'glov/client/ui.js';
 import * as urlhash from 'glov/client/urlhash.js';
 import { createAccountUI } from './account_ui.js';
@@ -39,7 +37,7 @@ function title(dt: number): void {
   }
 
   let x = 10;
-  ui.print(null, x, y, Z.UI, 'Crawler Demo');
+  ui.print(null, x, y, Z.UI, 'Dungeon Crawler Jam 2023');
   x += 10;
   y += ui.font_height + 2;
   for (let ii = 0; ii < 3; ++ii) {
@@ -61,14 +59,14 @@ function title(dt: number): void {
   }
   x = 10;
   y += ui.button_height * 3 + 6;
-  if (netSubs().loggedIn()) {
-    if (ui.buttonText({
-      x, y, text: 'Online Test',
-    })) {
-      urlhash.go('?c=build');
-    }
-    y += ui.button_height + 2;
-  }
+  // if (netSubs().loggedIn()) {
+  //   if (ui.buttonText({
+  //     x, y, text: 'Online Test',
+  //   })) {
+  //     urlhash.go('?c=build');
+  //   }
+  //   y += ui.button_height + 2;
+  // }
   if (crawlerCommWant()) {
     crawlerCommStart();
   }
