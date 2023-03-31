@@ -249,7 +249,7 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
       draw: drawableDraw,
     },
     default_opts: {
-      lod_bias: [-4, 0],
+      lod_bias: [-1, 0], // JAM
       biasL: [-0.2, 0.25],
       biasF: [-0.25, 0],
       biasR: [-0.3, 0.4],
@@ -284,6 +284,7 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
           times: 1000,
         },
       },
+      hybrid: true, // JAM
       sprite_data: {
         name: 'required',
         ws: [1],
@@ -307,6 +308,14 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
           filter_min: gl.NEAREST,
           filter_mag: gl.NEAREST,
         });
+      }
+      if (opts.hybrid) {
+        assert(opts.sprite_near);
+        opts.sprite = spriteCreate({
+          ...opts.sprite_data,
+          texs: [opts.sprite.texs[0], opts.sprite_near.texs[0]],
+        });
+        opts.sprite_near = undefined;
       }
     },
     alloc_state: function (opts: DrawableSpriteOpts, ent: Entity) {

@@ -2392,6 +2392,54 @@
         12,
         0
       ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        5,
+        9,
+        2
+      ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        5,
+        10,
+        2
+      ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        5,
+        11,
+        2
+      ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        4,
+        11,
+        2
+      ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        4,
+        10,
+        2
+      ]
+    },
+    {
+      "type": "demo_wander",
+      "pos": [
+        4,
+        9,
+        2
+      ]
     }
   ],
   "state": {},

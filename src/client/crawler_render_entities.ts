@@ -33,6 +33,7 @@ import {
   ROVec4,
   Vec2,
   v2addScale,
+  v2dist,
   v2distSq,
   v2iNormalize,
   v2lengthSq,
@@ -74,7 +75,7 @@ import type { spineCreate } from 'glov/client/spine';
 import type { SpriteAnimation, SpriteAnimationParam } from 'glov/client/sprite_animation';
 import type { Sprite, SpriteParamBase, TextureOptions } from 'glov/client/sprites';
 
-const { ceil, floor } = Math;
+const { max, ceil, floor } = Math;
 
 let font: Font;
 
@@ -109,6 +110,7 @@ export type TextureOptionsAsStrings = {
 
 export type DrawableSpriteOpts = {
   anim_data: SpriteAnimationParam;
+  hybrid: boolean;
   sprite_data: (TextureOptions | TextureOptionsAsStrings) & SpriteParamBase & { name: string };
   sprite: Sprite; // assigned at load time
   sprite_near?: Sprite; // assigned at load time
@@ -164,12 +166,12 @@ export function drawableSpriteDraw2D(this: EntityDrawableSprite, param: EntityDr
     anim.update(getFrameDt());
     ent.drawable_sprite_state.anim_update_frame = getFrameIndex();
   }
-  let { sprite } = ent.drawable_sprite_opts;
+  let { sprite, sprite_near } = ent.drawable_sprite_opts;
   let use_near = true; // slightly better for 2D
-  if (ent.drawable_sprite_opts.sprite_near && (use_near ||
+  if (sprite_near && (use_near ||
     !settings.entity_split && settings.entity_nosplit_use_near)
   ) {
-    sprite = ent.drawable_sprite_opts.sprite_near;
+    sprite = sprite_near;
   }
   let frame = anim.getFrame();
   let aspect = sprite.uidata && sprite.uidata.aspect ? sprite.uidata.aspect[frame] : 1;
@@ -203,11 +205,11 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     anim.update(dt);
     ent.drawable_sprite_state.anim_update_frame = getFrameIndex();
   }
-  let { scale, sprite } = ent.drawable_sprite_opts;
-  if (ent.drawable_sprite_opts.sprite_near && (use_near ||
+  let { scale, sprite, sprite_near, hybrid } = ent.drawable_sprite_opts;
+  if (sprite_near && (use_near ||
     !settings.entity_split && settings.entity_nosplit_use_near)
   ) {
-    sprite = ent.drawable_sprite_opts.sprite_near;
+    sprite = sprite_near;
   }
   let tint_colors = ent.drawable_sprite_opts.tint_colors;
   let tinted;
@@ -217,7 +219,16 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     shader_params.tint1 = tint_colors[costume][1];
     shader_params.tint2 = tint_colors[costume][2];
   }
-  let shader = crawlerRenderGetShader(tinted ? ShaderType.TintedSpriteFragment : ShaderType.SpriteFragment);
+  if (hybrid) {
+    let dist = v2dist(draw_pos, renderCamPos()) / DIM; // 0...N grid cells
+    // Desired mapping:
+    // Dist 0 = 0.5 (half blend between nearest and linear)
+    // Dist 2 = 0.25
+    // Dist 4 = 0 (fully linear mipmapped)
+    (shader_params.lod_bias as Vec2)[1] = max(0, 0.5 - dist * 0.125);
+  }
+  let shader = crawlerRenderGetShader(hybrid ? ShaderType.SpriteHybridFragment :
+    tinted ? ShaderType.TintedSpriteFragment : ShaderType.SpriteFragment);
   let frame = anim ? anim.getFrame() : 0;
   let aspect = sprite.uidata && sprite.uidata.aspect ? sprite.uidata.aspect[frame] : 1;
   if (aspect !== 1) {

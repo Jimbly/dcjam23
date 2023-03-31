@@ -13,6 +13,7 @@ export const ShaderType = {
   ModelFragment: 'fmodel',
   SpriteVertex: 'vsprite',
   SpriteFragment: 'fsprite',
+  SpriteHybridFragment: 'fsprite_hybrid',
   TintedSpriteFragment: 'fspritetinted',
   TintedModelFragment: 'fmodeltinted',
 } as const;
@@ -284,6 +285,7 @@ export function crawlerRenderStartup(): void {
 
   render_shaders = {
     fsprite: shaderCreate('shaders/crawler_sprite3d.fp'),
+    fsprite_hybrid: shaderCreate('shaders/crawler_sprite3d_hybrid.fp'),
     fspritetinted: shaderCreate('shaders/crawler_sprite3d_tinted.fp'),
     vsprite: shaderCreate('shaders/crawler_sprite3d.vp'),
     fmodel: shaderCreate('shaders/crawler_model.fp'),
