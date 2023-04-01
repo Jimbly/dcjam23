@@ -1,0 +1,9 @@
+---
+background_color: '#fff'
+fog_color: '#fff'
+cell_swaps:
+  open: spirit_open
+wall_swaps:
+  door: spirit_door
+  solid: spirit_solid
+  stairs_out: spirit_exit

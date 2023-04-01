@@ -355,15 +355,16 @@ export class CrawlerController {
 
     if (param.show_debug && !this.getTransitioningFloor()) {
       const { game_state, entity_manager } = this;
+      let x = 1;
       let y = 0;
       let z = Z.DEBUG;
       let my_ent = entity_manager.hasMyEnt() ? entity_manager.getMyEnt() : null;
-      ui.print(null, 0, y, z, `Pos: ${game_state.pos[0]},${game_state.pos[1]}` +
+      ui.print(null, x, y, z, `Pos: ${game_state.pos[0]},${game_state.pos[1]}` +
         `  Floor: ${my_ent?.data.floor}`);
       y += ui.font_height;
-      ui.print(null, 0, y, z, `Angle: ${(game_state.angle / PI * 180).toFixed(0)}`);
+      ui.print(null, x, y, z, `Angle: ${(game_state.angle / PI * 180).toFixed(0)}`);
       y += ui.font_height;
-      ui.print(null, 0, y, z, `Angle Idx: ${this.moveEffRot()}`);
+      ui.print(null, x, y, z, `Angle Idx: ${this.moveEffRot()}`);
       y += ui.font_height;
     }
   }

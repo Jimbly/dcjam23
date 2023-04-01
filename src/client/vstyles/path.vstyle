@@ -1,0 +1,6 @@
+---
+cell_swaps:
+  open: path_open
+wall_swaps:
+  door: path_door
+  solid: path_solid

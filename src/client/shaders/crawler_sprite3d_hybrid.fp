@@ -13,10 +13,9 @@ vec3 unit_vec = vec3(1.0, 1.0, 1.0);
 
 #ifndef NOFOG
 varying vec2 interp_fog_param;
+uniform vec3 fog_color;
 vec3 applyFogVS(in vec3 albedo) {
-  // vec3 fog_color = vec3(0.0);
-  // return fog_color * interp_fog_param.x + albedo * interp_fog_param.y;
-  return albedo * interp_fog_param.y;
+  return fog_color * interp_fog_param.x + albedo * interp_fog_param.y;
 }
 #endif
 

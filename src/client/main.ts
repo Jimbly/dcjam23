@@ -63,8 +63,6 @@ export function main(): void {
   } else if ('CRT filter') {
     settings.set('pixely', 2);
     settings.set('hybrid', 1);
-    settings.set('hybrid_base', 0.75);
-    settings.set('hybrid_scalar', 0.125);
     settings.set('filter', 0);
     settings.set('entity_split', 0);
     settings.set('entity_nosplit_use_near', 1);
@@ -102,7 +100,7 @@ export function main(): void {
     viewport_postprocess: true,
     antialias: false,
     znear: 11,
-    zfar: 2000,
+    zfar: 3200,
     do_borders: true,
     show_fps: false,
     ui_sprites: {

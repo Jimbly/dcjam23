@@ -23,7 +23,7 @@ import {
   Sprite,
   spriteCreate,
 } from 'glov/client/sprites';
-import { textureSupportsDepth, textureWhite } from 'glov/client/textures';
+import { textureLoad, textureSupportsDepth, textureWhite } from 'glov/client/textures';
 import * as ui from 'glov/client/ui';
 import * as urlhash from 'glov/client/urlhash';
 import { getURLBase } from 'glov/client/urlhash';
@@ -41,6 +41,7 @@ import {
   Vec4,
   v3copy,
   v4copy,
+  vec3,
   vec4,
 } from 'glov/common/vmath';
 import '../common/crawler_events'; // side effects: register events
@@ -51,6 +52,7 @@ import {
   DX,
   DY,
   JSVec3,
+  VstyleDesc,
   createCrawlerState,
 } from '../common/crawler_state';
 import { LevelGenerator, levelGeneratorCreate } from '../common/level_generator';
@@ -81,6 +83,7 @@ import {
   crawlerCalc3DViewport,
   crawlerRenderDoSplit,
   crawlerRenderViewportGet,
+  crawlerSetFogColor,
   render,
 } from './crawler_render';
 import { crawlerRenderEntities } from './crawler_render_entities';
@@ -712,6 +715,7 @@ function uiClearColor(): void {
 
 
 let entity_split: boolean;
+let default_bg_color = vec3();
 export function crawlerRenderFramePrep(): void {
   let opts_3d: {
     fov: number;
@@ -744,8 +748,34 @@ export function crawlerRenderFramePrep(): void {
     // need depth buffer attachment
     opts_3d.need_depth = 'texture';
   }
-  gl.clearColor(0, 0, 0, 0);
+  let { level } = game_state;
+  let clear = default_bg_color;
+  let fog = default_bg_color;
+  let vstyle: VstyleDesc | null = null;
+  if (level) {
+    vstyle = level.vstyle;
+  }
+  if (vstyle) {
+    clear = vstyle.background_color;
+    fog = vstyle.fog_color;
+  }
+  gl.clearColor(clear[0], clear[1], clear[2], 0);
+  crawlerSetFogColor(fog);
   engine.start3DRendering(opts_3d);
+  if (vstyle && vstyle.background_img) {
+    let tex = textureLoad({
+      url: `img/${vstyle.background_img}.png`,
+    });
+    if (tex.loaded) {
+      gl.disable(gl.DEPTH_TEST);
+      gl.depthMask(false);
+      applyCopy({ source: tex, no_framebuffer: true, params: {
+        copy_uv_scale: [1, -tex.src_height / tex.height, 0, -(1-tex.src_height / tex.height)],
+      } });
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthMask(true);
+    }
+  }
 
   uiClearColor();
 }

@@ -9,6 +9,9 @@ import {
 
 const spritesheet_demo = require('./img/demo');
 const spritesheet_jam = require('./img/jam');
+const spritesheet_path = require('./img/path');
+const spritesheet_phys = require('./img/phys');
+const spritesheet_spirit = require('./img/spirit');
 const spritesheet_whitebox = require('./img/whitebox');
 
 export function renderResetFilter(): void {
@@ -20,6 +23,9 @@ export function renderResetFilter(): void {
   spritesheet_whitebox.sprite.texs[0].setSamplerState(ss);
   spritesheet_demo.sprite.texs[0].setSamplerState(ss);
   spritesheet_jam.sprite.texs[0].setSamplerState(ss);
+  spritesheet_phys.sprite.texs[0].setSamplerState(ss);
+  spritesheet_spirit.sprite.texs[0].setSamplerState(ss);
+  spritesheet_path.sprite.texs[0].setSamplerState(ss);
 }
 
 export function renderAppStartup(): void {
@@ -41,6 +47,9 @@ export function renderAppStartup(): void {
     spritesheets: {
       default: spritesheet_jam,
       jam: spritesheet_jam,
+      phys: spritesheet_phys,
+      spirit: spritesheet_spirit,
+      path: spritesheet_path,
       demo: spritesheet_demo,
       whitebox: spritesheet_whitebox,
     },

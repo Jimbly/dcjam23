@@ -85,6 +85,9 @@ export type VstyleDesc = {
   id: string;
   cell_swaps: Partial<Record<string, string>>;
   wall_swaps: Partial<Record<string, string>>;
+  fog_color: Vec3;
+  background_color: Vec3;
+  background_img?: string;
 };
 export type VstyleDescs = Partial<Record<string, VstyleDesc>>;
 export type CrawlerStateParams = {
@@ -113,8 +116,10 @@ import { DataObject } from 'glov/common/types';
 import { callEach, clone, empty } from 'glov/common/util';
 import {
   Vec2,
+  Vec3,
   v2set,
   vec2,
+  vec3,
 } from 'glov/common/vmath';
 import { CrawlerScriptAPI, getEffWall } from './crawler_script';
 
@@ -400,6 +405,8 @@ let identity_vstyle: VstyleDesc = {
   id: '',
   cell_swaps: {},
   wall_swaps: {},
+  background_color: vec3(0,0,0),
+  fog_color: vec3(0,0,0),
 };
 
 export type CrawlerLevelState = {
@@ -998,6 +1005,8 @@ function vstyleLoad(filename: string): VstyleDesc {
   vstyle_desc.id = id;
   vstyle_desc.cell_swaps = vstyle_desc.cell_swaps || {};
   vstyle_desc.wall_swaps = vstyle_desc.wall_swaps || {};
+  vstyle_desc.background_color = vstyle_desc.background_color || identity_vstyle.background_color;
+  vstyle_desc.fog_color = vstyle_desc.fog_color || identity_vstyle.fog_color;
   return vstyle_desc;
 }
 

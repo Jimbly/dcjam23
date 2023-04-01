@@ -1,0 +1,10 @@
+---
+fog_color: '#5b6ee1'
+background_color: '#5b6ee1'
+background_img: backdrop_phys
+cell_swaps:
+  open: phys_open
+wall_swaps:
+  door: phys_door
+  solid: phys_solid
+  stairs_out: phys_exit
