@@ -88,6 +88,7 @@ export enum CrawlerScriptWhen {
 }
 export enum CrawlerScriptEventMapIcon {
   NONE=0,
+  SHOP1=8,
   QUESTION=27,
   EXCLAIMATION=28,
 }

@@ -2354,19 +2354,19 @@
   ],
   "initial_entities": [
     {
-      "type": "demo_shopkeeper",
+      "type": "demo_wander",
       "pos": [
-        5,
-        13,
-        0
+        4,
+        10,
+        2
       ]
     },
     {
-      "type": "demo_shopkeeper",
+      "type": "demo_wander",
       "pos": [
-        0,
-        10,
-        0
+        4,
+        9,
+        2
       ]
     },
     {
@@ -2426,18 +2426,18 @@
       ]
     },
     {
-      "type": "demo_wander",
+      "type": "shopkeeper",
       "pos": [
-        4,
+        0,
         10,
-        2
+        0
       ]
     },
     {
-      "type": "demo_wander",
+      "type": "shopkeeper",
       "pos": [
-        4,
-        9,
+        5,
+        13,
         2
       ]
     }

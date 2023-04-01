@@ -17,6 +17,7 @@ import * as ui from 'glov/client/ui';
 import { crawlerBuildModeStartup } from './crawler_build_mode';
 import { crawlerOnPixelyChange } from './crawler_play.js';
 import { game_height, game_width } from './globals';
+import { jamEventsStartup } from './jam_events';
 import { playStartup } from './play';
 import { titleInit, titleStartup } from './title';
 
@@ -165,6 +166,7 @@ export function main(): void {
     fade_time: [1000, 1000],
   });
 
+  jamEventsStartup();
   crawlerBuildModeStartup(fonts[0]);
   playStartup();
   titleStartup();

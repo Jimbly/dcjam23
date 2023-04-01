@@ -1215,6 +1215,12 @@
         "solid",
         "solid",
         "open"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": ""
+        }
       ]
     },
     {
@@ -2322,6 +2328,16 @@
         "open",
         "open",
         "open"
+      ]
+    }
+  ],
+  "initial_entities": [
+    {
+      "type": "shopkeeper",
+      "pos": [
+        4,
+        8,
+        3
       ]
     }
   ],
