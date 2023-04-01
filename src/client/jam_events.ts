@@ -5,6 +5,7 @@ import {
   crawlerScriptRegisterEvent,
 } from '../common/crawler_script';
 import { CrawlerCell } from '../common/crawler_state';
+import { startShopping } from './play';
 
 
 crawlerScriptRegisterEvent({
@@ -13,6 +14,7 @@ crawlerScriptRegisterEvent({
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
     api.status('floor_abs', 'Shopping time!');
+    startShopping();
   },
 });
 

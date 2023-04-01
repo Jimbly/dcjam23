@@ -1284,6 +1284,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
       base_name: build_tab === tab ? 'buttonselected' : 'button',
       text: tab,
       hotkey: keyDown(KEYS.ALT) ? KEYS['1'] + idx : undefined,
+      font,
     })) {
       localStorageSet('build_tab', tab);
       build_tab = tab;

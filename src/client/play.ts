@@ -1,3 +1,4 @@
+import assert from 'assert';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
 import {
@@ -25,6 +26,7 @@ import * as ui from 'glov/client/ui';
 import {
   ButtonStateString,
   isMenuUp,
+  uiPanel,
 } from 'glov/client/ui';
 import * as urlhash from 'glov/client/urlhash';
 import walltime from 'glov/client/walltime';
@@ -99,6 +101,7 @@ import {
   render_height,
   render_width,
 } from './globals';
+import { GOODS } from './goods';
 import { levelGenTest } from './level_gen_test';
 import { renderAppStartup } from './render_app';
 import {
@@ -132,6 +135,8 @@ let loading_level = false;
 let controller: CrawlerController;
 
 let pause_menu_up = false;
+let inventory_up = false;
+let shop_up = false;
 
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
@@ -199,8 +204,67 @@ function pauseMenu(): void {
   ui.menuUp();
 }
 
+function inventoryMenu(): void {
+  if (!inventory_up) {
+    return;
+  }
+  let me = myEnt();
+  let data = me.data;
+  let z = Z.OVERLAY_UI;
+  const pad = 4;
+  const x0 = game_width/2;
+  const y0 = 0;
+  let w = game_width / 2;
+  let h = game_height;
+  let x = x0;
+  let y = y0;
+  uiPanel({
+    x, y,
+    w, h, z: z - 1,
+  });
+  y += pad;
+  x += pad;
+  w -= pad * 2;
+  font.draw({
+    align: ALIGN.HCENTER,
+    x, y, z,
+    w,
+    text: `Money: ${data.money}`,
+  });
+  y += ui.font_height + 1;
+  y = 40;
+  let goods = data.goods;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let good = goods[ii];
+    let good_def = GOODS[good.type];
+    assert(good_def);
+    font.draw({
+      align: ALIGN.HLEFT,
+      x, y, z,
+      w,
+      text: good_def.name,
+    });
+    font.draw({
+      align: ALIGN.HRIGHT,
+      x, y, z,
+      w,
+      text: `${good.count}`,
+    });
+
+    y += ui.button_height + 1;
+  }
+}
+
+function shopMenu(): void {
+  // TODO
+}
+
 function moveBlocked(): boolean {
   return false;
+}
+
+export function startShopping(): void {
+  inventory_up = shop_up = true;
 }
 
 // TODO: move into crawler_play?
@@ -265,6 +329,7 @@ function playCrawl(): void {
 
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
+  let overlay_menu_up = pause_menu_up || inventory_up || shop_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
   let compass_h = show_compass ? 11 : 0;
@@ -302,12 +367,13 @@ function playCrawl(): void {
       no_visible_ui = false;
       if (frame_map_view) {
         z = Z.MAP + 1;
-      }
-      if (pause_menu_up) {
+      } else if (pause_menu_up) {
         z = Z.MODAL + 1;
+      } else {
+        z = Z.MENUBUTTON;
       }
     } else {
-      my_disabled = my_disabled || pause_menu_up;
+      my_disabled = my_disabled || overlay_menu_up;
     }
     let ret = crawlerOnScreenButton({
       x: button_x0 + (BUTTON_W + 2) * rx,
@@ -331,13 +397,16 @@ function playCrawl(): void {
   // Escape / open/close menu button - *before* pauseMenu()
   button_x0 = 317;
   button_y0 = 3;
-  let menu_up = frame_map_view || build_mode || pause_menu_up;
+  let menu_up = frame_map_view || build_mode || overlay_menu_up;
   let menu_keys = [KEYS.ESC];
   button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, [PAD.BACK]);
 
   if (pause_menu_up) {
     pauseMenu();
   }
+
+  inventoryMenu();
+  shopMenu();
 
   controller.doPlayerMotion({
     dt: getScaledFrameDt(),
@@ -346,7 +415,7 @@ function playCrawl(): void {
     no_visible_ui: frame_map_view,
     button_w: BUTTON_W,
     button_sprites,
-    disable_move: moveBlocked() || pause_menu_up,
+    disable_move: moveBlocked() || overlay_menu_up,
     show_buttons: true,
     do_debug_move: engine.defines.LEVEL_GEN || build_mode,
     show_debug: Boolean(settings.show_fps),
@@ -376,6 +445,7 @@ function playCrawl(): void {
         crawlerBuildModeActivate(false);
       } else {
         // close whatever other menu
+        inventory_up = shop_up = false;
       }
       pause_menu_up = false;
     } else {
@@ -393,8 +463,13 @@ function playCrawl(): void {
       mapViewToggle();
     }
   }
-  if (!pause_menu_up && keyDownEdge(KEYS.M)) {
+  if (!overlay_menu_up && keyDownEdge(KEYS.M)) {
     mapViewToggle();
+  }
+  if (!overlay_menu_up && keyDownEdge(KEYS.I)) {
+    inventory_up = true;
+  } else if (inventory_up && keyDownEdge(KEYS.I)) {
+    inventory_up = shop_up = false;
   }
   let game_state = crawlerGameState();
   let script_api = crawlerScriptAPI();
@@ -405,10 +480,10 @@ function playCrawl(): void {
       }
     }
     crawlerMapViewDraw(game_state, 0, 0, game_width, game_height, 0, Z.MAP,
-      engine.defines.LEVEL_GEN, script_api, pause_menu_up);
+      engine.defines.LEVEL_GEN, script_api, overlay_menu_up);
   } else {
     crawlerMapViewDraw(game_state, MINIMAP_X, MINIMAP_Y, MINIMAP_W, minimap_display_h, compass_h, Z.MAP,
-      false, script_api, pause_menu_up);
+      false, script_api, overlay_menu_up);
   }
 
   statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
@@ -472,13 +547,14 @@ export function play(dt: number): void {
   frame_wall_time = max(frame_wall_time, walltime()); // strictly increasing
 
   const map_view = mapViewActive();
-  if (!(map_view || isMenuUp() || pause_menu_up)) {
+  let overlay_menu_up = pause_menu_up || inventory_up || shop_up;
+  if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }
 
   profilerStopStart('chat');
   getChatUI().run({
-    hide: map_view || pause_menu_up || !isOnline(),
+    hide: map_view || overlay_menu_up || !isOnline(),
     x: 3,
     y: 196,
     border: 2,
@@ -513,7 +589,7 @@ export function play(dt: number): void {
     let script_api = crawlerScriptAPI();
     script_api.is_visited = true; // Always visited for AI
     aiDoFloor(game_state.floor_id, game_state, entityManager(), engine.defines,
-      settings.ai_pause || engine.defines.LEVEL_GEN || pause_menu_up, script_api);
+      settings.ai_pause || engine.defines.LEVEL_GEN || overlay_menu_up, script_api);
   }
 
   if (crawlerCommWant()) {
@@ -544,6 +620,8 @@ function playInitShared(online: boolean): void {
   controller.setOnInitPos(onInitPos);
 
   pause_menu_up = false;
+  inventory_up = false;
+  shop_up = false;
 }
 
 
@@ -584,6 +662,7 @@ export function playStartup(): void {
         pos: [0, 0, 0],
         floor: 0,
         stats: { hp: 10, hp_max: 10 },
+        money: 100,
       },
       loading_state: playOfflineLoading,
     },

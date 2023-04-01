@@ -41,12 +41,20 @@ export type StatsData = {
   hp: number;
 };
 
+export type Good = {
+  type: string;
+  count: number;
+};
+
 export type EntityDataClient = {
   type: string;
   pos: JSVec3;
   state: string;
   floor: number;
   stats: StatsData;
+  // Player:
+  money: number;
+  goods: Good[];
 } & EntityCrawlerDataCommon;
 
 
@@ -69,13 +77,22 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   declare is_player: boolean;
   declare is_enemy: boolean;
 
-  constructor(data: DataObject) {
-    super(data);
-    if (!this.data.pos) {
-      this.data.pos = [0,0,0];
+  constructor(data_in: DataObject) {
+    super(data_in);
+    let data = this.data;
+
+    if (!data.pos) {
+      data.pos = [0,0,0];
     }
-    while (this.data.pos.length < 3) {
-      this.data.pos.push(0);
+    while (data.pos.length < 3) {
+      data.pos.push(0);
+    }
+    if (!data.stats) {
+      data.stats = { hp: 1 } as StatsData;
+    }
+    if (this.is_player) {
+      data.money = data.money || 0;
+      data.goods = data.goods || [];
     }
     this.floaters = [];
     this.aiResetMoveTime(true);

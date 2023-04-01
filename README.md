@@ -19,3 +19,4 @@ Credits for assets used (may not make it into final version)
 ============================================================
 
 * Player placeholder derived from art by Clint Bellanger - https://opengameart.org/content/first-person-dungeon-crawl-art-pack
+* Fonts from https://nimblebeastscollective.itch.io/nb-pixel-font-bundle

@@ -680,7 +680,7 @@ export function uiHandlingNav() {
   return menu_up || !spotPadSuppressed();
 }
 
-export function panel(param) {
+export function uiPanel(param) {
   assert(typeof param.x === 'number');
   assert(typeof param.y === 'number');
   assert(typeof param.w === 'number');
@@ -739,7 +739,7 @@ export function drawTooltip(param) {
   y += eff_tooltip_pad;
   let pixel_scale = param.pixel_scale || tooltip_panel_pixel_scale;
 
-  panel({
+  uiPanel({
     x,
     y: tooltip_y0,
     z,
@@ -1268,7 +1268,7 @@ function modalDialogRun() {
     y += eff_button_height;
   }
   y = round(y + vpad + pad);
-  panel({
+  uiPanel({
     x: x0,
     y: y0,
     z: Z.MODAL - 1,
@@ -1894,3 +1894,6 @@ export function setTooltipWidth(_tooltip_width, _tooltip_panel_pixel_scale) {
   tooltip_panel_pixel_scale = _tooltip_panel_pixel_scale;
   tooltip_pad = modal_pad / 2 * _tooltip_panel_pixel_scale;
 }
+
+// Legacy exports
+exports.panel = uiPanel;

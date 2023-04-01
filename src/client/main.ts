@@ -2,17 +2,17 @@
 import * as local_storage from 'glov/client/local_storage.js'; // eslint-disable-line import/order
 local_storage.setStoragePrefix('dcjam2023'); // Before requiring anything else that might load from this
 
-import assert from 'assert';
 import { chatUICreate } from 'glov/client/chat_ui';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
-import { Font, fontCreate } from 'glov/client/font';
+import { fontCreate } from 'glov/client/font';
 import * as net from 'glov/client/net';
 import * as settings from 'glov/client/settings';
 import { spriteSetGet } from 'glov/client/sprite_sets';
 import { spritesheetTextureOpts } from 'glov/client/spritesheet';
 import { textureDefaultFilters } from 'glov/client/textures';
 import * as ui from 'glov/client/ui';
+import { v4set } from 'glov/common/vmath';
 // import './client_cmds.js'; // for side effects
 import { crawlerBuildModeStartup } from './crawler_build_mode';
 import { crawlerOnPixelyChange } from './crawler_play.js';
@@ -28,14 +28,16 @@ Z.CHAT = 60;
 Z.UI = 100;
 Z.STATUS = 100;
 Z.MAP = Z.UI + 5; // also minimap
+Z.OVERLAY_UI = 110;
+Z.MENUBUTTON = 120;
 Z.FLOATERS = Z.UI + 25;
 Z.CHAT_FOCUSED = 100;
 
-let fonts: Font[] | undefined;
+// let fonts: Font[] | undefined;
 
 crawlerOnPixelyChange(function (new_value: number): void {
-  assert(fonts);
-  engine.setFonts(fonts[new_value] || fonts[2]);
+  // assert(fonts);
+  // engine.setFonts(fonts[new_value] || fonts[2]);
 });
 
 export let chat_ui: ReturnType<typeof chatUICreate>;
@@ -77,18 +79,19 @@ export function main(): void {
     settings.set('entity_split', 1);
   }
 
-  const font_info_04b03x2 = require('./img/font/04b03_8x2.json');
-  const font_info_04b03x1 = require('./img/font/04b03_8x1.json');
+  // const font_info_04b03x2 = require('./img/font/04b03_8x2.json');
+  // const font_info_04b03x1 = require('./img/font/04b03_8x1.json');
   const font_info_palanquin32 = require('./img/font/palanquin32.json');
   let pixely = settings.pixely === 2 ? 'strict' : settings.pixely ? 'on' : false;
-  let font;
-  if (pixely === 'strict') {
-    font = { info: font_info_04b03x1, texture: 'font/04b03_8x1' };
-  } else if (pixely && pixely !== 'off') {
-    font = { info: font_info_04b03x2, texture: 'font/04b03_8x2' };
-  } else {
-    font = { info: font_info_palanquin32, texture: 'font/palanquin32' };
-  }
+  //let font = { info: require('./img/font/bitfantasy.json'), texture: 'font/bitfantasy' };
+  let font = { info: require('./img/font/celtictime.json'), texture: 'font/celtictime' };
+  // if (pixely === 'strict') {
+  //   font = { info: font_info_04b03x1, texture: 'font/04b03_8x1' };
+  // } else if (pixely && pixely !== 'off') {
+  //   font = { info: font_info_04b03x2, texture: 'font/04b03_8x2' };
+  // } else {
+  //   font = { info: font_info_palanquin32, texture: 'font/palanquin32' };
+  // }
   settings.set('use_fbos', 1); // Needed for our effects
 
   spritesheetTextureOpts('whitebox', { force_mipmaps: true });
@@ -115,7 +118,7 @@ export function main(): void {
       buttonselected_down: { name: 'pixely/buttonselected_down', ws: [4, 5, 4], hs: [13] },
       buttonselected_rollover: { name: 'pixely/buttonselected', ws: [4, 5, 4], hs: [13] },
       buttonselected_disabled: { name: 'pixely/buttonselected_disabled', ws: [4, 5, 4], hs: [13] },
-      // panel: { name: 'panel', ws: [3, 2, 3], hs: [3, 10, 3] },
+      panel: { name: 'pixely/panel', ws: [3, 2, 3], hs: [3, 10, 3] },
       // menu_entry: { name: 'menu_entry', ws: [4, 5, 4], hs: [13] },
       // menu_selected: { name: 'menu_selected', ws: [4, 5, 4], hs: [13] },
       // menu_down: { name: 'menu_down', ws: [4, 5, 4], hs: [13] },
@@ -137,11 +140,12 @@ export function main(): void {
   })) {
     return;
   }
-  fonts = [
-    fontCreate(font_info_palanquin32, 'font/palanquin32'),
-    fontCreate(font_info_04b03x2, 'font/04b03_8x2'),
-    fontCreate(font_info_04b03x1, 'font/04b03_8x1'),
-  ];
+  let build_font = fontCreate(font_info_palanquin32, 'font/palanquin32');
+  // fonts = [
+  //   fontCreate(font_info_palanquin32, 'font/palanquin32'),
+  //   fontCreate(font_info_bitfantasy, 'font/bitfantasy'),
+  //   fontCreate(font_info_celtictime, 'font/celtictime'),
+  // ];
 
   gl.clearColor(0, 0, 0, 1);
 
@@ -150,8 +154,10 @@ export function main(): void {
     textureDefaultFilters(gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR);
   }
 
-  ui.scaleSizes(13 / 32);
-  ui.setFontHeight(8);
+  ui.scaleSizes(11 / 32);
+  ui.setFontHeight(11);
+  ui.setPanelPixelScale(1);
+  v4set(ui.color_panel, 1, 1, 1, 1);
   // ui.uiSetFontStyleFocused(fontStyle(ui.uiGetFontStyleFocused(), {
   //   outline_width: 2.5,
   //   outline_color: dawnbringer.font_colors[8],
@@ -167,7 +173,7 @@ export function main(): void {
   });
 
   jamEventsStartup();
-  crawlerBuildModeStartup(fonts[0]);
+  crawlerBuildModeStartup(build_font);
   playStartup();
   titleStartup();
 
