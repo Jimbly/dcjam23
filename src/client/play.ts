@@ -5,6 +5,7 @@ import { getFrameIndex } from 'glov/client/engine';
 import {
   ALIGN,
   Font,
+  fontStyle,
 } from 'glov/client/font';
 import * as input from 'glov/client/input';
 import {
@@ -224,6 +225,14 @@ function initGoods(trader: Entity): void {
   }];
 }
 
+const style_not_interested = fontStyle(null, {
+  color: 0x404040ff,
+});
+const style_not_allowed = fontStyle(null, {
+  color: 0x800000ff,
+});
+
+
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
 function inventoryMenu(): void {
@@ -375,6 +384,7 @@ function inventoryMenu(): void {
         text: good_def.name,
       });
       font.draw({
+        style: trader_good.count ? undefined : style_not_allowed,
         align: ALIGN.HCENTER,
         x: trader_count_x, y, z,
         w: count_w,
@@ -402,10 +412,19 @@ function inventoryMenu(): void {
         data.money -= trader_good.cost;
       }
       font.draw({
+        style: trader_good.cost > data.money ? style_not_allowed : undefined,
         align: ALIGN.HCENTERFIT,
         x: value_x, y, z,
         w: value_w,
         text: `${trader_good.cost}`,
+      });
+    } else if (trader) {
+      font.draw({
+        style: style_not_interested,
+        align: ALIGN.HRIGHT,
+        x: value_x + value_w, y, z,
+        w: 0,
+        text: 'Not interested',
       });
     }
     if (player_good) {
