@@ -961,6 +961,11 @@ let prop_key_items: MenuItem[] = [
   'key_west',
   'new',
 ].map((name) => ({ name, tag: name }));
+let level_prop_key_items: MenuItem[] = [
+  'realm', // JAM
+  'is_town', // JAM
+  'new',
+].map((name) => ({ name, tag: name }));
 
 function showCurrentCell(param: {
   level: CrawlerLevel;
@@ -1244,6 +1249,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   if (!level) {
     return;
   }
+  const button_height = 11; // JAM ui.button_height;
   if (keyDownEdge(KEYS.Z) && keyDown(KEYS.CTRL)) {
     buildModeUndo();
   }
@@ -1280,6 +1286,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
     if (button({
       x, y, z,
       w: col_width,
+      h: button_height,
       disabled: build_tab === tab,
       base_name: build_tab === tab ? 'buttonselected' : 'button',
       text: tab,
@@ -1293,7 +1300,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   });
 
   x = x0;
-  y += ui.button_height + 2;
+  y += button_height + 2;
 
   if (build_tab === BuildTab.Paint || build_tab === BuildTab.Spawn) {
     // Palette area
@@ -1320,12 +1327,13 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
       auto_reset: false,
       x, y, z,
       width: w,
+      entry_height: button_height,
       items,
     }, level.vstyle.id || 'default');
     if (new_vstyle) {
       buildModeSetVstyle(new_vstyle.tag!);
     }
-    y += ui.button_height + 2;
+    y += button_height + 2;
 
     let font_height = ui.font_height * 0.75;
     let button_w = font_height;
@@ -1399,32 +1407,121 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
 
     if (ui.buttonText({
       x, y, z,
+      h: button_height,
       font,
       text: 'Generate Level',
     })) {
       mapViewSetActive(true);
       crawlerSetLevelGenMode(true);
     }
-    y += ui.button_height + 2;
+    y += button_height + 2;
 
     if (ui.buttonText({
       x, y, z,
+      h: button_height,
       font,
       text: 'Reset Entities',
     })) {
       getChatUI().cmdParse('floor_reset');
     }
-    y += ui.button_height + 2;
+    y += button_height + 2;
 
     if (ui.buttonText({
       x, y, z,
+      h: button_height,
       font,
       text: 'Reset Visibility',
     })) {
       getChatUI().cmdParse('reset_vis_data');
     }
-    y += ui.button_height + 2;
+    y += button_height + 2;
 
+    // Level Props
+    let btn_w = w * 0.2;
+    if (buttonText({
+      x: x + w - btn_w,
+      y, z,
+      w: btn_w,
+      font_height: font_height*0.75,
+      h: font_height,
+      font,
+      text: '+Prop',
+      font_style_normal: font_style_prop,
+      colors: colors_prop,
+    })) {
+      crawlerBuildModeBegin();
+      level.setProp('new', '');
+      crawlerBuildModeCommit();
+    }
+
+    y += font_height + 1;
+    let { props } = level;
+    let w1 = w * 0.4;
+    let x1b = x + w1 + 1;
+    let x2 = x + w - font_height;
+    let w2 = x2 - 1 - x1b;
+    let prop_keys = Object.keys(props);
+    for (let ii = 0; ii < prop_keys.length; ++ii) {
+      let prop_key = prop_keys[ii];
+      let value = props[prop_key];
+      let new_id = dropDown({
+        x, y, z,
+        width: w1,
+        entry_height: font_height,
+        font_height: font_height * 0.75,
+        items: level_prop_key_items,
+      }, prop_key, { suppress_return_during_dropdown: true });
+      if (new_id) {
+        crawlerBuildModeBegin();
+        level.setProp(prop_key, undefined);
+        level.setProp(String(new_id.name), value);
+        crawlerBuildModeCommit();
+      }
+
+      if (buttonText({
+        x: x1b,
+        y, z,
+        w: w2,
+        font_height: font_height*0.75,
+        h: font_height,
+        font,
+        text: value && String(value) || '...',
+        font_style_normal: font_style_prop,
+        colors: colors_prop,
+      })) {
+        modalTextEntry({
+          title: 'Level Property',
+          text: `Enter property value for "${prop_key}"`,
+          edit_text: String(value) || '',
+          buttons: {
+            ok: function (text: string) {
+              crawlerBuildModeBegin();
+              level!.setProp(prop_key, text);
+              crawlerBuildModeCommit();
+            },
+            cancel: null,
+          },
+        });
+      }
+
+      if (buttonText({
+        x: x + w - font_height,
+        y, z,
+        w: font_height,
+        font_height: font_height*0.75,
+        h: font_height,
+        font,
+        text: 'X',
+        font_style_normal: font_style_prop,
+        colors: colors_prop,
+      })) {
+        crawlerBuildModeBegin();
+        level.setProp(prop_key, undefined);
+        crawlerBuildModeCommit();
+      }
+
+      y += font_height + 1;
+    }
   }
 
   x = 5;

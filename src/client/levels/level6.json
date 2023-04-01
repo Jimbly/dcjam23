@@ -1,9 +1,9 @@
 {
   "special_pos": {
     "stairs_in": [
-      1,
+      14,
       8,
-      0
+      2
     ],
     "stairs_out": [
       14,
@@ -2343,5 +2343,9 @@
   ],
   "state": {},
   "vstyle": "spirit",
-  "seed": "32845502"
+  "seed": "32845502",
+  "props": {
+    "realm": "spirit",
+    "is_town": "1"
+  }
 }

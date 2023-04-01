@@ -423,6 +423,7 @@ export type CrawlerLevelSerialized = {
   state?: CrawlerLevelState;
   vstyle: string;
   seed: string;
+  props?: CrawlerCellProps;
 };
 
 export class CrawlerLevel {
@@ -443,6 +444,7 @@ export class CrawlerLevel {
   initial_entities?: DataObject[];
   initial_state?: CrawlerLevelState;
   state: CrawlerLevelState = {};
+  props: CrawlerCellProps = {};
   default_open_cell = descs.cell.open;
   vstyle: VstyleDesc = identity_vstyle;
   seed: string = 'dummyseed';
@@ -693,6 +695,7 @@ export class CrawlerLevel {
       state: this.state,
       vstyle: this.vstyle.id,
       seed: this.seed,
+      props: this.props,
     };
   }
 
@@ -703,6 +706,7 @@ export class CrawlerLevel {
     this.initial_entities = data.initial_entities;
     this.initial_state = data.initial_state;
     this.state = data.state || {};
+    this.props = data.props || {};
     this.seed = data.seed;
     let { cells } = this;
     for (let idx = 0; idx < w * h; ++idx) {
@@ -829,6 +833,17 @@ export class CrawlerLevel {
       return null;
     }
     return this.cells[y * this.w + x];
+  }
+
+  setProp(key: string, value: CrawlerCellPropValue | undefined): void {
+    if (value === undefined) {
+      delete this.props[key];
+    } else {
+      this.props[key] = value;
+    }
+  }
+  getProp(key: string): CrawlerCellPropValue | undefined {
+    return this.props && this.props[key];
   }
 }
 

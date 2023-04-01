@@ -2343,5 +2343,9 @@
   ],
   "state": {},
   "vstyle": "phys",
-  "seed": "32845502"
+  "seed": "32845502",
+  "props": {
+    "is_town": "1",
+    "realm": "phys"
+  }
 }
