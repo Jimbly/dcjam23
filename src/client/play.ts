@@ -2,6 +2,7 @@ import assert from 'assert';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
 import { getFrameIndex } from 'glov/client/engine';
+import { ClientEntityManagerInterface } from 'glov/client/entity_manager_client';
 import {
   ALIGN,
   Font,
@@ -46,6 +47,7 @@ import {
   Vec2,
 } from 'glov/common/vmath';
 import {
+  CrawlerLevel,
   crawlerLoadData,
 } from '../common/crawler_state';
 import {
@@ -887,6 +889,17 @@ function playInitEarly(room: ClientChannelWorker): void {
   playInitShared(true);
 }
 
+function initLevel(entity_manager: ClientEntityManagerInterface,
+  floor_id: number, level: CrawlerLevel
+) : void {
+  let me = myEnt();
+  assert(me);
+  if (level.props.is_town && floor_id !== me.data.last_journey_town) {
+    me.data.last_journey_town = floor_id;
+    me.data.journeys++;
+  }
+}
+
 settings.register({
   ai_pause: {
     default_value: 0,
@@ -915,6 +928,7 @@ export function playStartup(): void {
       loading_state: playOfflineLoading,
     },
     play_state: play,
+    on_init_level_offline: initLevel,
   });
   let ent_factory = traitFactoryCreate<Entity, DataObject>();
   jamTraitsStartup(ent_factory);

@@ -390,17 +390,23 @@ function populateLevelFromInitialEntities(
   return ret;
 }
 
+
+export type InitLevelFunc = ((entity_manager: ClientEntityManagerInterface,
+  floor_id: number, level: CrawlerLevel) => void);
+let on_init_level_offline: InitLevelFunc | null = null;
+
 function crawlerOnInitHaveLevel(floor_id: number): void {
   crawlerInitVisData(floor_id);
   if (isLocal()) {
+    let level = game_state.level;
+    assert(level);
     if (!local_game_data.floors_inited || !local_game_data.floors_inited[floor_id]) {
       assert(game_state.floor_id === floor_id);
-      let level = game_state.level;
-      assert(level);
       local_game_data.floors_inited = local_game_data.floors_inited || {};
       local_game_data.floors_inited[floor_id] = true;
       populateLevelFromInitialEntities(crawlerEntityManagerOffline(), floor_id, level);
     }
+    on_init_level_offline?.(crawlerEntityManagerOffline(), floor_id, level);
   }
 }
 
@@ -859,12 +865,14 @@ export function crawlerPlayStartup(param: {
   play_init_offline?: () => void;
   offline_data?: CrawlerOfflineData;
   play_state: EngineState;
+  on_init_level_offline?: InitLevelFunc;
 }): void {
   on_broadcast = param.on_broadcast || undefined;
   play_init_online = param.play_init_online;
   play_init_offline = param.play_init_offline;
   offline_data = param.offline_data;
   play_state = param.play_state;
+  on_init_level_offline = param.on_init_level_offline || null;
   window.addEventListener('beforeunload', beforeUnload, false);
   viewport_sprite = spriteCreate({ texs: [textureWhite()] });
   supports_frag_depth = engine.webgl2 || gl.getExtension('EXT_frag_depth');

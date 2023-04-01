@@ -65,6 +65,7 @@ export type EntityDataClient = {
   mercs: Merc[];
   merc_capacity: number;
   journeys: number;
+  last_journey_town: number;
   // Traders
   last_init: number;
 } & EntityCrawlerDataCommon;
