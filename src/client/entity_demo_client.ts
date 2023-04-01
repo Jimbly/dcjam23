@@ -47,6 +47,11 @@ export type Good = {
   cost: number;
 };
 
+export type Merc = {
+  hp: number;
+  hp_max: number;
+};
+
 export type EntityDataClient = {
   type: string;
   pos: JSVec3;
@@ -56,6 +61,9 @@ export type EntityDataClient = {
   // Player:
   money: number;
   goods: Good[]; // and traders
+  good_capacity: number;
+  mercs: Merc[];
+  merc_capacity: number;
   journeys: number;
   // Traders
   last_init: number;
@@ -98,6 +106,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
     if (this.is_player) {
       data.money = data.money || 0;
       data.goods = data.goods || [];
+      data.mercs = data.mercs || [];
       data.journeys = data.journeys || 0;
     }
     this.floaters = [];

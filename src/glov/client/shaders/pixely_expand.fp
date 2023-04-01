@@ -25,7 +25,7 @@ const float VIGNETTE = 0.5;
 // Display warp.
 // 0.0 = none
 // 1.0/8.0 = extreme
-const vec2 WARP=vec2(1.0/32.0,1.0/24.0);
+const vec2 WARP=vec2(1.0/64.0,1.0/48.0);
 
 // Distortion of scanlines, and end of screen alpha.
 vec2 Warp(vec2 pos){

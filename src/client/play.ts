@@ -232,6 +232,10 @@ const style_not_allowed = fontStyle(null, {
   color: 0x800000ff,
 });
 
+const style_money = fontStyle(null, {
+  color: 0xFFFF80ff,
+});
+
 
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
@@ -276,6 +280,7 @@ function inventoryMenu(): void {
 
   // Player inventory header
   const inv_x = inv_x0 + pad;
+  let overloaded: boolean;
   {
     let x = inv_x;
     let y = y0 + pad;
@@ -287,12 +292,26 @@ function inventoryMenu(): void {
     });
     y += ui.font_height + 1;
     font.draw({
+      style: style_money,
       align: ALIGN.HCENTER,
       x, y, z,
       w,
       text: `Money: ${data.money}`,
     });
     y += ui.font_height + 1;
+
+    let num_goods = 0;
+    for (let ii = 0; ii < data.goods.length; ++ii) {
+      num_goods += data.goods[ii].count;
+    }
+    overloaded = num_goods >= data.good_capacity;
+    font.draw({
+      style: overloaded ? style_not_allowed : undefined,
+      align: ALIGN.VBOTTOM | ALIGN.HCENTER,
+      x, y: y0 + h - 5, z,
+      w,
+      text: `Load: ${num_goods} / ${data.good_capacity}`,
+    });
   }
 
   // Shop header
@@ -390,13 +409,20 @@ function inventoryMenu(): void {
         w: count_w,
         text: `${trader_good.count}`,
       });
+      font.draw({
+        style: trader_good.cost > data.money ? style_not_allowed : style_money,
+        align: ALIGN.HCENTERFIT,
+        x: value_x, y, z,
+        w: value_w,
+        text: `${trader_good.cost}`,
+      });
       if (ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
         w: button_w, z,
         text: '->',
         sound: 'buy',
         tooltip: 'Buy',
-        disabled: trader_good.count === 0 || trader_good.cost > data.money,
+        disabled: trader_good.count === 0 || trader_good.cost > data.money || overloaded,
       })) {
         if (!player_good) {
           player_good = {
@@ -411,13 +437,6 @@ function inventoryMenu(): void {
         player_good.count++;
         data.money -= trader_good.cost;
       }
-      font.draw({
-        style: trader_good.cost > data.money ? style_not_allowed : undefined,
-        align: ALIGN.HCENTERFIT,
-        x: value_x, y, z,
-        w: value_w,
-        text: `${trader_good.cost}`,
-      });
     } else if (trader) {
       font.draw({
         style: style_not_interested,
@@ -428,6 +447,18 @@ function inventoryMenu(): void {
       });
     }
     if (player_good) {
+      font.draw({
+        align: ALIGN.HCENTER,
+        x: player_count_x, y, z,
+        w: count_w,
+        text: `${player_good.count}`,
+      });
+      font.draw({
+        align: ALIGN.HLEFT,
+        x: player_count_x + count_w + 1, y, z,
+        w,
+        text: good_def.name,
+      });
       if (trader_good) {
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
@@ -457,18 +488,6 @@ function inventoryMenu(): void {
           }
         }
       }
-      font.draw({
-        align: ALIGN.HCENTER,
-        x: player_count_x, y, z,
-        w: count_w,
-        text: `${player_good.count}`,
-      });
-      font.draw({
-        align: ALIGN.HLEFT,
-        x: player_count_x + count_w + 1, y, z,
-        w,
-        text: good_def.name,
-      });
     }
 
     y += ui.button_height + 1;
@@ -890,6 +909,8 @@ export function playStartup(): void {
         floor: 0,
         stats: { hp: 10, hp_max: 10 },
         money: 100,
+        good_capacity: 10,
+        merc_capacity: 1,
       },
       loading_state: playOfflineLoading,
     },

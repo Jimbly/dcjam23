@@ -82,6 +82,7 @@ import {
   SPLIT_NEAR,
   crawlerCalc3DViewport,
   crawlerRenderDoSplit,
+  crawlerRenderGameViewAngle,
   crawlerRenderViewportGet,
   crawlerSetFogColor,
   render,
@@ -92,7 +93,7 @@ import {
   crawlerScriptAPIClientCreate,
 } from './crawler_script_api_client';
 
-const { floor } = Math;
+const { PI, floor } = Math;
 
 type Entity = EntityCrawlerClient;
 
@@ -769,8 +770,9 @@ export function crawlerRenderFramePrep(): void {
     if (tex.loaded) {
       gl.disable(gl.DEPTH_TEST);
       gl.depthMask(false);
+      let voffs = -crawlerRenderGameViewAngle() / PI * 2;
       applyCopy({ source: tex, no_framebuffer: true, params: {
-        copy_uv_scale: [1, -tex.src_height / tex.height, 0, -(1-tex.src_height / tex.height)],
+        copy_uv_scale: [1, -tex.src_height / tex.height, voffs, -(1-tex.src_height / tex.height)],
       } });
       gl.enable(gl.DEPTH_TEST);
       gl.depthMask(true);
