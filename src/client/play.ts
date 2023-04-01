@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
+import { getFrameIndex } from 'glov/client/engine';
 import {
   ALIGN,
   Font,
@@ -59,6 +60,7 @@ import {
 import { CrawlerController } from './crawler_controller';
 import {
   EntityCrawlerClient,
+  crawlerEntitiesAt,
   crawlerEntityManager,
   crawlerEntityTraitsClientStartup,
   crawlerMyEnt,
@@ -93,7 +95,11 @@ import {
 } from './crawler_render_entities';
 import { crawlerScriptAPIDummyServer } from './crawler_script_api_client';
 import { crawlerOnScreenButton } from './crawler_ui';
-import { EntityDemoClient, entityManager } from './entity_demo_client';
+import {
+  EntityDemoClient,
+  Good,
+  entityManager,
+} from './entity_demo_client';
 // import { EntityDemoClient } from './entity_demo_client';
 import {
   game_height,
@@ -102,6 +108,7 @@ import {
   render_width,
 } from './globals';
 import { GOODS } from './goods';
+import { jamTraitsStartup } from './jam_events';
 import { levelGenTest } from './level_gen_test';
 import { renderAppStartup } from './render_app';
 import {
@@ -204,59 +211,261 @@ function pauseMenu(): void {
   ui.menuUp();
 }
 
+function initGoods(trader: Entity): void {
+  let data = trader.data;
+  data.goods = [{
+    type: 'spoon',
+    count: 0,
+    cost: 15,
+  },{
+    type: 'anger',
+    count: 21,
+    cost: 11,
+  }];
+}
+
+let inventory_last_frame: number = -1;
+let inventory_goods: string[];
 function inventoryMenu(): void {
   if (!inventory_up) {
     return;
   }
+  let reset = false;
+  if (inventory_last_frame !== getFrameIndex() - 1) {
+    reset = true;
+  }
+  inventory_last_frame = getFrameIndex();
   let me = myEnt();
   let data = me.data;
+  let other_ents = crawlerEntitiesAt(entityManager(), data.pos, data.floor, true) as Entity[];
+  let trader: Entity | null = null;
+  for (let ii = 0; ii < other_ents.length; ++ii) {
+    let ent = other_ents[ii];
+    if (ent.is_trader) {
+      trader = ent;
+    }
+  }
+
+  if (trader) {
+    if (trader.data.last_init !== data.journeys) {
+      // Init trade goods if the player has completed a journey
+      initGoods(trader);
+      trader.data.last_init = data.journeys;
+    }
+  }
+
   let z = Z.OVERLAY_UI;
   const pad = 4;
-  const x0 = game_width/2;
-  const y0 = 0;
-  let w = game_width / 2;
-  let h = game_height;
-  let x = x0;
-  let y = y0;
-  uiPanel({
-    x, y,
-    w, h, z: z - 1,
-  });
-  y += pad;
-  x += pad;
-  w -= pad * 2;
-  font.draw({
-    align: ALIGN.HCENTER,
-    x, y, z,
-    w,
-    text: `Money: ${data.money}`,
-  });
-  y += ui.font_height + 1;
-  y = 40;
+  const x0 = 1;
+  const y0 = 1;
+  const total_w = game_width - 2;
+  const inv_x0 = game_width/2;
+  const inv_w = total_w / 2;
+  const h = game_height - 2;
+  // half width
+  const w = inv_w - pad * 2;
+
+  // Player inventory header
+  const inv_x = inv_x0 + pad;
+  {
+    let x = inv_x;
+    let y = y0 + pad;
+    font.draw({
+      align: ALIGN.HCENTER,
+      x, y, z,
+      w,
+      text: 'PLAYER',
+    });
+    y += ui.font_height + 1;
+    font.draw({
+      align: ALIGN.HCENTER,
+      x, y, z,
+      w,
+      text: `Money: ${data.money}`,
+    });
+    y += ui.font_height + 1;
+  }
+
+  // Shop header
+  const trader_x = x0 + pad;
+  if (trader) {
+    let x = trader_x;
+    let y = y0 + pad;
+    font.draw({
+      align: ALIGN.HCENTER,
+      x, y, z,
+      w,
+      text: 'SHOP',
+    });
+    y += ui.font_height + 1;
+    // font.draw({
+    //   align: ALIGN.HCENTER,
+    //   x, y, z,
+    //   w,
+    //   text: `Money: ${data.money}`,
+    // });
+    y += ui.font_height + 1;
+  }
+
+  // Goods list
+  if (reset) {
+    let good_sets = [data.goods];
+    if (trader) {
+      good_sets.unshift(trader.data.goods);
+    }
+    let done: Record<string, boolean> = {};
+    inventory_goods = [];
+    good_sets.forEach(function (list) {
+      for (let ii = 0; ii < list.length; ++ii) {
+        let good = list[ii];
+        if (!done[good.type]) {
+          done[good.type] = true;
+          inventory_goods.push(good.type);
+        }
+      }
+    });
+  }
+
+  let y = 36;
+  if (trader) {
+    font.draw({
+      align: ALIGN.HCENTER,
+      x: x0, y: y - ui.font_height - 2, z,
+      w: total_w,
+      text: 'Value',
+    });
+  }
+
+  const button_w = ui.button_height;
+  const count_w = 6*3;
+  const value_w = 6*4;
+  const value_x = floor(x0 + (total_w - value_w) / 2);
+  const button_buy_x = value_x - 1 - button_w;
+  const trader_count_x = button_buy_x - value_w - 1;
+  const button_sell_x = value_x + value_w + 1;
+  const player_count_x = button_sell_x + button_w + 1;
+  const button_y_offs = floor((ui.button_height - ui.font_height) / 2);
+
   let goods = data.goods;
-  for (let ii = 0; ii < goods.length; ++ii) {
-    let good = goods[ii];
-    let good_def = GOODS[good.type];
+  for (let ii = 0; ii < inventory_goods.length; ++ii) {
+    let good_id = inventory_goods[ii];
+    let good_def = GOODS[good_id];
     assert(good_def);
-    font.draw({
-      align: ALIGN.HLEFT,
-      x, y, z,
-      w,
-      text: good_def.name,
-    });
-    font.draw({
-      align: ALIGN.HRIGHT,
-      x, y, z,
-      w,
-      text: `${good.count}`,
-    });
+    let player_good: Good | null = null;
+    for (let jj = 0; jj < goods.length; ++jj) {
+      let good = goods[jj];
+      if (good.type === good_id) {
+        player_good = good;
+      }
+    }
+    let trader_good: Good | null = null;
+    if (trader) {
+      for (let jj = 0; jj < trader.data.goods.length; ++jj) {
+        let good = trader.data.goods[jj];
+        if (good.type === good_id) {
+          trader_good = good;
+        }
+      }
+    }
+    if (trader_good) {
+      font.draw({
+        align: ALIGN.HLEFT,
+        x: trader_x, y, z,
+        w,
+        text: good_def.name,
+      });
+      font.draw({
+        align: ALIGN.HCENTER,
+        x: trader_count_x, y, z,
+        w: count_w,
+        text: `${trader_good.count}`,
+      });
+      if (ui.buttonText({
+        x: button_buy_x, y: y - button_y_offs,
+        w: button_w, z,
+        text: '->',
+        sound: 'buy',
+        tooltip: 'Buy',
+        disabled: trader_good.count === 0 || trader_good.cost > data.money,
+      })) {
+        if (!player_good) {
+          player_good = {
+            type: good_id,
+            count: 0,
+            cost: 0,
+          };
+          data.goods.push(player_good);
+        }
+        player_good.cost = (player_good.cost * player_good.count + trader_good.cost) / (player_good.count + 1);
+        trader_good.count--;
+        player_good.count++;
+        data.money -= trader_good.cost;
+      }
+      font.draw({
+        align: ALIGN.HCENTERFIT,
+        x: value_x, y, z,
+        w: value_w,
+        text: `${trader_good.cost}`,
+      });
+    }
+    if (player_good) {
+      if (trader_good) {
+        if (ui.buttonText({
+          x: button_sell_x, y: y - button_y_offs,
+          w: button_w, z,
+          text: '<-',
+          sound: 'sell',
+          tooltip: 'Sell',
+        })) {
+          player_good.count--;
+          trader_good.count++;
+          data.money += trader_good.cost;
+          if (!player_good.count) {
+            data.goods = data.goods.filter((elem) => elem.type !== good_id);
+          }
+        }
+      } else if (!trader) {
+        if (ui.buttonText({
+          x: button_sell_x, y: y - button_y_offs,
+          w: button_w, z,
+          text: 'X',
+          tooltip: 'Trash',
+          sound: 'drop',
+        })) {
+          player_good.count--;
+          if (!player_good.count) {
+            data.goods = data.goods.filter((elem) => elem.type !== good_id);
+          }
+        }
+      }
+      font.draw({
+        align: ALIGN.HCENTER,
+        x: player_count_x, y, z,
+        w: count_w,
+        text: `${player_good.count}`,
+      });
+      font.draw({
+        align: ALIGN.HLEFT,
+        x: player_count_x + count_w + 1, y, z,
+        w,
+        text: good_def.name,
+      });
+    }
 
     y += ui.button_height + 1;
   }
-}
 
-function shopMenu(): void {
-  // TODO
+  if (trader) {
+    uiPanel({
+      x: x0, y: y0,
+      w: total_w, h, z: z - 1,
+    });
+  } else {
+    uiPanel({
+      x: inv_x0, y: y0,
+      w: inv_w, h, z: z - 1,
+    });
+  }
 }
 
 function moveBlocked(): boolean {
@@ -406,7 +615,6 @@ function playCrawl(): void {
   }
 
   inventoryMenu();
-  shopMenu();
 
   controller.doPlayerMotion({
     dt: getScaledFrameDt(),
@@ -669,6 +877,7 @@ export function playStartup(): void {
     play_state: play,
   });
   let ent_factory = traitFactoryCreate<Entity, DataObject>();
+  jamTraitsStartup(ent_factory);
   aiTraitsClientStartup(ent_factory);
   crawlerEntityTraitsClientStartup({
     ent_factory: ent_factory as unknown as TraitFactory<EntityCrawlerClient, DataObject>,

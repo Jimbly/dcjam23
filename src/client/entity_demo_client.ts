@@ -44,6 +44,7 @@ export type StatsData = {
 export type Good = {
   type: string;
   count: number;
+  cost: number;
 };
 
 export type EntityDataClient = {
@@ -54,7 +55,10 @@ export type EntityDataClient = {
   stats: StatsData;
   // Player:
   money: number;
-  goods: Good[];
+  goods: Good[]; // and traders
+  journeys: number;
+  // Traders
+  last_init: number;
 } & EntityCrawlerDataCommon;
 
 
@@ -76,6 +80,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   declare do_split: boolean;
   declare is_player: boolean;
   declare is_enemy: boolean;
+  declare is_trader: boolean;
 
   constructor(data_in: DataObject) {
     super(data_in);
@@ -93,6 +98,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
     if (this.is_player) {
       data.money = data.money || 0;
       data.goods = data.goods || [];
+      data.journeys = data.journeys || 0;
     }
     this.floaters = [];
     this.aiResetMoveTime(true);
@@ -135,3 +141,4 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
 EntityDemoClient.prototype.draw2D = crawlerEntClientDefaultDraw2D;
 EntityDemoClient.prototype.onDelete = crawlerEntClientDefaultOnDelete;
 EntityDemoClient.prototype.do_split = true;
+EntityDemoClient.prototype.is_trader = false;

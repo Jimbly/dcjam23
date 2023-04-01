@@ -4,11 +4,15 @@ export type GoodDef = {
 };
 export const GOODS: Partial<Record<string, GoodDef>> = {
   spoon: {
-    name: 'Spoon',
+    name: 'Spoons',
     realm: 'phys',
   },
   joy: {
     name: 'Bottled Joy',
+    realm: 'spirit',
+  },
+  anger: {
+    name: 'Distil\'n of Anger',
     realm: 'spirit',
   },
 };

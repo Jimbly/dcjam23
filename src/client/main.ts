@@ -26,7 +26,7 @@ Z.SPRITES = 10;
 Z.PARTICLES = 20;
 Z.CHAT = 60;
 Z.UI = 100;
-Z.STATUS = 100;
+Z.STATUS = 130;
 Z.MAP = Z.UI + 5; // also minimap
 Z.OVERLAY_UI = 110;
 Z.MENUBUTTON = 120;
@@ -136,6 +136,9 @@ export function main(): void {
       msg_err: 'msg_err',
       msg_out_err: 'msg_out_err',
       msg_out: 'msg_out',
+      buy: 'msg_out',
+      sell: 'msg_in',
+      drop: 'msg_err',
     },
   })) {
     return;
@@ -154,7 +157,7 @@ export function main(): void {
     textureDefaultFilters(gl.LINEAR_MIPMAP_LINEAR, gl.LINEAR);
   }
 
-  ui.scaleSizes(11 / 32);
+  ui.scaleSizes(15 / 32);
   ui.setFontHeight(11);
   ui.setPanelPixelScale(1);
   v4set(ui.color_panel, 1, 1, 1, 1);

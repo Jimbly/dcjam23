@@ -86,7 +86,7 @@ export function statusTick(x: number, y: number, z: number, w: number, h: number
     font.draw({
       style: style_status,
       size,
-      x, y, w,
+      x, y, z, w,
       align: font.ALIGN.HCENTER|font.ALIGN.HWRAP,
       text: msg.text,
       alpha,
