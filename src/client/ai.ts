@@ -5,6 +5,7 @@ import { getFrameTimestamp } from 'glov/client/engine';
 import { EntityManager } from 'glov/common/entity_base_common';
 import {
   Vec2,
+  v3copy,
 } from 'glov/common/vmath';
 import { entSamePos } from '../common/crawler_entity_common';
 import {
@@ -45,6 +46,18 @@ export type EntityWander = EntityDemoClient & {
   aiWander: (game_state: CrawlerState, script_api: CrawlerScriptAPI) => void;
 };
 
+export type PatrolOpts = {
+};
+export type PatrolState = {
+  last_pos: JSVec3;
+};
+export type EntityPatrol = EntityDemoClient & {
+  patrol_state: PatrolState;
+  patrol_opts: PatrolOpts;
+  aiPatrol: (game_state: CrawlerState, script_api: CrawlerScriptAPI) => void;
+};
+
+
 function ignoreErrors(): void {
   // nothing
 }
@@ -76,6 +89,52 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
     alloc_state: function (opts: WanderOpts, ent: Entity) {
       let ret: WanderState = {
         home_pos: ent.data.pos.slice(0) as JSVec3,
+      };
+      return ret;
+    }
+  });
+
+  ent_factory.registerTrait<PatrolOpts, PatrolState>('patrol', {
+    methods: {
+      aiPatrol: function (this: EntityPatrol, game_state: CrawlerState, script_api: CrawlerScriptAPI) {
+        let pos = this.getData<JSVec3>('pos')!;
+        let last_pos = this.patrol_state.last_pos;
+        let floor_id = this.getData<number>('floor');
+        assert(typeof floor_id === 'number');
+        let level = game_state.levels[floor_id];
+        let paths = level.getPaths(pos[0], pos[1]);
+        if (paths.length > 1) {
+          paths = paths.filter((dir: DirType) => {
+            let x2 = pos[0] + DX[dir];
+            let y2 = pos[1] + DY[dir];
+            return !(last_pos[0] === x2 && last_pos[1] === y2);
+          });
+        }
+        if (!paths.length) {
+          return;
+        }
+
+
+        let dir = paths[floor(random() * paths.length)];
+        script_api.setPos(pos);
+        // if (level.wallsBlock(pos, dir, script_api) !== BLOCK_OPEN) {
+        //   return;
+        // }
+        let new_pos: JSVec3 = [pos[0] + DX[dir], pos[1] + DY[dir], pos[2]];
+        if (entitiesAt(this.entity_manager, new_pos, floor_id, true).length) {
+          return;
+        }
+        v3copy(this.patrol_state.last_pos, pos);
+        this.applyAIUpdate('ai_move', {
+          pos: new_pos,
+          last_pos: pos,
+        }, undefined, ignoreErrors);
+      },
+    },
+    default_opts: {},
+    alloc_state: function (opts: PatrolOpts, ent: Entity) {
+      let ret: PatrolState = {
+        last_pos: ent.data.pos.slice(0) as JSVec3,
       };
       return ret;
     }
@@ -117,6 +176,9 @@ export function aiDoFloor(
     }
     if ((ent as EntityWander).aiWander) {
       (ent as EntityWander).aiWander(game_state, script_api);
+    }
+    if ((ent as EntityPatrol).aiPatrol) {
+      (ent as EntityPatrol).aiPatrol(game_state, script_api);
     }
     ent.aiResetMoveTime(false);
   }

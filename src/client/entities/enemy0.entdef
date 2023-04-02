@@ -1,5 +1,6 @@
 ---
 traits:
+- id: patrol
 - id: enemy
 # - id: stats_default
 #   hp: 10

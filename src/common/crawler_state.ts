@@ -890,10 +890,12 @@ export class CrawlerLevel {
     let ret = this.paths[key] || [];
     let west = this.paths[`${x-1},${y}`];
     if (west && west.includes(EAST)) {
+      ret = ret.slice(0);
       ret.push(WEST);
     }
     let south = this.paths[`${x},${y-1}`];
     if (south && south.includes(NORTH)) {
+      ret = ret.slice(0);
       ret.push(SOUTH);
     }
     return ret;
