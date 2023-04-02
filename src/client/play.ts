@@ -27,6 +27,7 @@ import {
 } from 'glov/client/spot';
 import {
   Sprite,
+  UISprite,
   spriteCreate,
 } from 'glov/client/sprites';
 import * as ui from 'glov/client/ui';
@@ -47,6 +48,9 @@ import {
   DataObject,
   EntityID,
 } from 'glov/common/types';
+import {
+  clamp,
+} from 'glov/common/util';
 import {
   Vec2,
 } from 'glov/common/vmath';
@@ -71,6 +75,7 @@ import {
   crawlerEntityManager,
   crawlerEntityTraitsClientStartup,
   crawlerMyEnt,
+  crawlerMyEntOptional,
   isLocal,
   isOnline,
 } from './crawler_entity_client';
@@ -122,6 +127,8 @@ import {
   statusTick,
 } from './status';
 
+const spritesheet_ui = require('./img/ui');
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { floor, max, min, round } = Math;
 
@@ -129,6 +136,12 @@ declare module 'glov/client/settings' {
   export let ai_pause: 0 | 1; // TODO: move to ai.ts
   export let show_fps: 0 | 1;
   export let volume: number;
+}
+
+declare module 'glov/client/ui' {
+  interface UISprites {
+    panel_mini: UISprite;
+  }
 }
 
 // const ATTACK_WINDUP_TIME = 1000;
@@ -142,6 +155,7 @@ const VIEWPORT_Y0 = 3;
 type Entity = EntityDemoClient;
 
 let font: Font;
+let tiny_font: Font;
 
 let frame_wall_time = 0;
 let loading_level = false;
@@ -153,9 +167,22 @@ let inventory_up = false;
 
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
+type BarSprite = {
+  bg: Sprite;
+  hp: Sprite;
+  empty: Sprite;
+};
+let bar_sprites: {
+  healthbar: BarSprite;
+};
+let portraits: Sprite;
 
 function myEnt(): Entity {
   return crawlerMyEnt() as Entity;
+}
+
+function myEntOptional(): Entity | undefined {
+  return crawlerMyEntOptional() as Entity | undefined;
 }
 
 // function entityManager(): ClientEntityManagerInterface<Entity> {
@@ -237,6 +264,12 @@ function initGoods(trader: Entity): void {
   }
   data.goods = goods;
 }
+
+const style_text = fontStyle(null, {
+  color: 0xFFFFFFff,
+  outline_width: 4,
+  outline_color: 0x000000ff,
+});
 
 const style_not_interested = fontStyle(null, {
   color: 0x404040ff,
@@ -629,10 +662,119 @@ function moveBlockDead(): boolean {
   return true;
 }
 
+function drawBar(
+  bar: BarSprite,
+  x: number, y: number, z: number,
+  w: number, h: number,
+  p: number,
+): void {
+  const MIN_VIS_W = 4;
+  let full_w = round(p * w);
+  if (p > 0 && p < 1) {
+    full_w = clamp(full_w, MIN_VIS_W, w - MIN_VIS_W/2);
+  }
+  let empty_w = w - full_w;
+  ui.drawBox({
+    x, y, z,
+    w, h,
+  }, bar.bg, 1);
+  if (full_w) {
+    ui.drawBox({
+      x, y,
+      w: full_w, h,
+      z: z + 1,
+    }, bar.hp, 1);
+  }
+  if (empty_w) {
+    let temp_x = x + full_w;
+    if (full_w) {
+      temp_x -= 2;
+      empty_w += 2;
+    }
+    ui.drawBox({
+      x: temp_x, y,
+      w: empty_w, h,
+      z: z + 1,
+    }, bar.empty, 1);
+  }
+}
+
+function drawHealthBar(
+  x: number, y: number, z: number,
+  w: number, h: number,
+  hp: number, hp_max: number,
+  show_text: boolean
+): void {
+  drawBar(bar_sprites.healthbar, x, y, z, w, h, hp / hp_max);
+  if (show_text) {
+    font.drawSizedAligned(style_text, x, y + (settings.pixely > 1 ? 0.5 : 0), z+2,
+      ui.font_height, ALIGN.HVCENTERFIT,
+      w, h, `${hp} / ${hp_max}`);
+  }
+}
+
 const BUTTON_W = 26;
 
 const MOVE_BUTTONS_X0 = 261;
 const MOVE_BUTTONS_Y0 = 179;
+
+const MERC_BOTTOM_Y = MOVE_BUTTONS_Y0 - 2;
+const MERC_X0 = MOVE_BUTTONS_X0;
+const MERC_H = 26;
+const MERC_W = 41;
+
+function drawMercs(): void {
+  let me = myEntOptional();
+  if (!me) {
+    return;
+  }
+  let { mercs, merc_capacity } = me.data;
+
+
+  let x = MERC_X0;
+  let y = MERC_BOTTOM_Y - MERC_H;
+  let z = Z.UI;
+  for (let ii = 0; ii < merc_capacity; ++ii) {
+    let merc = mercs[ii];
+    uiPanel({
+      x, y, z, w: MERC_W, h: MERC_H,
+      sprite: ui.sprites.panel_mini,
+    });
+    if (merc) {
+      spritesheet_ui.sprite.draw({
+        x: x + 19, y: y + 2, w: 8, h: 8,
+        frame: spritesheet_ui.FRAME_ICON_ATTACK,
+      });
+      tiny_font.draw({
+        align: ALIGN.HCENTER,
+        x: x + 19 + 8, y: y + 2, w: 12, h: 8,
+        size: 8,
+        text: `${merc.attack}`,
+      });
+      spritesheet_ui.sprite.draw({
+        x: x + 19, y: y + 10, w: 8, h: 8,
+        frame: spritesheet_ui.FRAME_ICON_DEFENSE,
+      });
+      tiny_font.draw({
+        align: ALIGN.HCENTER,
+        x: x + 19 + 8, y: y + 10, w: 12, h: 8,
+        size: 8,
+        text: `${merc.defense}`,
+      });
+      portraits.draw({
+        x: x + 2, y: y + 2, z, w: 16, h: 16,
+        frame: merc.portrait || 1,
+      });
+      drawHealthBar(x + 2, y + 18, z + 1, MERC_W - 4, 6, merc.hp, merc.hp_max, false);
+    }
+    if (x === MERC_X0) {
+      x += MERC_W;
+    } else {
+      x = MERC_X0;
+      y -= MERC_H;
+    }
+  }
+}
 
 function playCrawl(): void {
   profilerStartFunc();
@@ -808,6 +950,10 @@ function playCrawl(): void {
       false, script_api, overlay_menu_up);
   }
 
+  if (!menu_up) {
+    drawMercs();
+  }
+
   statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
 
   profilerStopFunc();
@@ -981,8 +1127,9 @@ settings.register({
   },
 });
 
-export function playStartup(): void {
+export function playStartup(tiny_font_in: Font): void {
   ({ font } = ui);
+  tiny_font = tiny_font_in;
   crawlerScriptAPIDummyServer(true); // No script API running on server
   crawlerPlayStartup({
     // on_broadcast: onBroadcast,
@@ -1050,6 +1197,38 @@ export function playStartup(): void {
     rollover: button_sprites.rollover,
     disabled: button_sprites.disabled,
   };
+
+  let bar_param = {
+    filter_min: gl.NEAREST,
+    filter_mag: gl.NEAREST,
+    ws: [2, 4, 2],
+    hs: [2, 4, 2],
+  };
+  let healthbar_bg = spriteCreate({
+    name: 'healthbar_bg',
+    ...bar_param,
+  });
+  bar_sprites = {
+    healthbar: {
+      bg: healthbar_bg,
+      hp: spriteCreate({
+        name: 'healthbar_hp',
+        ...bar_param,
+      }),
+      empty: spriteCreate({
+        name: 'healthbar_empty',
+        ...bar_param,
+      }),
+    },
+  };
+
+  portraits = spriteCreate({
+    name: 'portraits',
+    filter_min: gl.NEAREST,
+    filter_mag: gl.NEAREST,
+    ws: [16, 16, 16, 16, 16, 16, 16, 16],
+    hs: [16, 16, 16, 16, 16, 16, 16, 16],
+  });
 
   renderAppStartup();
   crawlerLoadData(webFSAPI());

@@ -1,0 +1,38 @@
+const { v4fromRGBA } = require('glov/common/vmath.js');
+
+export const font_colors = [
+  0x000000ff,
+  0x222034ff,
+  0x45283cff,
+  0x663931ff,
+  0x8f563bff,
+  0xdf7126ff,
+  0xd9a066ff,
+  0xeec39aff,
+  0xfbf236ff,
+  0x99e550ff,
+  0x6abe30ff,
+  0x37946eff,
+  0x4b692fff,
+  0x524b24ff,
+  0x323c39ff,
+  0x3f3f74ff,
+  0x306082ff,
+  0x5b6ee1ff,
+  0x639bffff,
+  0x5fcde4ff,
+  0xcbdbfcff,
+  0xffffffff,
+  0x9badb7ff,
+  0x847e87ff,
+  0x696a6aff,
+  0x595652ff,
+  0x76428aff,
+  0xac3232ff,
+  0xd95763ff,
+  0xd77bbaff,
+  0x8f974aff,
+  0x8a6f30ff,
+];
+
+export const colors = font_colors.map(v4fromRGBA);

@@ -5,7 +5,7 @@ local_storage.setStoragePrefix('dcjam2023'); // Before requiring anything else t
 import { chatUICreate } from 'glov/client/chat_ui';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
-import { fontCreate } from 'glov/client/font';
+import { Font, fontCreate } from 'glov/client/font';
 import * as net from 'glov/client/net';
 import * as settings from 'glov/client/settings';
 import { spriteSetGet } from 'glov/client/sprite_sets';
@@ -34,6 +34,8 @@ Z.FLOATERS = Z.UI + 25;
 Z.CHAT_FOCUSED = 100;
 
 // let fonts: Font[] | undefined;
+
+export let tiny_font: Font;
 
 crawlerOnPixelyChange(function (new_value: number): void {
   // assert(fonts);
@@ -119,6 +121,7 @@ export function main(): void {
       buttonselected_rollover: { name: 'pixely/buttonselected', ws: [4, 5, 4], hs: [13] },
       buttonselected_disabled: { name: 'pixely/buttonselected_disabled', ws: [4, 5, 4], hs: [13] },
       panel: { name: 'pixely/panel', ws: [3, 2, 3], hs: [3, 10, 3] },
+      panel_mini: { name: 'pixely/panel_mini', ws: [3, 2, 3], hs: [3, 2, 3] },
       // menu_entry: { name: 'menu_entry', ws: [4, 5, 4], hs: [13] },
       // menu_selected: { name: 'menu_selected', ws: [4, 5, 4], hs: [13] },
       // menu_down: { name: 'menu_down', ws: [4, 5, 4], hs: [13] },
@@ -144,6 +147,7 @@ export function main(): void {
     return;
   }
   let build_font = fontCreate(font_info_palanquin32, 'font/palanquin32');
+  tiny_font = fontCreate(require('./img/font/04b03_8x1.json'), 'font/04b03_8x1');
   // fonts = [
   //   fontCreate(font_info_palanquin32, 'font/palanquin32'),
   //   fontCreate(font_info_bitfantasy, 'font/bitfantasy'),
@@ -177,7 +181,7 @@ export function main(): void {
 
   jamEventsStartup();
   crawlerBuildModeStartup(build_font);
-  playStartup();
+  playStartup(tiny_font);
   titleStartup();
 
   engine.setState(titleInit);

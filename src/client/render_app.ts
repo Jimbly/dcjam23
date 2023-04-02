@@ -2,10 +2,12 @@ import * as settings from 'glov/client/settings';
 import {
   vec2,
 } from 'glov/common/vmath';
+import { crawlerRenderSetUIClearColor } from './crawler_play';
 import {
   crawlerRenderInit,
   crawlerRenderStartup,
 } from './crawler_render';
+import * as palette from './dawnbringer32';
 
 const spritesheet_demo = require('./img/demo');
 const spritesheet_jam = require('./img/jam');
@@ -57,6 +59,7 @@ export function renderAppStartup(): void {
     angle_offs: 0, // 9.5,
     pos_offs: vec2(0/*0.3*/, -0.95),
   });
+  crawlerRenderSetUIClearColor(palette.colors[1]);
 
   renderResetFilter();
 }

@@ -48,8 +48,11 @@ export type Good = {
 };
 
 export type Merc = {
+  portrait: number;
   hp: number;
   hp_max: number;
+  attack: number;
+  defense: number;
 };
 
 export type EntityDataClient = {
