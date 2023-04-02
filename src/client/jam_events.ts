@@ -22,7 +22,7 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    api.status('floor_abs', 'Shopping time!');
+    // api.status('floor_abs', 'Shopping time!');
     startShopping();
   },
 });

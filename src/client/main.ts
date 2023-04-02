@@ -136,9 +136,9 @@ export function main(): void {
       msg_err: 'msg_err',
       msg_out_err: 'msg_out_err',
       msg_out: 'msg_out',
-      buy: 'msg_out',
-      sell: 'msg_in',
-      drop: 'msg_err',
+      buy: 'buy',
+      sell: 'sell',
+      drop: 'drop',
     },
   })) {
     return;
