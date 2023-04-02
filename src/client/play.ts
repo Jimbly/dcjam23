@@ -16,6 +16,7 @@ import {
   keyDownEdge,
   keyUpEdge,
   padButtonDown,
+  padButtonDownEdge,
 } from 'glov/client/input';
 import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
@@ -399,6 +400,8 @@ function inventoryMenu(): void {
     });
   }
 
+  inventory_scroll.keyboardScroll();
+
   inventory_scroll.begin({
     x: x0 + 3, y: y - 2, w: total_w - 6, h: y1 - pad - y + 3,
   });
@@ -712,7 +715,11 @@ function playCrawl(): void {
   button_y0 = 3;
   let menu_up = frame_map_view || build_mode || overlay_menu_up;
   let menu_keys = [KEYS.ESC];
-  button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, [PAD.BACK]);
+  let menu_pads = [PAD.BACK];
+  if (menu_up) {
+    menu_pads.push(PAD.B);
+  }
+  button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, menu_pads);
 
   if (pause_menu_up) {
     pauseMenu();
@@ -778,9 +785,10 @@ function playCrawl(): void {
   if (!overlay_menu_up && keyDownEdge(KEYS.M)) {
     mapViewToggle();
   }
-  if (!overlay_menu_up && keyDownEdge(KEYS.I)) {
+  // TODO: use crawlerOnScreenButton
+  if (!overlay_menu_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
     inventory_up = true;
-  } else if (inventory_up && keyDownEdge(KEYS.I)) {
+  } else if (inventory_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
     inventory_up = false;
   }
   let game_state = crawlerGameState();
