@@ -151,9 +151,10 @@ export function crawlerMapViewDraw(
   let total_enemies = initial_entities.length;
   //last_progress = level.seen_cells/level.total_cells;
   last_progress = total_enemies ? max(0, 1 - (num_enemies / total_enemies)) : 1;
+  let floor_title = level.props.title || `Floor ${game_state.floor_id}`;
   if (fullscreen) {
     ui.font.drawSizedAligned(null, x, y + 2, z + 1, ui.font_height,
-      ui.font.ALIGN.HCENTER, w, 0, `Floor ${game_state.floor_id}`);
+      ui.font.ALIGN.HCENTER, w, 0, floor_title);
     if (full_vis) {
       ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2)*2, z + 1, ui.font_height,
         ui.font.ALIGN.HCENTER, w, 0, `${num_enemies}/${total_enemies}`);
@@ -206,7 +207,7 @@ export function crawlerMapViewDraw(
 
   if (!fullscreen) {
     ui.font.drawSizedAligned(null, x, y + 1, z + 1, ui.font_height,
-      ui.font.ALIGN.HCENTER, w, 0, `Floor ${game_state.floor_id}`);
+      ui.font.ALIGN.HCENTER, w, 0, floor_title);
   }
 
   spriteClipPush(z, x, y, w, h);

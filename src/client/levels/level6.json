@@ -2346,6 +2346,7 @@
   "seed": "32845502",
   "props": {
     "realm": "spirit",
-    "is_town": "1"
+    "is_town": "1",
+    "title": "Spiriton"
   }
 }

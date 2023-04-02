@@ -277,12 +277,14 @@ function inventoryMenu(): void {
   let reset = false;
   if (inventory_last_frame !== getFrameIndex() - 1) {
     reset = true;
+    inventory_scroll?.resetScroll();
   }
   inventory_last_frame = getFrameIndex();
   let me = myEnt();
   let data = me.data;
   let other_ents = crawlerEntitiesAt(entityManager(), data.pos, data.floor, true) as Entity[];
   let trader: Entity | null = null;
+  let floor_id = crawlerGameState().floor_id;
   for (let ii = 0; ii < other_ents.length; ++ii) {
     let ent = other_ents[ii];
     if (ent.is_trader) {
@@ -313,6 +315,7 @@ function inventoryMenu(): void {
   // Player inventory header
   const inv_x = inv_x0 + pad;
   let overloaded: boolean;
+  let num_goods = 0;
   {
     let x = inv_x;
     let y = y0 + pad;
@@ -330,7 +333,6 @@ function inventoryMenu(): void {
       text: `$${data.money}`,
     });
 
-    let num_goods = 0;
     for (let ii = 0; ii < data.goods.length; ++ii) {
       num_goods += data.goods[ii].count;
     }
@@ -439,7 +441,7 @@ function inventoryMenu(): void {
         }
       }
     }
-    let is_for_buy_only = trader_good && !trader_good.count && !player_good;
+    let trader_only_buys = trader_good && good_def.avail[floor_id] && !good_def.avail[floor_id][0];
     if (trader_good) {
       font.draw({
         style: style_by_realm[good_def.realm],
@@ -448,9 +450,9 @@ function inventoryMenu(): void {
         w,
         text: good_def.name,
       });
-      if (!is_for_buy_only) {
+      if (!trader_only_buys || trader_good.count) {
         font.draw({
-          style: is_for_buy_only || trader_good.count ? undefined : style_not_allowed,
+          style: trader_only_buys || trader_good.count ? undefined : style_not_allowed,
           align: ALIGN.HCENTER,
           x: trader_count_x, y, z,
           w: count_w,
@@ -466,9 +468,9 @@ function inventoryMenu(): void {
       });
       let num_to_buy = 1;
       if (shift()) {
-        num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost));
+        num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost), data.good_capacity - num_goods);
       }
-      if (!is_for_buy_only && ui.buttonText({
+      if ((!trader_only_buys || trader_good.count) && ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
         w: button_w, z,
         text: '->',
@@ -546,7 +548,7 @@ function inventoryMenu(): void {
           }
         }
       }
-    } else if (is_for_buy_only) {
+    } else if (trader_only_buys) {
       ui.buttonText({
         x: button_sell_x, y: y - button_y_offs,
         w: button_w, z,

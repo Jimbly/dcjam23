@@ -2346,6 +2346,7 @@
   "seed": "32845502",
   "props": {
     "is_town": "1",
-    "realm": "phys"
+    "realm": "phys",
+    "title": "Physopolis"
   }
 }

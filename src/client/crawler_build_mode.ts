@@ -964,6 +964,7 @@ let prop_key_items: MenuItem[] = [
 let level_prop_key_items: MenuItem[] = [
   'realm', // JAM
   'is_town', // JAM
+  'title',
   'new',
 ].map((name) => ({ name, tag: name }));
 
