@@ -10,6 +10,9 @@ import {
 } from 'glov/client/sprites';
 import * as ui from 'glov/client/ui';
 import {
+  drawLine,
+} from 'glov/client/ui';
+import {
   ROVec4,
   rovec4,
   vec2,
@@ -98,6 +101,7 @@ export function mapViewLastProgress(): number {
 let mouse_pos = vec2();
 let moved_since_fullscreen = false;
 let color_map_rollover = rovec4(1,1,1,1);
+let color_path = rovec4(1,0.5,0,1);
 
 export function crawlerMapViewDraw(
   game_state: CrawlerState,
@@ -409,6 +413,22 @@ export function crawlerMapViewDraw(
             h: MAP_TILE_SIZE,
             frame: wall.map_view_wall_frame_south || wall.map_view_wall_frame_north,
           });
+        }
+      }
+
+      if (build_mode) {
+        let paths = level.getPathsForMap(xx, yy);
+        for (let ii = 0; ii < paths.length; ++ii) {
+          let dir = paths[ii];
+          let x2 = xx + DX[dir];
+          let y2 = yy + DY[dir];
+          drawLine(
+            x0 + xx * MAP_STEP_SIZE + MAP_CENTER_OFFS + 0.5,
+            y1 - yy * MAP_STEP_SIZE + MAP_CENTER_OFFS + 0.5,
+            x0 + x2 * MAP_STEP_SIZE + MAP_CENTER_OFFS + 0.5,
+            y1 - y2 * MAP_STEP_SIZE + MAP_CENTER_OFFS + 0.5,
+            z+3, 0.5, 1,
+            color_path);
         }
       }
     }

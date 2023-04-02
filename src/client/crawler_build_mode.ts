@@ -105,7 +105,7 @@ export function buildModeSetActive(new_value: boolean): void {
 
 enum BuildTab {
   Paint = 'Pnt',
-  Spawn = 'Spwn',
+  Path = 'Path',
   Config = 'Cnfg',
 }
 
@@ -500,6 +500,18 @@ function setCellEx(
   if (cell_desc.special_pos) {
     level.special_pos[cell_desc.special_pos] = [tx, ty, dirMod(dir + 2)];
   }
+}
+
+function togglePath(): void {
+  crawlerBuildModeBegin();
+  let my_ent = crawlerMyEnt();
+  let game_state = crawlerGameState();
+  let level = game_state.level;
+  assert(level);
+  let pos = my_ent.getData<[number, number, DirType]>('pos')!;
+  let [myx, myy, dir] = pos;
+  level.togglePath(myx, myy, dir);
+  crawlerBuildModeCommit();
 }
 
 function toggleWithSelected(): void {
@@ -1258,9 +1270,13 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
     buildModeRedo();
   }
   if (keyDownEdge(KEYS.SPACE)) {
-    // toggleCell();
-    // toggleWall();
-    toggleWithSelected();
+    if (build_tab === BuildTab.Path) {
+      togglePath();
+    } else {
+      // toggleCell();
+      // toggleWall();
+      toggleWithSelected();
+    }
   }
   if (keyDownEdge(KEYS.EQUALS)) {
     getChatUI().cmdParse(`floor ${game_state.floor_id + 1}`);
@@ -1283,7 +1299,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   const num_columns = 3;
   const col_width = floor((w - num_columns + 1) / num_columns);
 
-  [BuildTab.Paint, BuildTab.Config].forEach((tab: BuildTab, idx: number) => {
+  [BuildTab.Paint, BuildTab.Path, BuildTab.Config].forEach((tab: BuildTab, idx: number) => {
     if (button({
       x, y, z,
       w: col_width,
@@ -1303,7 +1319,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   x = x0;
   y += button_height + 2;
 
-  if (build_tab === BuildTab.Paint || build_tab === BuildTab.Spawn) {
+  if (build_tab === BuildTab.Paint) {
     // Palette area
     ({ x, y } = showPaintPalette({
       level,
@@ -1533,7 +1549,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   (settings.build_mode_help ? [
     'BUILD MODE',
     '[B] - Toggle Build Mode',
-    '[SPACE] - Toggle cell/wall with selected',
+    build_tab === BuildTab.Path ? '[SPACE] - Toggle path (see map)' : '[SPACE] - Toggle cell/wall with selected',
     build_tab === BuildTab.Paint ? '[NUMPAD/1-9] - Select cell/wall from palette' : '',
     build_tab === BuildTab.Paint ? '  Double-select or shift-click to redefine palette' : '',
     '[ALT+1-3] - Change tab',

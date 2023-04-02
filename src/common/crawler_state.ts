@@ -113,7 +113,7 @@ import { base64CharTable } from 'glov/common/base64';
 import { dataError } from 'glov/common/data_error';
 import { FSAPI, fileBaseName } from 'glov/common/fsapi';
 import { DataObject } from 'glov/common/types';
-import { callEach, clone, empty } from 'glov/common/util';
+import { callEach, clone, empty, ridx } from 'glov/common/util';
 import {
   Vec2,
   Vec3,
@@ -413,6 +413,8 @@ export type CrawlerLevelState = {
   // Nothing for now, may want this later, though?
 };
 
+export type CrawlerLevelPaths = Record<string, DirType[]>; // `x,y` -> dir[]
+
 export type CrawlerLevelSerialized = {
   special_pos: Partial<Record<string, JSVec3>>;
   w: number;
@@ -424,6 +426,7 @@ export type CrawlerLevelSerialized = {
   vstyle: string;
   seed: string;
   props?: CrawlerCellProps;
+  paths?: CrawlerLevelPaths;
 };
 
 export class CrawlerLevel {
@@ -445,6 +448,7 @@ export class CrawlerLevel {
   initial_state?: CrawlerLevelState;
   state: CrawlerLevelState = {};
   props: CrawlerCellProps = {};
+  paths: CrawlerLevelPaths = {};
   default_open_cell = descs.cell.open;
   vstyle: VstyleDesc = identity_vstyle;
   seed: string = 'dummyseed';
@@ -696,6 +700,7 @@ export class CrawlerLevel {
       vstyle: this.vstyle.id,
       seed: this.seed,
       props: this.props,
+      paths: this.paths,
     };
   }
 
@@ -707,6 +712,7 @@ export class CrawlerLevel {
     this.initial_state = data.initial_state;
     this.state = data.state || {};
     this.props = data.props || {};
+    this.paths = data.paths || {};
     this.seed = data.seed;
     let { cells } = this;
     for (let idx = 0; idx < w * h; ++idx) {
@@ -844,6 +850,53 @@ export class CrawlerLevel {
   }
   getProp(key: string): CrawlerCellPropValue | undefined {
     return this.props && this.props[key];
+  }
+
+  togglePath(x: number, y: number, dir: DirType): void {
+    let x2 = x + DX[dir];
+    let y2 = y + DY[dir];
+    if (x2 < x || x2 === x && y2 < y) {
+      // Key is always lexographically first
+      let t = x;
+      x = x2;
+      x2 = t;
+      t = y;
+      y = y2;
+      y2 = t;
+      dir = dirMod(dir + 2);
+    }
+    if (x2 >= 0 && y2 >= 0 && x2 < this.w && y2 < this.h) {
+      let key = `${x},${y}`;
+      let list = this.paths[key];
+      if (!list) {
+        list = this.paths[key] = [];
+      }
+      for (let ii = 0; ii < list.length; ++ii) {
+        if (list[ii] === dir) {
+          ridx(list, ii);
+          return;
+        }
+      }
+      list.push(dir);
+    }
+  }
+
+  getPathsForMap(x: number, y: number): DirType[] {
+    let key = `${x},${y}`;
+    return this.paths[key] || [];
+  }
+  getPaths(x: number, y: number): DirType[] {
+    let key = `${x},${y}`;
+    let ret = this.paths[key] || [];
+    let west = this.paths[`${x-1},${y}`];
+    if (west && west.includes(EAST)) {
+      ret.push(WEST);
+    }
+    let south = this.paths[`${x},${y-1}`];
+    if (south && south.includes(NORTH)) {
+      ret.push(SOUTH);
+    }
+    return ret;
   }
 }
 
