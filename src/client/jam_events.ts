@@ -10,7 +10,10 @@ import {
 } from '../common/crawler_state';
 import { EntityDemoClient } from './entity_demo_client';
 
-import { startShopping } from './play';
+import {
+  startRecruiting,
+  startShopping,
+} from './play';
 import type { TraitFactory } from 'glov/common/trait_factory';
 import type { DataObject } from 'glov/common/types';
 
@@ -18,12 +21,19 @@ type Entity = EntityDemoClient;
 
 
 crawlerScriptRegisterEvent({
-  key: 'shop', // no param?
+  key: 'shop',
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    // api.status('floor_abs', 'Shopping time!');
     startShopping();
+  },
+});
+crawlerScriptRegisterEvent({
+  key: 'recruit',
+  when: CrawlerScriptWhen.POST,
+  map_icon: CrawlerScriptEventMapIcon.SHOP2,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    startRecruiting();
   },
 });
 

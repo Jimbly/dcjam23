@@ -1074,6 +1074,12 @@
         "open",
         "solid",
         "door"
+      ],
+      "events": [
+        {
+          "id": "recruit",
+          "param": ""
+        }
       ]
     },
     {
@@ -1230,6 +1236,12 @@
         "solid",
         "solid",
         "open"
+      ],
+      "events": [
+        {
+          "id": "recruit",
+          "param": ""
+        }
       ]
     },
     {
@@ -2348,5 +2360,6 @@
     "is_town": "1",
     "realm": "phys",
     "title": "Physopolis"
-  }
+  },
+  "paths": {}
 }

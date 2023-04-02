@@ -53,6 +53,7 @@ export type Merc = {
   hp_max: number;
   attack: number;
   defense: number;
+  cost: number;
 };
 
 export type EntityDataClient = {

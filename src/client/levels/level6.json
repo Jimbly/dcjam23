@@ -1410,6 +1410,12 @@
         "open",
         "solid",
         "door"
+      ],
+      "events": [
+        {
+          "id": "recruit",
+          "param": ""
+        }
       ]
     },
     {
@@ -2348,5 +2354,6 @@
     "realm": "spirit",
     "is_town": "1",
     "title": "Spiriton"
-  }
+  },
+  "paths": {}
 }

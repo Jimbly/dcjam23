@@ -140,6 +140,7 @@ export function main(): void {
       msg_out_err: 'msg_out_err',
       msg_out: 'msg_out',
       buy: 'buy',
+      heal: 'heal',
       sell: 'sell',
       drop: 'drop',
     },

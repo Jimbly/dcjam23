@@ -49,7 +49,7 @@ import {
   EntityID,
 } from 'glov/common/types';
 import {
-  clamp,
+  clamp, clone,
 } from 'glov/common/util';
 import {
   Vec2,
@@ -107,9 +107,11 @@ import {
 } from './crawler_render_entities';
 import { crawlerScriptAPIDummyServer } from './crawler_script_api_client';
 import { crawlerOnScreenButton } from './crawler_ui';
+import * as dawnbringer from './dawnbringer32';
 import {
   EntityDemoClient,
   Good,
+  Merc,
   entityManager,
 } from './entity_demo_client';
 // import { EntityDemoClient } from './entity_demo_client';
@@ -164,6 +166,7 @@ let controller: CrawlerController;
 
 let pause_menu_up = false;
 let inventory_up = false;
+let recruit_up = false;
 
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
@@ -296,17 +299,74 @@ function shift(): boolean {
   return keyDown(KEYS.SHIFT) || padButtonDown(PAD.LEFT_TRIGGER) || padButtonDown(PAD.RIGHT_TRIGGER);
 }
 
+function drawBar(
+  bar: BarSprite,
+  x: number, y: number, z: number,
+  w: number, h: number,
+  p: number,
+): void {
+  const MIN_VIS_W = 4;
+  let full_w = round(p * w);
+  if (p > 0 && p < 1) {
+    full_w = clamp(full_w, MIN_VIS_W, w - MIN_VIS_W/2);
+  }
+  let empty_w = w - full_w;
+  ui.drawBox({
+    x, y, z,
+    w, h,
+  }, bar.bg, 1);
+  if (full_w) {
+    ui.drawBox({
+      x, y,
+      w: full_w, h,
+      z: z + 1,
+    }, bar.hp, 1);
+  }
+  if (empty_w) {
+    let temp_x = x + full_w;
+    if (full_w) {
+      temp_x -= 2;
+      empty_w += 2;
+    }
+    ui.drawBox({
+      x: temp_x, y,
+      w: empty_w, h,
+      z: z + 1,
+    }, bar.empty, 1);
+  }
+}
+
+function drawHealthBar(
+  x: number, y: number, z: number,
+  w: number, h: number,
+  hp: number, hp_max: number,
+  show_text: boolean
+): void {
+  drawBar(bar_sprites.healthbar, x, y, z, w, h, hp / hp_max);
+  if (show_text) {
+    font.drawSizedAligned(style_text, x, y + (settings.pixely > 1 ? 0.5 : 0), z+2,
+      ui.font_height, ALIGN.HVCENTERFIT,
+      w, h, `${hp} / ${hp_max}`);
+  }
+}
+
+const OVERLAY_PAD = 4;
+const OVERLAY_X0 = 1;
+const OVERLAY_Y0 = 1;
+const OVERLAY_W = game_width - 2;
+const OVERLAY_H = game_height - 2;
+const OVERLAY_PLAYER_X0 = game_width / 2;
+const OVERLAY_SUB_W = OVERLAY_W / 2;
+
 
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
 let inventory_scroll: ScrollArea;
 function inventoryMenu(): void {
-  if (buildModeActive()) {
-    inventory_up = false;
-  }
   if (!inventory_up) {
     return;
   }
+  recruit_up = false;
   let reset = false;
   if (inventory_last_frame !== getFrameIndex() - 1) {
     reset = true;
@@ -334,24 +394,17 @@ function inventoryMenu(): void {
   }
 
   let z = Z.OVERLAY_UI;
-  const pad = 4;
-  const x0 = 1;
-  const y0 = 1;
-  const total_w = game_width - 2;
-  const inv_x0 = game_width/2;
-  const inv_w = total_w / 2;
-  const h = game_height - 2;
-  const y1 = y0 + h;
+  const y1 = OVERLAY_Y0 + OVERLAY_H;
   // half width
-  const w = inv_w - pad * 2;
+  const w = OVERLAY_SUB_W - OVERLAY_PAD * 2;
 
   // Player inventory header
-  const inv_x = inv_x0 + pad;
+  const inv_x = OVERLAY_PLAYER_X0 + OVERLAY_PAD;
   let overloaded: boolean;
   let num_goods = 0;
   {
     let x = inv_x;
-    let y = y0 + pad;
+    let y = OVERLAY_Y0 + OVERLAY_PAD;
     font.draw({
       align: ALIGN.HCENTER,
       x, y, z,
@@ -359,11 +412,15 @@ function inventoryMenu(): void {
       text: 'PLAYER',
     });
     y += ui.font_height + 1;
+    spritesheet_ui.sprite.draw({
+      x: x + w/2 + 4, y: y + 2, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_COIN,
+    });
     font.draw({
       style: style_money,
       align: ALIGN.HLEFT,
-      x: x + w/2 + 4, y, z, w: w/3,
-      text: `$${data.money}`,
+      x: x + w/2 + 4 + 9, y, z,
+      text: `${data.money}`,
     });
 
     for (let ii = 0; ii < data.goods.length; ++ii) {
@@ -379,10 +436,10 @@ function inventoryMenu(): void {
   }
 
   // Shop header
-  const trader_x = x0 + pad;
+  const trader_x = OVERLAY_X0 + OVERLAY_PAD;
   if (trader) {
     let x = trader_x;
-    let y = y0 + pad;
+    let y = OVERLAY_Y0 + OVERLAY_PAD;
     font.draw({
       align: ALIGN.HCENTER,
       x, y, z,
@@ -390,12 +447,6 @@ function inventoryMenu(): void {
       text: 'SHOP',
     });
     y += ui.font_height + 1;
-    // font.draw({
-    //   align: ALIGN.HCENTER,
-    //   x, y, z,
-    //   w,
-    //   text: `Money: ${data.money}`,
-    // });
     y += ui.font_height + 1;
   }
 
@@ -420,32 +471,37 @@ function inventoryMenu(): void {
 
   let y = 36;
   if (trader) {
-    font.draw({
-      align: ALIGN.HCENTER,
-      x: x0, y: y - ui.font_height - 2, z,
-      w: total_w,
-      text: 'Value',
+    spritesheet_ui.sprite.draw({
+      x: OVERLAY_X0 + OVERLAY_W/2 - 2, y: y - 10, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_COIN,
     });
+    // font.draw({
+    //   align: ALIGN.HCENTER,
+    //   x: OVERLAY_X0, y: y - ui.font_height - 2, z,
+    //   w: OVERLAY_W,
+    //   text: 'Value',
+    // });
   }
 
   if (!inventory_scroll) {
     inventory_scroll = scrollAreaCreate({
       z,
       background_color: null,
+      auto_hide: true,
     });
   }
 
   inventory_scroll.keyboardScroll();
 
   inventory_scroll.begin({
-    x: x0 + 3, y: y - 2, w: total_w - 6, h: y1 - pad - y + 3,
+    x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6, h: y1 - OVERLAY_PAD - y + 3,
   });
   y = 2;
 
   const button_w = ui.button_height;
   const count_w = 6*3;
   const value_w = 6*4;
-  const value_x = floor(0 + (total_w - value_w) / 2);
+  const value_x = floor(0 + (OVERLAY_W - value_w) / 2);
   const button_buy_x = value_x - 1 - button_w;
   const trader_count_x = button_buy_x - value_w - 1;
   const button_sell_x = value_x + value_w + 1;
@@ -599,15 +655,263 @@ function inventoryMenu(): void {
 
   if (trader) {
     uiPanel({
-      x: x0, y: y0,
-      w: total_w, h, z: z - 1,
+      x: OVERLAY_X0, y: OVERLAY_Y0,
+      w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
     });
   } else {
     uiPanel({
-      x: inv_x0, y: y0,
-      w: inv_w, h, z: z - 1,
+      x: OVERLAY_PLAYER_X0, y: OVERLAY_Y0,
+      w: OVERLAY_SUB_W, h: OVERLAY_H, z: z - 1,
     });
   }
+}
+
+let MERC_LIST: Merc[] = [{
+  portrait: 1,
+  hp: 10, hp_max: 10,
+  attack: 1, defense: 1,
+  cost: 10,
+}, {
+  portrait: 2,
+  hp: 10, hp_max: 10,
+  attack: 1, defense: 3,
+  cost: 20,
+}, {
+  portrait: 3,
+  hp: 10, hp_max: 10,
+  attack: 3, defense: 0,
+  cost: 30,
+}, {
+  portrait: 4,
+  hp: 1, hp_max: 1,
+  attack: 1, defense: 0,
+  cost: 1,
+}];
+
+const MERC_H = 26;
+const MERC_W = 41;
+function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: boolean, is_player: boolean): void {
+  let x1 = x + 19 + (expanded ? 2 : 0);
+  let x2 = x1 + 24;
+  let y1 = y + 2;
+  let y2 = y1 + 8;
+  portraits.draw({
+    x: x + 2, y: y1, z, w: 16, h: 16,
+    frame: merc && merc.portrait || 0,
+  });
+  if (merc) {
+    spritesheet_ui.sprite.draw({
+      x: x1, y: y1, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_ATTACK,
+    });
+    tiny_font.draw({
+      align: ALIGN.HCENTER,
+      x: x1 + 8, y: y1, z, w: 12, h: 8,
+      size: 8,
+      text: `${merc.attack}`,
+    });
+    spritesheet_ui.sprite.draw({
+      x: x1, y: y2, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_DEFENSE,
+    });
+    tiny_font.draw({
+      align: ALIGN.HCENTER,
+      x: x1 + 8, y: y2, z, w: 12, h: 8,
+      size: 8,
+      text: `${merc.defense}`,
+    });
+    if (expanded) {
+      spritesheet_ui.sprite.draw({
+        x: x2, y: y1, z, w: 8, h: 8,
+        frame: spritesheet_ui.FRAME_ICON_HP,
+      });
+      tiny_font.draw({
+        align: ALIGN.HLEFT,
+        x: x2 + 9, y: y1, z, w: 12, h: 8,
+        size: 8,
+        text: is_player ? `${merc.hp}/${merc.hp_max}` : `${merc.hp_max}`,
+      });
+      if (!is_player) {
+        spritesheet_ui.sprite.draw({
+          x: x2, y: y2, z, w: 8, h: 8,
+          frame: spritesheet_ui.FRAME_ICON_COIN,
+        });
+        tiny_font.draw({
+          style: merc.cost > myEnt().data.money ? style_not_allowed : undefined,
+          align: ALIGN.HLEFT,
+          x: x2 + 9, y: y2, z, w: 12, h: 8,
+          size: 8,
+          text: `${merc.cost}`,
+        });
+      }
+    }
+    if (!expanded || is_player && merc.hp < merc.hp_max) {
+      drawHealthBar(x + 2, y + 18, z + 1, MERC_W - 4, 6, merc.hp, merc.hp_max, false);
+    }
+  }
+}
+
+function recruitMenu(): void {
+  if (!recruit_up) {
+    return;
+  }
+
+  let me = myEnt();
+  let data = me.data;
+
+  let z = Z.OVERLAY_UI;
+  // const y1 = OVERLAY_Y0 + OVERLAY_H;
+  // half width
+  const w = OVERLAY_SUB_W - OVERLAY_PAD * 2;
+
+
+  font.draw({
+    align: ALIGN.HCENTER,
+    x: OVERLAY_X0, y: OVERLAY_Y0 + OVERLAY_PAD, z,
+    w: OVERLAY_W,
+    text: 'MERCENARIES',
+  });
+
+  // Player inventory header
+  const inv_x = OVERLAY_PLAYER_X0 + OVERLAY_PAD;
+  let num_mercs = 0;
+  let overloaded = false;
+  let missing_hp = 0;
+  {
+    let x = inv_x;
+    let y = OVERLAY_Y0 + OVERLAY_PAD;
+    font.draw({
+      align: ALIGN.HCENTER,
+      x, y, z,
+      w,
+      text: 'Retinue',
+    });
+    y += ui.font_height + 1;
+    spritesheet_ui.sprite.draw({
+      x: x + w/2 + 4, y: y + 2, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_COIN,
+    });
+    font.draw({
+      style: style_money,
+      align: ALIGN.HLEFT,
+      x: x + w/2 + 4 + 9, y, z,
+      text: `${data.money}`,
+    });
+
+    for (let ii = 0; ii < data.mercs.length; ++ii) {
+      let merc = data.mercs[ii];
+      if (merc) {
+        num_mercs++;
+        missing_hp += merc.hp_max - merc.hp;
+      }
+    }
+    overloaded = num_mercs >= data.merc_capacity;
+    font.draw({
+      style: overloaded ? style_not_allowed : undefined,
+      align: ALIGN.HCENTER,
+      x, y, z, w: w/2,
+      text: `${num_mercs} / ${data.merc_capacity}`,
+    });
+  }
+
+  // Shop header
+  const trader_x = OVERLAY_X0 + OVERLAY_PAD;
+  let x = trader_x;
+  let y = OVERLAY_Y0 + OVERLAY_PAD;
+  font.draw({
+    align: ALIGN.HCENTER,
+    x, y, z,
+    w,
+    text: 'Tavern',
+  });
+  y += ui.font_height + 1;
+  y += ui.font_height + 1;
+
+  let y_save = y;
+
+  let shop = MERC_LIST;
+  for (let ii = 0; ii < shop.length; ++ii) {
+    let merc = shop[ii];
+    drawMerc(merc, x, y, z, true, false);
+
+    if (ui.buttonText({
+      text: 'Recruit',
+      x: x + 72, y: y + 3, w: 56, z,
+      disabled: overloaded || merc.cost >= data.money,
+      sound: 'buy',
+    })) {
+      data.money -= merc.cost;
+      data.mercs.push(clone(merc));
+    }
+
+    uiPanel({
+      x, y, z, w: 72 + 56 + 3, h: MERC_H,
+      sprite: ui.sprites.panel_mini,
+    });
+    y += MERC_H;
+  }
+
+  y = y_save;
+  x = OVERLAY_PLAYER_X0;
+
+  let { mercs, merc_capacity } = data;
+  if (ui.buttonText({
+    x, y, z,
+    text: `Heal   ${missing_hp} (  ${missing_hp})`,
+    disabled: !missing_hp || data.money < missing_hp,
+    sound: 'heal',
+  })) {
+    data.money -= missing_hp;
+    for (let ii = 0; ii < mercs.length; ++ii) {
+      if (mercs[ii]) {
+        mercs[ii].hp = mercs[ii].hp_max;
+      }
+    }
+  }
+  spritesheet_ui.sprite.draw({
+    x: x + 39, y: y + 4, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_HP,
+  });
+  spritesheet_ui.sprite.draw({
+    x: x + 63, y: y + 4, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_COIN,
+  });
+  y += ui.button_height + 1;
+
+  for (let ii = 0; ii < merc_capacity; ++ii) {
+    let merc = mercs[ii];
+    if (merc) {
+      drawMerc(merc, x, y, z, true, true);
+    } else {
+      font.draw({
+        color: dawnbringer.font_colors[25],
+        x, y: y - 1, z,
+        w: 90 + 56 + 3, h: MERC_H,
+        align: ALIGN.HVCENTER,
+        text: 'Empty Slot',
+      });
+    }
+    if (merc && ui.button({
+      x: x + 90, y: y + 3, w: 56, z,
+      text: 'Retire',
+      sound: 'drop',
+      // disabled: ii === 0 && mercs.length === 1,
+    })) {
+      mercs.splice(ii, 1);
+    }
+
+    uiPanel({
+      x, y, z, w: 90 + 56 + 3, h: MERC_H,
+      sprite: ui.sprites.panel_mini,
+    });
+    y += MERC_H;
+  }
+
+
+  uiPanel({
+    x: OVERLAY_X0, y: OVERLAY_Y0,
+    w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
+  });
 }
 
 function moveBlocked(): boolean {
@@ -616,6 +920,10 @@ function moveBlocked(): boolean {
 
 export function startShopping(): void {
   inventory_up = true;
+}
+
+export function startRecruiting(): void {
+  recruit_up = true;
 }
 
 // TODO: move into crawler_play?
@@ -662,57 +970,6 @@ function moveBlockDead(): boolean {
   return true;
 }
 
-function drawBar(
-  bar: BarSprite,
-  x: number, y: number, z: number,
-  w: number, h: number,
-  p: number,
-): void {
-  const MIN_VIS_W = 4;
-  let full_w = round(p * w);
-  if (p > 0 && p < 1) {
-    full_w = clamp(full_w, MIN_VIS_W, w - MIN_VIS_W/2);
-  }
-  let empty_w = w - full_w;
-  ui.drawBox({
-    x, y, z,
-    w, h,
-  }, bar.bg, 1);
-  if (full_w) {
-    ui.drawBox({
-      x, y,
-      w: full_w, h,
-      z: z + 1,
-    }, bar.hp, 1);
-  }
-  if (empty_w) {
-    let temp_x = x + full_w;
-    if (full_w) {
-      temp_x -= 2;
-      empty_w += 2;
-    }
-    ui.drawBox({
-      x: temp_x, y,
-      w: empty_w, h,
-      z: z + 1,
-    }, bar.empty, 1);
-  }
-}
-
-function drawHealthBar(
-  x: number, y: number, z: number,
-  w: number, h: number,
-  hp: number, hp_max: number,
-  show_text: boolean
-): void {
-  drawBar(bar_sprites.healthbar, x, y, z, w, h, hp / hp_max);
-  if (show_text) {
-    font.drawSizedAligned(style_text, x, y + (settings.pixely > 1 ? 0.5 : 0), z+2,
-      ui.font_height, ALIGN.HVCENTERFIT,
-      w, h, `${hp} / ${hp_max}`);
-  }
-}
-
 const BUTTON_W = 26;
 
 const MOVE_BUTTONS_X0 = 261;
@@ -720,8 +977,6 @@ const MOVE_BUTTONS_Y0 = 179;
 
 const MERC_BOTTOM_Y = MOVE_BUTTONS_Y0 - 2;
 const MERC_X0 = MOVE_BUTTONS_X0;
-const MERC_H = 26;
-const MERC_W = 41;
 
 function drawMercs(): void {
   let me = myEntOptional();
@@ -740,33 +995,7 @@ function drawMercs(): void {
       x, y, z, w: MERC_W, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
-    if (merc) {
-      spritesheet_ui.sprite.draw({
-        x: x + 19, y: y + 2, w: 8, h: 8,
-        frame: spritesheet_ui.FRAME_ICON_ATTACK,
-      });
-      tiny_font.draw({
-        align: ALIGN.HCENTER,
-        x: x + 19 + 8, y: y + 2, w: 12, h: 8,
-        size: 8,
-        text: `${merc.attack}`,
-      });
-      spritesheet_ui.sprite.draw({
-        x: x + 19, y: y + 10, w: 8, h: 8,
-        frame: spritesheet_ui.FRAME_ICON_DEFENSE,
-      });
-      tiny_font.draw({
-        align: ALIGN.HCENTER,
-        x: x + 19 + 8, y: y + 10, w: 12, h: 8,
-        size: 8,
-        text: `${merc.defense}`,
-      });
-      portraits.draw({
-        x: x + 2, y: y + 2, z, w: 16, h: 16,
-        frame: merc.portrait || 1,
-      });
-      drawHealthBar(x + 2, y + 18, z + 1, MERC_W - 4, 6, merc.hp, merc.hp_max, false);
-    }
+    drawMerc(merc, x, y, z, false, true);
     if (x === MERC_X0) {
       x += MERC_W;
     } else {
@@ -789,7 +1018,7 @@ function playCrawl(): void {
 
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up;
+  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
   let compass_h = show_compass ? 11 : 0;
@@ -869,7 +1098,12 @@ function playCrawl(): void {
     pauseMenu();
   }
 
+  if (buildModeActive()) {
+    inventory_up = recruit_up = false;
+  }
+
   inventoryMenu();
+  recruitMenu();
 
   controller.doPlayerMotion({
     dt: getScaledFrameDt(),
@@ -908,7 +1142,7 @@ function playCrawl(): void {
         crawlerBuildModeActivate(false);
       } else {
         // close whatever other menu
-        inventory_up = false;
+        inventory_up = recruit_up = false;
       }
       pause_menu_up = false;
     } else {
@@ -1015,7 +1249,7 @@ export function play(dt: number): void {
   frame_wall_time = max(frame_wall_time, walltime()); // strictly increasing
 
   const map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up;
+  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
   if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }
@@ -1089,6 +1323,7 @@ function playInitShared(online: boolean): void {
 
   pause_menu_up = false;
   inventory_up = false;
+  recruit_up = false;
 }
 
 
