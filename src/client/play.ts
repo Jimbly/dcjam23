@@ -53,13 +53,18 @@ import {
 } from 'glov/common/util';
 import {
   Vec2,
+  v2sub,
+  vec2,
 } from 'glov/common/vmath';
 import {
   CrawlerLevel,
   crawlerLoadData,
+  dirFromDelta,
 } from '../common/crawler_state';
 import {
-  aiDoFloor, aiTraitsClientStartup,
+  aiDoFloor,
+  aiTraitsClientStartup,
+  entitiesAdjacentTo,
 } from './ai';
 // import './client_cmds';
 import { buildModeActive, crawlerBuildModeUI } from './crawler_build_mode';
@@ -102,6 +107,7 @@ import {
   renderPrep,
 } from './crawler_render';
 import {
+  crawlerEntInFront,
   crawlerRenderEntitiesPrep,
   crawlerRenderEntitiesStartup,
 } from './crawler_render_entities';
@@ -914,6 +920,29 @@ function recruitMenu(): void {
   });
 }
 
+
+function engagedEnemy(): Entity | null {
+  let me = crawlerMyEnt();
+  // search, needs game_state, returns list of foes
+  let ents: Entity[] = entitiesAdjacentTo(crawlerGameState(),
+    entityManager(),
+    me.data.floor, me.data.pos, crawlerScriptAPI());
+  ents = ents.filter((ent: Entity) => {
+    return ent.is_enemy;
+  });
+  if (ents.length) {
+    return ents[0];
+  }
+  return null;
+}
+
+export function onEnterCell(pos: Vec2): void {
+  if (engagedEnemy()) {
+    controller.cancelAllMoves();
+  }
+}
+
+
 function moveBlocked(): boolean {
   return false;
 }
@@ -1005,6 +1034,7 @@ function drawMercs(): void {
   }
 }
 
+let temp_delta = vec2();
 function playCrawl(): void {
   profilerStartFunc();
 
@@ -1105,6 +1135,17 @@ function playCrawl(): void {
   inventoryMenu();
   recruitMenu();
 
+  if (engagedEnemy() && engagedEnemy() !== crawlerEntInFront()) {
+    // turn to face
+    let target = engagedEnemy();
+    assert(target);
+    let me = crawlerMyEnt();
+    let dir = dirFromDelta(v2sub(temp_delta, target.data.pos, me.data.pos));
+    controller.forceFaceDir(dir);
+  } else {
+    controller.forceFaceDir(null);
+  }
+
   controller.doPlayerMotion({
     dt: getScaledFrameDt(),
     button_x0: MOVE_BUTTONS_X0,
@@ -1113,6 +1154,7 @@ function playCrawl(): void {
     button_w: BUTTON_W,
     button_sprites,
     disable_move: moveBlocked() || overlay_menu_up,
+    disable_player_impulse: Boolean(engagedEnemy()),
     show_buttons: true,
     do_debug_move: engine.defines.LEVEL_GEN || build_mode,
     show_debug: Boolean(settings.show_fps),
@@ -1291,7 +1333,7 @@ export function play(dt: number): void {
     let script_api = crawlerScriptAPI();
     script_api.is_visited = true; // Always visited for AI
     aiDoFloor(game_state.floor_id, game_state, entityManager(), engine.defines,
-      settings.ai_pause || engine.defines.LEVEL_GEN || overlay_menu_up, script_api);
+      settings.ai_pause || engine.defines.LEVEL_GEN || overlay_menu_up || engagedEnemy(), script_api);
   }
 
   if (crawlerCommWant()) {

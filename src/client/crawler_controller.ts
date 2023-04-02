@@ -83,10 +83,12 @@ import { CrawlerScriptAPIClient } from './crawler_script_api_client';
 import { crawlerOnScreenButton } from './crawler_ui';
 import { statusPush } from './status';
 
-const { PI, abs, cos, random, round, sin } = Math;
+const { PI, abs, cos, max, random, round, sin } = Math;
 
 const WALK_TIME = 500;
 const ROT_TIME = 250;
+
+const FORCE_FACE_TIME = ROT_TIME;
 
 const half_vec = rovec3(0.5, 0.5, 0.5);
 const pit_times = [150, 400];
@@ -160,6 +162,7 @@ export type PlayerMotionParam = {
   show_buttons: boolean;
   show_debug: boolean;
   disable_move: boolean;
+  disable_player_impulse: boolean;
   button_w: number;
   button_sprites: Record<ButtonStateString, Sprite>;
   dt: number;
@@ -171,12 +174,14 @@ export class CrawlerController {
   entity_manager: ClientEntityManagerInterface<EntityCrawlerClient>;
   script_api: CrawlerScriptAPIClient;
   on_init_level?: (floor_id: number) => void;
+  on_enter_cell?: (pos: Vec2) => void;
   flush_vis_data?: (force: boolean) => void;
   constructor(param: {
     game_state: CrawlerState;
     entity_manager: ClientEntityManagerInterface<EntityCrawlerClient>;
     script_api: CrawlerScriptAPIClient;
     on_init_level?: (floor_id: number) => void;
+    on_enter_cell?: (pos: Vec2) => void;
     flush_vis_data?: (force: boolean) => void;
   }) {
     this.game_state = param.game_state;
@@ -184,6 +189,7 @@ export class CrawlerController {
     this.script_api = param.script_api;
     this.flush_vis_data = param.flush_vis_data;
     this.on_init_level = param.on_init_level;
+    this.on_enter_cell = param.on_enter_cell;
     this.script_api.setController(this);
   }
 
@@ -826,11 +832,14 @@ export class CrawlerController {
         });
       }
     }
-    if (new_cell && new_cell.events && !buildModeActive()) {
-      assert(new_cell.events.length);
-      script_api.setLevel(game_state.level!);
-      script_api.setPos(cur_move_pos);
-      crawlerScriptRunEvents(script_api, new_cell, CrawlerScriptWhen.POST);
+    if (new_cell && !buildModeActive()) {
+      if (new_cell.events) {
+        assert(new_cell.events.length);
+        script_api.setLevel(game_state.level!);
+        script_api.setPos(cur_move_pos);
+        crawlerScriptRunEvents(script_api, new_cell, CrawlerScriptWhen.POST);
+      }
+      this.on_enter_cell?.(cur_move_pos);
     }
   }
 
@@ -880,6 +889,7 @@ export class CrawlerController {
       button_sprites,
       show_buttons,
       disable_move,
+      disable_player_impulse,
     } = param;
     let dt = param.dt;
     const {
@@ -892,6 +902,10 @@ export class CrawlerController {
     const build_mode = buildModeActive();
 
     let no_move = this.hasMoveBlocker() || disable_move;
+
+    if (disable_player_impulse) {
+      this.path_to = null;
+    }
 
     let down = {
       forward: 0,
@@ -930,7 +944,7 @@ export class CrawlerController {
         pads,
         no_visible_ui,
         do_up_edge: false,
-        disabled: no_move,
+        disabled: no_move || disable_player_impulse,
         button_sprites,
       });
       down_edge[key] += ret.down_edge;
@@ -987,6 +1001,14 @@ export class CrawlerController {
 
     if (no_move) {
       this.fade_alpha = this.fade_override;
+      // Apply rot interpolation
+      let cur = this.queueTail();
+      game_state.angle = cur.rot * PI/2;
+      let ffw = this.forceFaceUpdateWeight(dt);
+      if (ffw) {
+        assert(typeof this.force_face_dir === 'number');
+        game_state.angle = lerp(ffw, game_state.angle, this.force_face_dir * PI/2);
+      }
       return;
     }
 
@@ -1191,6 +1213,11 @@ export class CrawlerController {
       v2copy(game_state.pos, cur.pos);
       game_state.angle = cur.rot * PI/2;
     }
+    let ffw = this.forceFaceUpdateWeight(dt);
+    if (ffw) {
+      assert(typeof this.force_face_dir === 'number');
+      game_state.angle = lerp(ffw, game_state.angle, this.force_face_dir * PI/2);
+    }
     assert(instantaneous_move);
     assert(instantaneous_move.pos);
 
@@ -1252,6 +1279,44 @@ export class CrawlerController {
     }
     this.freecam_pitch += dp * 0.004;
     this.freecam_pitch = clamp(this.freecam_pitch, -PI/2 + 0.001, PI/2 - 0.001);
+  }
+
+  force_face_dir: DirType | null = null;
+  force_face_counter: number = 0;
+  force_face_starting = false;
+  forceFaceDir(dir: DirType | null): void {
+    if (dir !== null) {
+      if (dir !== this.force_face_dir) {
+        this.force_face_dir = dir;
+        this.force_face_counter = FORCE_FACE_TIME;
+        this.force_face_starting = true;
+      }
+    } else if (this.force_face_dir !== null) {
+      if (!this.force_face_starting) {
+        // already fading out
+      } else if (this.force_face_counter) {
+        // let it finish first
+      } else {
+        // Start fading out
+        this.force_face_counter = FORCE_FACE_TIME;
+        this.force_face_starting = false;
+      }
+    }
+  }
+  forceFaceUpdateWeight(dt: number): number {
+    this.force_face_counter = max(0, this.force_face_counter - dt);
+    if (this.force_face_dir === null) {
+      return 0;
+    } else if (this.force_face_starting) {
+      return 1 - this.force_face_counter / FORCE_FACE_TIME;
+    } else {
+      if (!this.force_face_counter) {
+        this.force_face_dir = null;
+        return 0;
+      } else {
+        return this.force_face_counter / FORCE_FACE_TIME;
+      }
+    }
   }
 
   getRenderPrepParam(): RenderPrepParam {

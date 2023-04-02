@@ -14,6 +14,7 @@ import {
   DX,
   DY,
   DirType,
+  JSVec2,
   JSVec3,
 } from '../common/crawler_state';
 import { EntityDemoClient } from './entity_demo_client';
@@ -26,6 +27,10 @@ const { floor, random } = Math;
 
 type Entity = EntityDemoClient;
 
+function randomFrom<T>(arr: T[]): T {
+  return arr[floor(random() * arr.length)];
+}
+
 function entitiesAt<T extends Entity>(
   entity_manager: EntityManager<T>,
   pos: Vec2,
@@ -34,6 +39,32 @@ function entitiesAt<T extends Entity>(
 ): T[] {
   return entity_manager.entitiesFind((ent) => entSamePos(ent, pos) && ent.data.floor === floor_id, skip_fading_out);
 }
+
+let temp_pos: JSVec2 = [0, 0];
+export function entitiesAdjacentTo<T extends Entity>(
+  game_state: CrawlerState,
+  entity_manager: EntityManager<T>,
+  floor_id: number,
+  pos: Vec2,
+  script_api: CrawlerScriptAPI,
+): T[] {
+  let ret: T[] = [];
+  let level = game_state.levels[floor_id];
+  script_api.setPos(pos);
+  for (let dir = 0 as DirType; dir < 4; ++dir) {
+    if (level.wallsBlock(pos, dir, script_api) !== BLOCK_OPEN) {
+      continue;
+    }
+    temp_pos[0] = pos[0] + DX[dir];
+    temp_pos[1] = pos[1] + DY[dir];
+    let ents = entitiesAt(entity_manager, temp_pos, floor_id, true);
+    if (ents.length) {
+      ret = ret.concat(ents);
+    }
+  }
+  return ret;
+}
+
 
 export type WanderOpts = {
 };
@@ -141,6 +172,39 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
   });
 }
 
+function isLivingPlayer(ent: Entity): boolean {
+  return ent.isPlayer() && ent.isAlive();
+}
+
+function foeNear<T extends Entity>(game_state: CrawlerState, ent: T, script_api: CrawlerScriptAPI): T | null {
+  // search, needs game_state, returns list of foes
+  let ents: T[] = entitiesAdjacentTo(game_state,
+    ent.entity_manager as unknown as EntityManager<T>,
+    ent.data.floor, ent.data.pos, script_api);
+  ents = ents.filter(isLivingPlayer);
+  if (ents.length) {
+    return randomFrom(ents);
+  }
+  return null;
+}
+
+function aiDoEnemy(
+  game_state: CrawlerState,
+  ent: Entity,
+  defines: Partial<Record<string, true>>,
+  script_api: CrawlerScriptAPI,
+): boolean {
+  let foe_near = foeNear(game_state, ent, script_api);
+  if (defines?.PEACE || defines?.AIPEACE) {
+    foe_near = null;
+  }
+  if (!foe_near) {
+    return false;
+  }
+
+  return true;
+}
+
 
 export function aiDoFloor(
   floor_id: number,
@@ -164,6 +228,12 @@ export function aiDoFloor(
       continue;
     }
 
+    let no_move = false;
+    if (ent.is_enemy && aiDoEnemy(game_state, ent, defines, script_api)) {
+      // not wandering/patrolling/etc
+      no_move = true;
+    }
+
     if (frame_timestamp < ent.ai_next_move_time) {
       continue;
     }
@@ -174,11 +244,13 @@ export function aiDoFloor(
         continue;
       } // else it's been a while, do an update if we want
     }
-    if ((ent as EntityWander).aiWander) {
-      (ent as EntityWander).aiWander(game_state, script_api);
-    }
-    if ((ent as EntityPatrol).aiPatrol) {
-      (ent as EntityPatrol).aiPatrol(game_state, script_api);
+    if (!no_move) {
+      if ((ent as EntityWander).aiWander) {
+        (ent as EntityWander).aiWander(game_state, script_api);
+      }
+      if ((ent as EntityPatrol).aiPatrol) {
+        (ent as EntityPatrol).aiPatrol(game_state, script_api);
+      }
     }
     ent.aiResetMoveTime(false);
   }

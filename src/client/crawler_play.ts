@@ -92,6 +92,7 @@ import {
   CrawlerScriptAPIClient,
   crawlerScriptAPIClientCreate,
 } from './crawler_script_api_client';
+import { onEnterCell } from './play';
 
 const { PI, floor } = Math;
 
@@ -586,6 +587,7 @@ function crawlerPlayInitShared(): void {
     entity_manager: crawlerEntityManager(),
     script_api,
     on_init_level: crawlerOnInitHaveLevel,
+    on_enter_cell: onEnterCell, // JAM
     flush_vis_data: crawlerFlushVisData,
   });
 
