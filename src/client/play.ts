@@ -12,9 +12,12 @@ import * as input from 'glov/client/input';
 import {
   KEYS,
   PAD,
+  keyDown,
   keyDownEdge,
   keyUpEdge,
+  padButtonDown,
 } from 'glov/client/input';
+import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
 import { SimpleMenu, simpleMenuCreate } from 'glov/client/simple_menu';
@@ -146,7 +149,6 @@ let controller: CrawlerController;
 
 let pause_menu_up = false;
 let inventory_up = false;
-let shop_up = false;
 
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
@@ -216,15 +218,23 @@ function pauseMenu(): void {
 
 function initGoods(trader: Entity): void {
   let data = trader.data;
-  data.goods = [{
-    type: 'spoon',
-    count: 0,
-    cost: 15,
-  },{
-    type: 'anger',
-    count: 21,
-    cost: 11,
-  }];
+  let floor_id = data.floor;
+  // let level = game_state.level!;
+  // let realm = level.props.realm;
+  let goods = [];
+  for (let good_id in GOODS) {
+    let good_def = GOODS[good_id]!;
+    let { avail } = good_def;
+    let pair = avail[floor_id];
+    if (pair) {
+      goods.push({
+        type: good_id,
+        count: pair[0],
+        cost: pair[1],
+      });
+    }
+  }
+  data.goods = goods;
 }
 
 const style_not_interested = fontStyle(null, {
@@ -234,14 +244,32 @@ const style_not_allowed = fontStyle(null, {
   color: 0x800000ff,
 });
 
+
+const style_by_realm = {
+  phys: fontStyle(null, {
+    color: 0xFFFFFFff,
+  }),
+  spirit: fontStyle(null, {
+    color: 0x000000ff,
+  }),
+};
+
 const style_money = fontStyle(null, {
   color: 0xFFFF80ff,
 });
 
+function shift(): boolean {
+  return keyDown(KEYS.SHIFT) || padButtonDown(PAD.LEFT_TRIGGER) || padButtonDown(PAD.RIGHT_TRIGGER);
+}
+
 
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
+let inventory_scroll: ScrollArea;
 function inventoryMenu(): void {
+  if (buildModeActive()) {
+    inventory_up = false;
+  }
   if (!inventory_up) {
     return;
   }
@@ -277,6 +305,7 @@ function inventoryMenu(): void {
   const inv_x0 = game_width/2;
   const inv_w = total_w / 2;
   const h = game_height - 2;
+  const y1 = y0 + h;
   // half width
   const w = inv_w - pad * 2;
 
@@ -295,12 +324,10 @@ function inventoryMenu(): void {
     y += ui.font_height + 1;
     font.draw({
       style: style_money,
-      align: ALIGN.HCENTER,
-      x, y, z,
-      w,
-      text: `Money: ${data.money}`,
+      align: ALIGN.HLEFT,
+      x: x + w/2 + 4, y, z, w: w/3,
+      text: `$${data.money}`,
     });
-    y += ui.font_height + 1;
 
     let num_goods = 0;
     for (let ii = 0; ii < data.goods.length; ++ii) {
@@ -309,10 +336,9 @@ function inventoryMenu(): void {
     overloaded = num_goods >= data.good_capacity;
     font.draw({
       style: overloaded ? style_not_allowed : undefined,
-      align: ALIGN.VBOTTOM | ALIGN.HCENTER,
-      x, y: y0 + h - 5, z,
-      w,
-      text: `Load: ${num_goods} / ${data.good_capacity}`,
+      align: ALIGN.HCENTER,
+      x, y, z, w: w/2,
+      text: `${num_goods} / ${data.good_capacity}`,
     });
   }
 
@@ -366,15 +392,28 @@ function inventoryMenu(): void {
     });
   }
 
+  if (!inventory_scroll) {
+    inventory_scroll = scrollAreaCreate({
+      z,
+      background_color: null,
+    });
+  }
+
+  inventory_scroll.begin({
+    x: x0 + 3, y: y - 2, w: total_w - 6, h: y1 - pad - y + 3,
+  });
+  y = 2;
+
   const button_w = ui.button_height;
   const count_w = 6*3;
   const value_w = 6*4;
-  const value_x = floor(x0 + (total_w - value_w) / 2);
+  const value_x = floor(0 + (total_w - value_w) / 2);
   const button_buy_x = value_x - 1 - button_w;
   const trader_count_x = button_buy_x - value_w - 1;
   const button_sell_x = value_x + value_w + 1;
   const player_count_x = button_sell_x + button_w + 1;
   const button_y_offs = floor((ui.button_height - ui.font_height) / 2);
+
 
   let goods = data.goods;
   for (let ii = 0; ii < inventory_goods.length; ++ii) {
@@ -397,33 +436,41 @@ function inventoryMenu(): void {
         }
       }
     }
+    let is_for_buy_only = trader_good && !trader_good.count && !player_good;
     if (trader_good) {
       font.draw({
+        style: style_by_realm[good_def.realm],
         align: ALIGN.HLEFT,
         x: trader_x, y, z,
         w,
         text: good_def.name,
       });
+      if (!is_for_buy_only) {
+        font.draw({
+          style: is_for_buy_only || trader_good.count ? undefined : style_not_allowed,
+          align: ALIGN.HCENTER,
+          x: trader_count_x, y, z,
+          w: count_w,
+          text: `${trader_good.count}`,
+        });
+      }
       font.draw({
-        style: trader_good.count ? undefined : style_not_allowed,
-        align: ALIGN.HCENTER,
-        x: trader_count_x, y, z,
-        w: count_w,
-        text: `${trader_good.count}`,
-      });
-      font.draw({
-        style: trader_good.cost > data.money ? style_not_allowed : style_money,
+        style: trader_good.count && trader_good.cost > data.money ? style_not_allowed : style_money,
         align: ALIGN.HCENTERFIT,
         x: value_x, y, z,
         w: value_w,
         text: `${trader_good.cost}`,
       });
-      if (ui.buttonText({
+      let num_to_buy = 1;
+      if (shift()) {
+        num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost));
+      }
+      if (!is_for_buy_only && ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
         w: button_w, z,
         text: '->',
         sound: 'buy',
-        tooltip: 'Buy',
+        tooltip: `Buy ${num_to_buy}`,
         disabled: trader_good.count === 0 || trader_good.cost > data.money || overloaded,
       })) {
         if (!player_good) {
@@ -434,10 +481,11 @@ function inventoryMenu(): void {
           };
           data.goods.push(player_good);
         }
-        player_good.cost = (player_good.cost * player_good.count + trader_good.cost) / (player_good.count + 1);
-        trader_good.count--;
-        player_good.count++;
-        data.money -= trader_good.cost;
+        player_good.cost = (player_good.cost * player_good.count + trader_good.cost * num_to_buy) /
+          (player_good.count + num_to_buy);
+        trader_good.count-= num_to_buy;
+        player_good.count+= num_to_buy;
+        data.money -= trader_good.cost * num_to_buy;
       }
     } else if (trader) {
       font.draw({
@@ -456,22 +504,27 @@ function inventoryMenu(): void {
         text: `${player_good.count}`,
       });
       font.draw({
+        style: style_by_realm[good_def.realm],
         align: ALIGN.HLEFT,
         x: player_count_x + count_w + 1, y, z,
         w,
         text: good_def.name,
       });
       if (trader_good) {
+        let num_to_sell = 1;
+        if (shift()) {
+          num_to_sell = player_good.count;
+        }
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
           w: button_w, z,
           text: '<-',
           sound: 'sell',
-          tooltip: 'Sell',
+          tooltip: `Sell ${num_to_sell}`,
         })) {
-          player_good.count--;
-          trader_good.count++;
-          data.money += trader_good.cost;
+          player_good.count -= num_to_sell;
+          trader_good.count += num_to_sell;
+          data.money += trader_good.cost * num_to_sell;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
@@ -490,10 +543,21 @@ function inventoryMenu(): void {
           }
         }
       }
+    } else if (is_for_buy_only) {
+      ui.buttonText({
+        x: button_sell_x, y: y - button_y_offs,
+        w: button_w, z,
+        text: '<-',
+        sound: 'sell',
+        tooltip: 'Sell',
+        disabled: true,
+      });
     }
 
     y += ui.button_height + 1;
   }
+
+  inventory_scroll.end(y);
 
   if (trader) {
     uiPanel({
@@ -513,7 +577,7 @@ function moveBlocked(): boolean {
 }
 
 export function startShopping(): void {
-  inventory_up = shop_up = true;
+  inventory_up = true;
 }
 
 // TODO: move into crawler_play?
@@ -578,7 +642,7 @@ function playCrawl(): void {
 
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up || shop_up;
+  let overlay_menu_up = pause_menu_up || inventory_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
   let compass_h = show_compass ? 11 : 0;
@@ -693,7 +757,7 @@ function playCrawl(): void {
         crawlerBuildModeActivate(false);
       } else {
         // close whatever other menu
-        inventory_up = shop_up = false;
+        inventory_up = false;
       }
       pause_menu_up = false;
     } else {
@@ -717,7 +781,7 @@ function playCrawl(): void {
   if (!overlay_menu_up && keyDownEdge(KEYS.I)) {
     inventory_up = true;
   } else if (inventory_up && keyDownEdge(KEYS.I)) {
-    inventory_up = shop_up = false;
+    inventory_up = false;
   }
   let game_state = crawlerGameState();
   let script_api = crawlerScriptAPI();
@@ -795,7 +859,7 @@ export function play(dt: number): void {
   frame_wall_time = max(frame_wall_time, walltime()); // strictly increasing
 
   const map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up || shop_up;
+  let overlay_menu_up = pause_menu_up || inventory_up;
   if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }
@@ -869,7 +933,6 @@ function playInitShared(online: boolean): void {
 
   pause_menu_up = false;
   inventory_up = false;
-  shop_up = false;
 }
 
 
@@ -892,7 +955,7 @@ function playInitEarly(room: ClientChannelWorker): void {
 function initLevel(entity_manager: ClientEntityManagerInterface,
   floor_id: number, level: CrawlerLevel
 ) : void {
-  let me = myEnt();
+  let me = entity_manager.getMyEnt();
   assert(me);
   if (level.props.is_town && floor_id !== me.data.last_journey_town) {
     me.data.last_journey_town = floor_id;
@@ -919,7 +982,7 @@ export function playStartup(): void {
       new_player_data: {
         type: 'player',
         pos: [0, 0, 0],
-        floor: 0,
+        floor: 5,
         stats: { hp: 10, hp_max: 10 },
         money: 100,
         good_capacity: 10,
