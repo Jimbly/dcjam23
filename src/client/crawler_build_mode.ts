@@ -133,6 +133,10 @@ const PALETTE_SIZE = 9;
 let palette = localStorageGetJSON<PaletteData>('build_palette', DEFAULT_PALETTE);
 let show_palette_config = false;
 
+export function buildModeOverlayActive(): boolean {
+  return build_mode && show_palette_config;
+}
+
 const serialize_opts = {};
 let last_floor: number;
 let differ: Differ;

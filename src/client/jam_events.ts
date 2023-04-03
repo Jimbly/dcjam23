@@ -89,6 +89,15 @@ crawlerScriptRegisterEvent({
   },
 });
 
+crawlerScriptRegisterEvent({
+  key: 'final',
+  when: CrawlerScriptWhen.POST,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    api.status('key', 'You win!');
+  },
+});
+
 export function jamEventsStartup(): void {
   // ?
 }

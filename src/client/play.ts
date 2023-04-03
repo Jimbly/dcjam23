@@ -72,7 +72,7 @@ import {
 } from './ai';
 import { cleanupCombat, combatStartup, doCombat, mercPosOverrideWeight } from './combat';
 // import './client_cmds';
-import { buildModeActive, crawlerBuildModeUI } from './crawler_build_mode';
+import { buildModeActive, buildModeOverlayActive, crawlerBuildModeUI } from './crawler_build_mode';
 import {
   crawlerCommStart,
   crawlerCommWant,
@@ -1415,7 +1415,7 @@ export function play(dt: number): void {
     y: 196,
     border: 2,
     scroll_grow: 2,
-    always_scroll: !map_view && !overlay_menu_up,
+    always_scroll: !map_view && !overlay_menu_up && !buildModeOverlayActive(),
     cuddly_scroll: true,
   });
   profilerStopStart('mid');

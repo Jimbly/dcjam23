@@ -3,12 +3,14 @@ export const AI_CLAIM_TIME = 2000;
 import assert from 'assert';
 import { getFrameTimestamp } from 'glov/client/engine';
 import { EntityManager } from 'glov/common/entity_base_common';
+import { clone } from 'glov/common/util';
 import {
   Vec2,
   v3copy,
 } from 'glov/common/vmath';
 import { entSamePos } from '../common/crawler_entity_common';
 import {
+  BLOCK_MOVE,
   BLOCK_OPEN,
   CrawlerState,
   DX,
@@ -16,6 +18,8 @@ import {
   DirType,
   JSVec2,
   JSVec3,
+  WEST,
+  dirMod,
 } from '../common/crawler_state';
 import { EntityDemoClient } from './entity_demo_client';
 
@@ -170,6 +174,57 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
       return ret;
     }
   });
+
+  ent_factory.registerTrait<PatrolOpts, PatrolState>('flow', {
+    methods: {
+      aiPatrol: function (this: EntityPatrol, game_state: CrawlerState, script_api: CrawlerScriptAPI) {
+        let pos = this.getData<JSVec3>('pos')!;
+        let dir: DirType = WEST;
+        let floor_id = this.getData<number>('floor');
+        assert(typeof floor_id === 'number');
+        let level = game_state.levels[floor_id];
+        let cur_cell = level.getCell(pos[0], pos[1]);
+        if (cur_cell && cur_cell.events) {
+          for (let ii = 0; ii < cur_cell.events.length; ++ii) {
+            let event = cur_cell.events[ii];
+            if (event.id === 'final') {
+              // respawn
+              let new_pos: JSVec3 = [14, (random() < 0.5) ? 11 : 5, WEST];
+              let data = clone(this.data);
+              this.entity_manager.deleteEntity(this.id, 'victory');
+              data.pos = new_pos;
+              this.entity_manager.addEntityFromSerialized(data as unknown as DataObject);
+              return;
+            }
+          }
+        }
+        script_api.setPos(pos);
+        if (level.wallsBlock(pos, dir, script_api) & BLOCK_MOVE) {
+          dir = dirMod(dir + (random() < 0.5 ? -1 : 1));
+          if (level.wallsBlock(pos, dir, script_api) & BLOCK_MOVE) {
+            return;
+          }
+        }
+        let new_pos: JSVec3 = [pos[0] + DX[dir], pos[1] + DY[dir], pos[2]];
+        let ents = entitiesAt(this.entity_manager, new_pos, floor_id, true);
+        ents = ents.filter((ent) => !ent.is_player);
+        if (ents.length) {
+          return;
+        }
+        this.applyAIUpdate('ai_move', {
+          pos: new_pos,
+        }, undefined, ignoreErrors);
+      },
+    },
+    default_opts: {},
+    alloc_state: function (opts: PatrolOpts, ent: Entity) {
+      let ret: PatrolState = {
+        last_pos: ent.data.pos.slice(0) as JSVec3,
+      };
+      return ret;
+    }
+  });
+
 }
 
 function isLivingPlayer(ent: Entity): boolean {
