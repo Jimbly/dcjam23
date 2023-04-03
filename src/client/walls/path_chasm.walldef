@@ -8,5 +8,5 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: path
-    tile: wall
+    tile: wall_pit
     offs: [0, 1]

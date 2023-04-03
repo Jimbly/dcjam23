@@ -36,7 +36,7 @@ function cmpFileKeys(a, b) {
 }
 
 module.exports = function (opts) {
-  const { name } = opts;
+  const { name, tile_horiz_regex } = opts;
   let pad = opts.pad || 0;
   function imgproc(job, done) {
     let files = job.getFiles();
@@ -158,8 +158,14 @@ module.exports = function (opts) {
         if (imgw !== imgh) {
           all_square = false;
         }
+        let tile_horiz = tile_horiz_regex && tile_horiz_regex.test(img_name);
         for (let yy = -pad; yy < imgh + pad; ++yy) {
-          let yyy = (yy + imgh) % imgh;
+          let yyy;
+          if (tile_horiz) {
+            yyy = yy < 0 ? 0 : yy >= imgh ? imgh - 1: yy;
+          } else {
+            yyy = (yy + imgh) % imgh;
+          }
           for (let xx = -pad; xx < imgw + pad; ++xx) {
             let xxx = (xx + imgw) % imgw;
             for (let jj = 0; jj < 4; ++jj) {
