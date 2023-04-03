@@ -295,6 +295,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       buttons: {
         yes: () => {
           stats.hp = 0;
+          entityManager().deleteEntity(target.id, 'killed');
           me.data.mercs = [];
         },
         no: null,
