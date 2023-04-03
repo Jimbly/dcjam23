@@ -453,7 +453,7 @@ export function crawlerMapViewDraw(
   if (!level_gen_test && !build_mode) {
     for (let ent_id in entities) {
       let ent = entities[ent_id]!;
-      if (ent.isEnemy() && !ent.fading_out) {
+      if (ent.isEnemy() && !ent.fading_out && ent.data.floor === game_state.floor_id) {
         let [xx,yy] = ent.data.pos;
         let vis = false;
         if (full_vis) {

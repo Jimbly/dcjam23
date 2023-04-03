@@ -3,6 +3,7 @@ export type GoodDef = {
   name: string;
   realm: 'phys' | 'spirit';
   avail: GoodAvail;
+  key?: string;
 };
 function spiritWants(cost: number): GoodAvail {
   let ret: GoodAvail = {};
@@ -127,5 +128,37 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       ...physWants(70),
       6: [7, 55],
     },
+  },
+  mcguff1: {
+    name: 'Painting of Beloved',
+    realm: 'phys',
+    avail: {
+      5: [1, 999],
+    },
+    key: 'mcguff1',
+  },
+  mcguff2: {
+    name: 'Dad\'s Pocketwatch',
+    realm: 'phys',
+    avail: {
+      5: [1, 999],
+    },
+    key: 'mcguff2',
+  },
+  mcguff3: {
+    name: 'Memories of Childhood',
+    realm: 'spirit',
+    avail: {
+      6: [1, 999],
+    },
+    key: 'mcguff3',
+  },
+  mcguff4: {
+    name: 'Hope',
+    realm: 'spirit',
+    avail: {
+      6: [1, 999],
+    },
+    key: 'mcguff4',
   },
 };

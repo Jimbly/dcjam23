@@ -136,7 +136,10 @@ import {
   render_height,
   render_width,
 } from './globals';
-import { GOODS } from './goods';
+import {
+  GOODS,
+  GoodDef,
+} from './goods';
 import { jamTraitsStartup } from './jam_events';
 import { levelGenTest } from './level_gen_test';
 import { renderAppStartup } from './render_app';
@@ -264,6 +267,20 @@ function pauseMenu(): void {
   ui.menuUp();
 }
 
+function playerHasKeyGood(good_def: GoodDef): boolean {
+  assert(good_def.key);
+  let me = myEnt();
+  let { goods } = me.data;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let pgd = GOODS[goods[ii].type];
+    assert(pgd);
+    if (goods[ii] && pgd.key === good_def.key) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function initGoods(trader: Entity): void {
   let data = trader.data;
   let floor_id = data.floor;
@@ -275,9 +292,20 @@ function initGoods(trader: Entity): void {
     let { avail } = good_def;
     let pair = avail[floor_id];
     if (pair) {
+      let count = pair[0];
+      if (good_def.key) {
+        if (crawlerScriptAPI().keyGet(good_def.key)) {
+          // already activated, completely hide
+          continue;
+        }
+        if (playerHasKeyGood(good_def)) {
+          // player has it, do not stock another one
+          count = 0;
+        }
+      }
       goods.push({
         type: good_id,
-        count: pair[0],
+        count,
         cost: pair[1],
       });
     }
@@ -441,7 +469,11 @@ function inventoryMenu(): void {
     });
 
     for (let ii = 0; ii < data.goods.length; ++ii) {
-      num_goods += data.goods[ii].count;
+      let good_def = GOODS[data.goods[ii].type];
+      assert(good_def);
+      if (!good_def.key) {
+        num_goods += data.goods[ii].count;
+      }
     }
     overloaded = num_goods >= data.good_capacity;
     font.draw({
@@ -549,14 +581,22 @@ function inventoryMenu(): void {
     }
     let trader_only_buys = trader_good && good_def.avail[floor_id] && !good_def.avail[floor_id][0];
     if (trader_good) {
-      font.draw({
-        style: style_by_realm[good_def.realm],
-        align: ALIGN.HLEFT,
-        x: trader_x, y, z,
-        w,
-        text: good_def.name,
-      });
-      if (!trader_only_buys || trader_good.count) {
+      let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
+      if (!trader_good.count && good_def.key) {
+        // don't even show name, player must have one
+        show_buy_button = false;
+      } else {
+        font.draw({
+          style: style_by_realm[good_def.realm],
+          align: ALIGN.HLEFT,
+          x: trader_x, y, z,
+          w,
+          text: good_def.name,
+        });
+      }
+      if (good_def.key) {
+        // show no count
+      } else if (!trader_only_buys || trader_good.count) {
         font.draw({
           style: trader_only_buys || trader_good.count ? undefined : style_not_allowed,
           align: ALIGN.HCENTER,
@@ -576,7 +616,7 @@ function inventoryMenu(): void {
       if (shift()) {
         num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost), data.good_capacity - num_goods);
       }
-      if ((!trader_only_buys || trader_good.count) && ui.buttonText({
+      if (show_buy_button && ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
         w: button_w, z,
         text: '->',
@@ -598,7 +638,7 @@ function inventoryMenu(): void {
         player_good.count+= num_to_buy;
         data.money -= trader_good.cost * num_to_buy;
       }
-    } else if (trader) {
+    } else if (trader && !good_def.key) {
       font.draw({
         style: style_not_interested,
         align: ALIGN.HRIGHT,
@@ -608,16 +648,22 @@ function inventoryMenu(): void {
       });
     }
     if (player_good) {
-      font.draw({
-        align: ALIGN.HCENTER,
-        x: player_count_x, y, z,
-        w: count_w,
-        text: `${player_good.count}`,
-      });
+      let good_name_x = player_count_x + 1;
+      if (good_def.key) {
+        // show no count
+      } else {
+        font.draw({
+          align: ALIGN.HCENTER,
+          x: player_count_x, y, z,
+          w: count_w,
+          text: `${player_good.count}`,
+        });
+        good_name_x += count_w;
+      }
       font.draw({
         style: style_by_realm[good_def.realm],
         align: ALIGN.HLEFT,
-        x: player_count_x + count_w + 1, y, z,
+        x: good_name_x, y, z,
         w,
         text: good_def.name,
       });
@@ -640,7 +686,7 @@ function inventoryMenu(): void {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
         }
-      } else if (!trader) {
+      } else if (!trader && !good_def.key) {
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
           w: button_w, z,
@@ -1369,7 +1415,7 @@ export function play(dt: number): void {
     y: 196,
     border: 2,
     scroll_grow: 2,
-    always_scroll: !map_view,
+    always_scroll: !map_view && !overlay_menu_up,
     cuddly_scroll: true,
   });
   profilerStopStart('mid');
