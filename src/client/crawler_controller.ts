@@ -24,6 +24,7 @@ import {
   easeIn,
   easeInOut,
   lerp,
+  lerpAngle,
   sign,
 } from 'glov/common/util';
 import {
@@ -880,6 +881,14 @@ export class CrawlerController {
     }
   }
 
+  applyForceFace(game_state: CrawlerState, dt: number): void {
+    let ffw = this.forceFaceUpdateWeight(dt);
+    if (ffw) {
+      assert(typeof this.force_face_dir === 'number');
+      game_state.angle = lerpAngle(ffw, game_state.angle, this.force_face_dir * PI/2);
+    }
+  }
+
   modeCrawl(param: PlayerMotionParam): void {
     const {
       button_x0,
@@ -1004,11 +1013,7 @@ export class CrawlerController {
       // Apply rot interpolation
       let cur = this.queueTail();
       game_state.angle = cur.rot * PI/2;
-      let ffw = this.forceFaceUpdateWeight(dt);
-      if (ffw) {
-        assert(typeof this.force_face_dir === 'number');
-        game_state.angle = lerp(ffw, game_state.angle, this.force_face_dir * PI/2);
-      }
+      this.applyForceFace(game_state, dt);
       return;
     }
 
@@ -1213,11 +1218,7 @@ export class CrawlerController {
       v2copy(game_state.pos, cur.pos);
       game_state.angle = cur.rot * PI/2;
     }
-    let ffw = this.forceFaceUpdateWeight(dt);
-    if (ffw) {
-      assert(typeof this.force_face_dir === 'number');
-      game_state.angle = lerp(ffw, game_state.angle, this.force_face_dir * PI/2);
-    }
+    this.applyForceFace(game_state, dt);
     assert(instantaneous_move);
     assert(instantaneous_move.pos);
 

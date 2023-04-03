@@ -147,11 +147,13 @@ export function cleanupCombat(dt: number): void {
 const HEALTH_W = 100;
 const HEALTH_H = 8;
 let last_combat_frame = -1;
+let last_combat_ent: Entity | null = null;
 export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge: boolean): void {
   let me = myEnt();
   let { mercs, merc_capacity } = me.data;
-  let reset = last_combat_frame !== getFrameIndex() - 1;
+  let reset = last_combat_frame !== getFrameIndex() - 1 || target !== last_combat_ent;
   last_combat_frame = getFrameIndex();
+  last_combat_ent = target;
   if (reset || !combat_state) {
     combat_state = new CombatState();
     for (let ii = 0; ii < merc_capacity; ++ii) {
@@ -293,12 +295,12 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       text: 'Do you really wish to run away?  Your mercenaries will all stay, fight,' +
         ' and perish, allowing you to escape.',
       buttons: {
+        no: null,
         yes: () => {
           stats.hp = 0;
           entityManager().deleteEntity(target.id, 'killed');
           me.data.mercs = [];
         },
-        no: null,
       }
     });
   }
