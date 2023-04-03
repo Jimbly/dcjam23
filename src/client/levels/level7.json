@@ -954,7 +954,7 @@
       "id": "open",
       "walls": [
         "solid",
-        "path_chasm",
+        "invis_blocker",
         "open",
         "open"
       ]
@@ -1248,9 +1248,9 @@
       "id": "open",
       "walls": [
         "open",
-        "path_chasm",
+        "invis_blocker",
         "open",
-        "path_chasm"
+        "invis_blocker"
       ]
     },
     {
@@ -1544,7 +1544,7 @@
         "open",
         "open",
         "solid",
-        "path_chasm"
+        "invis_blocker"
       ]
     },
     {

@@ -614,7 +614,7 @@ function toggleWithSelected(): void {
       }
     } else {
       let neighbor_wall = target_cell?.walls[dirMod(dir + 2)];
-      if (selected_wall.advertise_other_side || neighbor_wall?.open_vis) {
+      if (selected_wall.advertise_other_side || neighbor_wall?.open_vis && !selected_wall.open_vis) {
         level.setWall(myx, myy, dir, selected_wall);
       } else {
         level.setWall(myx, myy, dir, selected_wall, null);
