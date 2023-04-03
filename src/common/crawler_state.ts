@@ -1105,8 +1105,12 @@ function celltypeFinalizeReferences(): void {
         let { name } = replace;
         assert(name);
         let target = descs.cell[name];
-        assert(target);
-        replace.desc = target;
+        if (!target) {
+          dataError(`Referencing unknown cell type "${name}" in replace in "${id}"`);
+          replace.desc = descs.cell.open;
+        } else {
+          replace.desc = target;
+        }
       }
     }
   }

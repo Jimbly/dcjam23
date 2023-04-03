@@ -10,7 +10,9 @@ import {
   JSVec3,
 } from '../common/crawler_state';
 import { EntityDemoClient, StatsData } from './entity_demo_client';
+import { GOODS } from './goods';
 import {
+  myEnt,
   startRecruiting,
   startShopping,
 } from './play';
@@ -35,6 +37,55 @@ crawlerScriptRegisterEvent({
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
     startRecruiting();
+  },
+});
+
+crawlerScriptRegisterEvent({
+  key: 'pedastal', // key is both a key ID and good def ID
+  when: CrawlerScriptWhen.POST,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (!param && cell.props?.key_cell) {
+      param = cell.props?.key_cell;
+    }
+    if (!param) {
+      api.status('key', '"pedastal" event requires a string parameter');
+    } else {
+      if (!api.keyGet(param)) {
+        let me = myEnt();
+        let { goods } = me.data;
+        for (let ii = 0; ii < goods.length; ++ii) {
+          let good = goods[ii];
+          let good_def = GOODS[good.type];
+          if (good_def && good_def.key === param) {
+            api.keySet(param);
+            api.status('key', `You reverently place your ${good_def.name} on the altar`);
+            let has_all = true;
+            for (let good_id in GOODS) {
+              let key = GOODS[good_id]!.key;
+              if (key) {
+                if (!api.keyGet(key)) {
+                  has_all = false;
+                }
+              }
+            }
+            if (has_all) {
+              api.keySet('final');
+              api.status('final', 'The gateway is now open');
+            }
+            goods.splice(ii, 1);
+            return;
+          }
+        }
+        let good_def = GOODS[param];
+        if (good_def) {
+          api.status('key', 'You long to place your ' +
+            `${good_def.name} on the altar`);
+        } else {
+          api.status('key', `Unknown good def ${param}`);
+        }
+      }
+    }
   },
 });
 

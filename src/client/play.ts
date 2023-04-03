@@ -686,7 +686,7 @@ function inventoryMenu(): void {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
         }
-      } else if (!trader && !good_def.key) {
+      } else if (!trader && (!good_def.key || engine.DEBUG && shift())) {
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
           w: button_w, z,

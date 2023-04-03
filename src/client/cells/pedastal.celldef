@@ -1,0 +1,27 @@
+---
+open_move: false
+open_vis: true
+map_view_detail_frame: 28
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: floor
+# - pass: bg
+#   type: simple_ceiling
+#   opts:
+#     spritesheet: path
+#     tile: ceiling
+- type: simple_billboard
+  opts:
+    spritesheet: path
+    tile: pedastal_empty
+    width: 0.5
+    height: 0.5 # 0..1
+    offs: [0, 0, 0]
+    face_camera: false # Otherwise faces frustum
+    do_split: true
+replace:
+  - func: KEY
+    name: pedastal_full
