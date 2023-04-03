@@ -222,7 +222,7 @@ export function getScaledFrameDt(): number {
   return last_scaled_time;
 }
 
-type SavedGameData = {
+export type SavedGameData = {
   entities?: DataObject[];
   floors_inited?: Partial<Record<number, true>>;
   vis_data?: Partial<Record<number, string>>;
@@ -273,9 +273,7 @@ urlhash.register({
   push: true,
 });
 
-
-export function crawlerSaveGame(): void {
-  let slot = urlhash.get('slot') || '1';
+export function crawlerSaveGameGetData(): SavedGameData {
   crawlerFlushVisData(true);
   let { entities } = crawlerEntityManager();
   let ent_list: DataObject[] = [];
@@ -287,8 +285,13 @@ export function crawlerSaveGame(): void {
   }
   local_game_data.entities = ent_list;
   local_game_data.script_data = script_api.localDataGet();
+  return local_game_data;
+}
 
-  localStorageSetJSON<SavedGameData>(`savedgame_${slot}`, local_game_data);
+export function crawlerSaveGame(): void {
+  let slot = urlhash.get('slot') || '1';
+  let data = crawlerSaveGameGetData();
+  localStorageSetJSON<SavedGameData>(`savedgame_${slot}`, data);
 }
 
 type LocalVisData = {
@@ -464,10 +467,17 @@ export function crawlerPlayWantNewGame(): void {
   want_new_game = true;
 }
 
-function crawlerLoadGame(new_player_data: DataObject): boolean {
+export type CrawlerOfflineData = {
+  new_player_data: DataObject;
+  loading_state: EngineState;
+};
+let offline_data: CrawlerOfflineData | undefined;
+
+function crawlerLoadGame(data: SavedGameData): boolean {
+  assert(offline_data);
+  const { new_player_data } = offline_data;
+  local_game_data = data;
   let entity_manager = crawlerEntityManager();
-  let slot = urlhash.get('slot') || '1';
-  local_game_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}`, {});
   if (want_new_game) {
     want_new_game = false;
     local_game_data = {};
@@ -629,18 +639,12 @@ export function crawlerPlayInitOnlineLate(online_only_for_build: boolean): void 
   }
 }
 
-export type CrawlerOfflineData = {
-  new_player_data: DataObject;
-  loading_state: EngineState;
-};
-let offline_data: CrawlerOfflineData | undefined;
-
-function crawlerPlayInitOfflineLate(): void {
+function crawlerPlayInitOfflineLate(data: SavedGameData): void {
   assert(offline_data);
-  const { new_player_data, loading_state } = offline_data;
+  const { loading_state } = offline_data;
 
   // Load or init game
-  let need_init_pos = crawlerLoadGame(new_player_data);
+  let need_init_pos = crawlerLoadGame(data);
 
   // Load and init current floor
   engine.setState(loading_state);
@@ -658,11 +662,17 @@ function crawlerPlayInitOfflineLate(): void {
   });
 }
 
-export function crawlerPlayInitOffline(): void {
+export function crawlerLoadOfflineGame(data: SavedGameData): void {
   crawlerPlayInitOfflineEarly();
   crawlerPlayInitShared();
   play_init_offline?.();
-  crawlerPlayInitOfflineLate();
+  crawlerPlayInitOfflineLate(data);
+}
+
+export function crawlerPlayInitOffline(): void {
+  let slot = urlhash.get('slot') || '1';
+  let data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}`, {});
+  crawlerLoadOfflineGame(data);
 }
 
 let level_generator_test: LevelGenerator;

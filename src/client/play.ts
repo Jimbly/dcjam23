@@ -93,13 +93,16 @@ import {
   mapViewToggle,
 } from './crawler_map_view';
 import {
+  SavedGameData,
   crawlerBuildModeActivate,
   crawlerController,
   crawlerGameState,
+  crawlerLoadOfflineGame,
   crawlerPlayStartup,
   crawlerRenderFrame,
   crawlerRenderFramePrep,
   crawlerSaveGame,
+  crawlerSaveGameGetData,
   crawlerScriptAPI,
   getScaledFrameDt,
 } from './crawler_play';
@@ -174,6 +177,8 @@ let controller: CrawlerController;
 let pause_menu_up = false;
 let inventory_up = false;
 let recruit_up = false;
+
+let last_level: CrawlerLevel | null = null;
 
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
@@ -1394,6 +1399,7 @@ function playInitShared(online: boolean): void {
   controller.setOnPlayerMove(onPlayerMove);
   controller.setOnInitPos(onInitPos);
 
+  last_level = null;
   pause_menu_up = false;
   inventory_up = false;
   recruit_up = false;
@@ -1416,6 +1422,23 @@ function playInitEarly(room: ClientChannelWorker): void {
   playInitShared(true);
 }
 
+function saveUponLeavingTown(me: Entity): void {
+  me.data.last_save_in_town = '';
+  me.data.last_save_in_town = JSON.stringify(crawlerSaveGameGetData());
+}
+
+export function restartInTown(): void {
+  let me = myEnt();
+  assert(me);
+  let data = me.data.last_save_in_town;
+  assert(data);
+  let data2 = JSON.parse(data) as SavedGameData;
+  crawlerLoadOfflineGame(data2);
+  me = myEnt();
+  assert(me);
+  me.data.last_save_in_town = data;
+}
+
 function initLevel(entity_manager: ClientEntityManagerInterface,
   floor_id: number, level: CrawlerLevel
 ) : void {
@@ -1425,6 +1448,11 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
     me.data.last_journey_town = floor_id;
     me.data.journeys++;
   }
+  if (last_level && last_level.props.is_town) {
+    // Save our state as of when we left town last
+    saveUponLeavingTown(me);
+  }
+  last_level = level;
 }
 
 settings.register({

@@ -22,6 +22,7 @@ import {
   drawHealthBar,
   mercPos,
   myEnt,
+  restartInTown,
 } from './play';
 
 const { abs, floor, max, pow, random } = Math;
@@ -125,10 +126,10 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       modalDialog({
         title: 'Defeat',
         text: 'With no mercenaries to defend you, the being quickly finishes you off.',
-        button_width: 140,
+        button_width: 160,
         buttons: {
-          'Reload in last town': () => {
-            // TODO
+          'Restart from entrance': () => {
+            restartInTown();
           },
         }
       });
