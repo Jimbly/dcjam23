@@ -139,7 +139,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   }
 
   isAlive(): boolean {
-    return true;
+    return this.data.stats ? this.data.stats.hp > 0 : true;
   }
 
   isEnemy(): boolean {

@@ -1,5 +1,9 @@
 import { AnimationSequencer, animationSequencerCreate } from 'glov/client/animation';
-import { getFrameIndex } from 'glov/client/engine';
+import * as engine from 'glov/client/engine';
+import {
+  getFrameIndex,
+  getFrameTimestamp,
+} from 'glov/client/engine';
 import { ALIGN } from 'glov/client/font';
 import { Sprite, spriteCreate } from 'glov/client/sprites';
 import * as ui from 'glov/client/ui';
@@ -12,8 +16,9 @@ import {
   lerp,
   ridx,
 } from 'glov/common/util';
-import { vec4 } from 'glov/common/vmath';
+import { Vec2, vec4 } from 'glov/common/vmath';
 import { crawlerRenderViewportGet } from './crawler_render';
+import { isEntityDrawableSprite } from './crawler_render_entities';
 import {
   EntityDemoClient,
   StatsData,
@@ -30,10 +35,14 @@ const { abs, floor, max, pow, random } = Math;
 type Entity = EntityDemoClient;
 
 const ENEMY_ATTACK_TIME = 1000;
+const ENEMY_ATTACK_TIME_R = 200;
+const MERC_ATTACK_TIME = 1000;
+const MERC_ATTACK_TIME_R = 200;
 class CombatState {
-  enemy_attack_counter = ENEMY_ATTACK_TIME;
+  enemy_attack_counter = ENEMY_ATTACK_TIME + random() * ENEMY_ATTACK_TIME_R;
   anims: AnimationSequencer[] = [];
   did_death = false;
+  merc_timers: number[] = [];
 }
 
 let combat_state: CombatState;
@@ -97,8 +106,11 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   let reset = last_combat_frame !== getFrameIndex() - 1;
   last_combat_frame = getFrameIndex();
   if (reset) {
-    // something
     combat_state = new CombatState();
+    for (let ii = 0; ii < mercs.length; ++ii) {
+      // mercs get chance for first hit
+      combat_state.merc_timers[ii] = random() * (MERC_ATTACK_TIME + MERC_ATTACK_TIME_R);
+    }
   }
 
   let z = Z.UI;
@@ -118,7 +130,36 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
 
   let alive_mercs = mercs.filter(isAlive);
 
-  combat_state.enemy_attack_counter -= dt;
+  function drawDamageAt(pos: Vec2, dam: number): void {
+    let anim = animationSequencerCreate();
+    anim.add(0, ENEMY_ATTACK_TIME, (progress) => {
+      let alpha = easeOut(1 - progress, 4);
+      temp_color[3] = alpha;
+      let rect = {
+        x: pos[0] - 6,
+        y: pos[1] - 6,
+        w: 32,
+        h: 32,
+        z: Z.PARTICLES,
+      };
+      damage_sprite.draw({
+        ...rect,
+        color: temp_color,
+      });
+      ui.font.draw({
+        ...rect,
+        z: rect.z + 1,
+        align: ALIGN.HVCENTER,
+        text: `${dam}`,
+        alpha,
+      });
+    });
+    combat_state.anims.push(anim);
+  }
+
+  if (stats.hp > 0) {
+    combat_state.enemy_attack_counter -= dt;
+  }
   if (combat_state.enemy_attack_counter <= 0 && !combat_state.did_death) {
     if (!alive_mercs.length) {
       combat_state.did_death = true;
@@ -134,37 +175,39 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
         }
       });
     } else {
-      combat_state.enemy_attack_counter += ENEMY_ATTACK_TIME;
+      combat_state.enemy_attack_counter += ENEMY_ATTACK_TIME + random() * ENEMY_ATTACK_TIME_R;
 
       let merc_target = floor(random() * alive_mercs.length);
       let dam = damage(stats, mercs[merc_target]);
+      if (engine.defines.INVINCIBLE) {
+        dam = 0;
+      }
       mercs[merc_target].hp = max(0, mercs[merc_target].hp - dam);
 
-      let anim = animationSequencerCreate();
-      anim.add(0, ENEMY_ATTACK_TIME, (progress) => {
-        let alpha = easeOut(1 - progress, 4);
-        temp_color[3] = alpha;
-        let pos = mercPos(merc_target);
-        let rect = {
-          x: pos[0] - 6,
-          y: pos[1] - 6,
-          w: 32,
-          h: 32,
-          z: Z.PARTICLES,
-        };
-        damage_sprite.draw({
-          ...rect,
-          color: temp_color,
-        });
-        ui.font.draw({
-          ...rect,
-          z: rect.z + 1,
-          align: ALIGN.HVCENTER,
-          text: `${dam}`,
-          alpha,
-        });
-      });
-      combat_state.anims.push(anim);
+      if (isEntityDrawableSprite(target)) {
+        target.drawable_sprite_state.grow_at = getFrameTimestamp();
+        target.drawable_sprite_state.grow_time = 250;
+      }
+      let pos = mercPos(merc_target);
+      drawDamageAt(pos, dam);
+    }
+  }
+
+  if (stats.hp > 0 && !combat_state.did_death && alive_mercs.length) {
+    for (let ii = 0; ii < mercs.length; ++ii) {
+      let merc = mercs[ii];
+      if (merc.hp > 0) {
+        combat_state.merc_timers[ii] -= dt;
+        if (combat_state.merc_timers[ii] <= 0) {
+          combat_state.merc_timers[ii] += MERC_ATTACK_TIME + random() * MERC_ATTACK_TIME_R;
+          let dam = damage(merc, stats);
+          if (engine.defines.IMPOTENT) {
+            dam = 0;
+          }
+          stats.hp = max(0, stats.hp - dam);
+          drawDamageAt([vp.x + vp.w/2 - 8, vp.y + vp.h / 2], dam);
+        }
+      }
     }
   }
 

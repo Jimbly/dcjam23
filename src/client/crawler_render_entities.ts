@@ -124,6 +124,8 @@ export type DrawableSpriteOpts = {
 export type DrawableSpriteState = {
   anim: SpriteAnimation;
   anim_update_frame: number;
+  grow_at?: number;
+  grow_time?: number;
 };
 
 export type DrawableSpineOpts = {
@@ -158,6 +160,10 @@ export type EntityDrawableSpine = Entity & {
   drawable_spine_opts: DrawableSpineOpts;
   drawable_spine_state: DrawableSpineState;
 };
+
+export function isEntityDrawableSprite(ent: Entity): ent is EntityDrawableSprite {
+  return Boolean((ent as EntityDrawableSprite).drawable_sprite_state);
+}
 
 
 const { abs, atan2, min, cos, sin, sqrt, PI } = Math;
@@ -203,12 +209,20 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     draw_pos,
     color,
   } = param;
-  let { anim } = ent.drawable_sprite_state;
+  let { anim, grow_at, grow_time } = ent.drawable_sprite_state;
   if (ent.drawable_sprite_state.anim_update_frame !== getFrameIndex()) {
     anim.update(dt);
     ent.drawable_sprite_state.anim_update_frame = getFrameIndex();
   }
   let { scale, sprite, sprite_near, sprite_hybrid } = ent.drawable_sprite_opts;
+  if (grow_at) {
+    assert(typeof grow_time === 'number');
+    let t = getFrameTimestamp() - grow_at;
+    if (t < grow_time) {
+      t /= grow_time;
+      scale *= 1 + easeIn(1 - t, 2) * 0.5;
+    }
+  }
   if (sprite_near && (use_near ||
     !settings.entity_split && settings.entity_nosplit_use_near)
   ) {
