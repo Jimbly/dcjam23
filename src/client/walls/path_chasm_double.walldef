@@ -1,0 +1,13 @@
+---
+open_move: false
+open_vis: false
+visuals:
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: wall
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: wall
+    offs: [0, 1]

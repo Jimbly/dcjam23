@@ -954,7 +954,7 @@
       "id": "open",
       "walls": [
         "solid",
-        "solid",
+        "path_chasm",
         "open",
         "open"
       ]
@@ -1088,10 +1088,19 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "path_chasm_double",
         "solid",
         "open",
         "solid"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm_double",
+        "path_chasm"
       ]
     },
     {
@@ -1099,16 +1108,7 @@
       "walls": [
         "open",
         "solid",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "open",
+        "path_chasm_double",
         "open"
       ]
     },
@@ -1248,9 +1248,9 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_chasm",
         "open",
-        "solid"
+        "path_chasm"
       ]
     },
     {
@@ -1388,19 +1388,19 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "path_chasm_double",
         "open",
         "open",
         "solid"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
-        "solid",
-        "solid",
-        "open",
-        "solid"
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm_double",
+        "path_chasm"
       ]
     },
     {
@@ -1544,7 +1544,7 @@
         "open",
         "open",
         "solid",
-        "solid"
+        "path_chasm"
       ]
     },
     {
