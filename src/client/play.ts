@@ -582,9 +582,13 @@ function inventoryMenu(): void {
     let trader_only_buys = trader_good && good_def.avail[floor_id] && !good_def.avail[floor_id][0];
     if (trader_good) {
       let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
+      let show_value = true;
       if (!trader_good.count && good_def.key) {
         // don't even show name, player must have one
         show_buy_button = false;
+        if (!player_good) {
+          show_value = false;
+        }
       } else {
         font.draw({
           style: style_by_realm[good_def.realm],
@@ -605,13 +609,15 @@ function inventoryMenu(): void {
           text: `${trader_good.count}`,
         });
       }
-      font.draw({
-        style: trader_good.count && trader_good.cost > data.money ? style_not_allowed : style_money,
-        align: ALIGN.HCENTERFIT,
-        x: value_x, y, z,
-        w: value_w,
-        text: `${trader_good.cost}`,
-      });
+      if (show_value) {
+        font.draw({
+          style: trader_good.count && trader_good.cost > data.money ? style_not_allowed : style_money,
+          align: ALIGN.HCENTERFIT,
+          x: value_x, y, z,
+          w: value_w,
+          text: `${trader_good.cost}`,
+        });
+      }
       let num_to_buy = 1;
       if (shift()) {
         num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost), data.good_capacity - num_goods);
