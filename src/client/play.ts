@@ -829,7 +829,9 @@ function recruitMenu(): void {
       let merc = data.mercs[ii];
       if (merc) {
         num_mercs++;
-        missing_hp += merc.hp_max - merc.hp;
+        if (merc.hp > 0) {
+          missing_hp += merc.hp_max - merc.hp;
+        }
       }
     }
     overloaded = num_mercs >= data.merc_capacity;
@@ -882,25 +884,31 @@ function recruitMenu(): void {
   x = OVERLAY_PLAYER_X0;
 
   let { mercs, merc_capacity } = data;
+  let heal_label = `Heal   ${missing_hp} (  ${missing_hp})`;
+  let heal_label_w = font.getStringWidth(null, ui.font_height, heal_label);
+  let prefix_w = font.getStringWidth(null, ui.font_height, 'Heal ');
+  let middle_w = font.getStringWidth(null, ui.font_height, `  ${missing_hp} (`);
   if (ui.buttonText({
     x, y, z,
-    text: `Heal   ${missing_hp} (  ${missing_hp})`,
+    text: heal_label,
     disabled: !missing_hp || data.money < missing_hp,
     sound: 'heal',
   })) {
     data.money -= missing_hp;
     for (let ii = 0; ii < mercs.length; ++ii) {
-      if (mercs[ii]) {
-        mercs[ii].hp = mercs[ii].hp_max;
+      let merc = mercs[ii];
+      if (merc && merc.hp > 0) {
+        merc.hp = merc.hp_max;
       }
     }
   }
+  let text_x0 = floor(x + (ui.button_width - heal_label_w) / 2);
   spritesheet_ui.sprite.draw({
-    x: x + 39, y: y + 4, z, w: 8, h: 8,
+    x: text_x0 + prefix_w, y: y + 4, z, w: 8, h: 8,
     frame: spritesheet_ui.FRAME_ICON_HP,
   });
   spritesheet_ui.sprite.draw({
-    x: x + 63, y: y + 4, z, w: 8, h: 8,
+    x: text_x0 + prefix_w + middle_w, y: y + 4, z, w: 8, h: 8,
     frame: spritesheet_ui.FRAME_ICON_COIN,
   });
   y += ui.button_height + 1;
@@ -920,7 +928,7 @@ function recruitMenu(): void {
     }
     if (merc && ui.button({
       x: x + 90, y: y + 3, w: 56, z,
-      text: 'Retire',
+      text: merc.hp > 0 ? 'Retire' : '"Retire"',
       sound: 'drop',
       // disabled: ii === 0 && mercs.length === 1,
     })) {
