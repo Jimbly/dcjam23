@@ -70,6 +70,8 @@ export type EntityDataClient = {
   journeys: number;
   last_journey_town: number;
   last_save_in_town: string;
+  town_visits: number;
+  floor_town_init: Record<number, number>;
   // Traders
   last_init: number;
 } & EntityCrawlerDataCommon;
@@ -114,6 +116,8 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
       data.goods = data.goods || [];
       data.mercs = data.mercs || [];
       data.journeys = data.journeys || 0;
+      data.town_visits = data.town_visits || 0;
+      data.floor_town_init = data.floor_town_init || {};
     }
     this.floaters = [];
     this.aiResetMoveTime(true);

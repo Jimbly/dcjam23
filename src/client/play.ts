@@ -7,6 +7,7 @@ import {
   ALIGN,
   Font,
   fontStyle,
+  fontStyleColored,
 } from 'glov/client/font';
 import * as input from 'glov/client/input';
 import {
@@ -48,13 +49,16 @@ import {
   EntityID,
 } from 'glov/common/types';
 import {
-  clamp, clone,
+  clamp,
+  clone,
+  lerp,
 } from 'glov/common/util';
 import {
   Vec2,
   v2set,
   v2sub,
   vec2,
+  vec4,
 } from 'glov/common/vmath';
 import {
   CrawlerLevel,
@@ -66,7 +70,7 @@ import {
   aiTraitsClientStartup,
   entitiesAdjacentTo,
 } from './ai';
-import { combatStartup, doCombat } from './combat';
+import { cleanupCombat, combatStartup, doCombat, mercPosOverrideWeight } from './combat';
 // import './client_cmds';
 import { buildModeActive, crawlerBuildModeUI } from './crawler_build_mode';
 import {
@@ -107,6 +111,7 @@ import {
   getScaledFrameDt,
 } from './crawler_play';
 import {
+  crawlerRenderViewportGet,
   crawlerRenderViewportSet,
   renderPrep,
 } from './crawler_render';
@@ -153,10 +158,10 @@ declare module 'glov/client/settings' {
 declare module 'glov/client/ui' {
   interface UISprites {
     panel_mini: UISprite;
+    panel_mini_red: UISprite;
   }
 }
 
-// const ATTACK_WINDUP_TIME = 1000;
 const MINIMAP_RADIUS = 3;
 const MINIMAP_X = 261;
 const MINIMAP_Y = 3;
@@ -700,6 +705,9 @@ let MERC_LIST: Merc[] = [{
   cost: 1,
 }];
 
+let style_dead = fontStyleColored(null, dawnbringer.font_colors[25]);
+let color_black = vec4(0, 0, 0, 1);
+
 const MERC_H = 26;
 const MERC_W = 41;
 function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: boolean, is_player: boolean): void {
@@ -707,16 +715,21 @@ function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: 
   let x2 = x1 + 24;
   let y1 = y + 2;
   let y2 = y1 + 8;
+  let dead = merc && merc.hp <= 0;
+  let style = dead ? style_dead : undefined;
+  let color = dead ? color_black : undefined;
   portraits.draw({
     x: x + 2, y: y1, z, w: 16, h: 16,
-    frame: merc && merc.hp <= 0 ? 63 : (merc && merc.portrait || 0),
+    frame: dead ? 63 : (merc && merc.portrait || 0),
   });
   if (merc) {
     spritesheet_ui.sprite.draw({
       x: x1, y: y1, z, w: 8, h: 8,
       frame: spritesheet_ui.FRAME_ICON_ATTACK,
+      color,
     });
     tiny_font.draw({
+      style,
       align: ALIGN.HCENTER,
       x: x1 + 8, y: y1, z, w: 12, h: 8,
       size: 8,
@@ -725,8 +738,10 @@ function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: 
     spritesheet_ui.sprite.draw({
       x: x1, y: y2, z, w: 8, h: 8,
       frame: spritesheet_ui.FRAME_ICON_DEFENSE,
+      color,
     });
     tiny_font.draw({
+      style,
       align: ALIGN.HCENTER,
       x: x1 + 8, y: y2, z, w: 12, h: 8,
       size: 8,
@@ -1027,20 +1042,30 @@ function drawMercs(): void {
     return;
   }
   let { mercs, merc_capacity } = me.data;
-
+  let vp = crawlerRenderViewportGet();
+  let attack_x = vp.x + vp.w * 0.667;
+  let attack_y = vp.y + vp.h / 2;
 
   let x = MERC_X0;
   let y = MERC_BOTTOM_Y - MERC_H;
   let z = Z.UI;
   for (let ii = 0; ii < merc_capacity; ++ii) {
     let merc = mercs[ii];
+    let weight = mercPosOverrideWeight(ii);
+    let xx = x;
+    let yy = y;
+    if (weight) {
+      xx = lerp(weight, xx, attack_x);
+      yy = lerp(weight * 0.5, yy, attack_y);
+    }
+    let dead = merc && merc.hp <= 0;
     uiPanel({
-      x, y, z, w: MERC_W, h: MERC_H,
-      sprite: ui.sprites.panel_mini,
+      x: xx, y: yy, z, w: MERC_W, h: MERC_H,
+      sprite: dead ? ui.sprites.panel_mini_red : ui.sprites.panel_mini,
     });
     last_merc_pos[ii] = last_merc_pos[ii] || vec2();
-    v2set(last_merc_pos[ii], x, y);
-    drawMerc(merc, x, y, z, false, true);
+    v2set(last_merc_pos[ii], xx, yy);
+    drawMerc(merc, xx, yy, z, false, true);
     if (x === MERC_X0) {
       x += MERC_W;
     } else {
@@ -1149,11 +1174,6 @@ function playCrawl(): void {
     menu_pads.push(PAD.B);
   }
   button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, menu_pads);
-  // if (!overlay_menu_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
-  //   inventory_up = true;
-  // } else if (inventory_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
-  //   inventory_up = false;
-  // }
   if (!build_mode) {
     button(0, 1, 7, 'inv', [KEYS.I], [PAD.Y], inventory_up);
     if (up_edge.inv) {
@@ -1188,7 +1208,9 @@ function playCrawl(): void {
   if (frame_combat) {
     button(1, 1, 8, 'flee', [KEYS.S, KEYS.NUMPAD2, KEYS.NUMPAD5], [PAD.B, PAD.DOWN]);
 
-    doCombat(frame_combat, dt * (shift() ? 3 : 1), menu_up, Boolean(up_edge.flee));
+    doCombat(frame_combat, dt * (shift() ? 3 : 1), menu_up || isMenuUp(), Boolean(up_edge.flee));
+  } else {
+    cleanupCombat(dt * (shift() ? 3 : 1));
   }
 
   controller.doPlayerMotion({
@@ -1439,6 +1461,31 @@ export function restartInTown(): void {
   me.data.last_save_in_town = data;
 }
 
+function resetFloorOnJourney(entity_manager: ClientEntityManagerInterface,
+  floor_id: number, level: CrawlerLevel
+) : void {
+  assert(!entity_manager.isOnline());
+  let { entities } = entity_manager;
+  for (let ent_id_str in entities) {
+    let ent_id = Number(ent_id_str);
+    let ent = entities[ent_id]!;
+    if (ent.is_enemy && ent.data.floor === floor_id) {
+      entity_manager.deleteEntity(ent_id, 'respawn');
+    }
+  }
+
+  if (level.initial_entities) {
+    let initial_entities = clone(level.initial_entities);
+    for (let ii = 0; ii < initial_entities.length; ++ii) {
+      initial_entities[ii].floor = floor_id;
+      let ent = entity_manager.addEntityFromSerialized(initial_entities[ii]);
+      if (!ent.is_enemy) {
+        entity_manager.deleteEntity(ent.id, 'respawn');
+      }
+    }
+  }
+}
+
 function initLevel(entity_manager: ClientEntityManagerInterface,
   floor_id: number, level: CrawlerLevel
 ) : void {
@@ -1450,9 +1497,14 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
   }
   if (last_level && last_level.props.is_town) {
     // Save our state as of when we left town last
+    me.data.town_visits++;
     saveUponLeavingTown(me);
   }
   last_level = level;
+  if (me.data.floor_town_init[floor_id] !== me.data.town_visits) {
+    resetFloorOnJourney(entity_manager, floor_id, level);
+    me.data.floor_town_init[floor_id] = me.data.town_visits;
+  }
 }
 
 settings.register({

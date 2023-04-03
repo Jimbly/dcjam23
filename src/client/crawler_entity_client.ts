@@ -133,6 +133,9 @@ export function crawlerEntClientDefaultOnDelete(this: EntityCrawlerClient, reaso
   if (reason === 'killed') {
     this.data.stats.hp = 0;
   }
+  if (reason === 'respawn') {
+    countdown_max = 0;
+  }
 
   if (this.onDeleteSub) {
     let param: EntityOnDeleteSubParam = {

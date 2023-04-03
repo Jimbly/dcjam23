@@ -123,6 +123,7 @@ export function main(): void {
       buttonselected_disabled: { name: 'pixely/buttonselected_disabled', ws: [4, 5, 4], hs: [13] },
       panel: { name: 'pixely/panel', ws: [3, 2, 3], hs: [3, 10, 3] },
       panel_mini: { name: 'pixely/panel_mini', ws: [3, 2, 3], hs: [3, 2, 3] },
+      panel_mini_red: { name: 'pixely/panel_mini_red', ws: [3, 2, 3], hs: [3, 2, 3] },
       // menu_entry: { name: 'menu_entry', ws: [4, 5, 4], hs: [13] },
       // menu_selected: { name: 'menu_selected', ws: [4, 5, 4], hs: [13] },
       // menu_down: { name: 'menu_down', ws: [4, 5, 4], hs: [13] },
