@@ -32,6 +32,7 @@ Z.OVERLAY_UI = 110;
 Z.MENUBUTTON = 120;
 Z.FLOATERS = Z.UI + 25;
 Z.CHAT_FOCUSED = 100;
+Z.PARTICLES = 150;
 
 // let fonts: Font[] | undefined;
 
@@ -143,6 +144,7 @@ export function main(): void {
       heal: 'heal',
       sell: 'sell',
       drop: 'drop',
+      victory: 'victory',
     },
   })) {
     return;

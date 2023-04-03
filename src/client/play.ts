@@ -16,7 +16,6 @@ import {
   keyDownEdge,
   keyUpEdge,
   padButtonDown,
-  padButtonDownEdge,
 } from 'glov/client/input';
 import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
@@ -53,6 +52,7 @@ import {
 } from 'glov/common/util';
 import {
   Vec2,
+  v2set,
   v2sub,
   vec2,
 } from 'glov/common/vmath';
@@ -66,6 +66,7 @@ import {
   aiTraitsClientStartup,
   entitiesAdjacentTo,
 } from './ai';
+import { combatStartup, doCombat } from './combat';
 // import './client_cmds';
 import { buildModeActive, crawlerBuildModeUI } from './crawler_build_mode';
 import {
@@ -186,7 +187,7 @@ let bar_sprites: {
 };
 let portraits: Sprite;
 
-function myEnt(): Entity {
+export function myEnt(): Entity {
   return crawlerMyEnt() as Entity;
 }
 
@@ -342,7 +343,7 @@ function drawBar(
   }
 }
 
-function drawHealthBar(
+export function drawHealthBar(
   x: number, y: number, z: number,
   w: number, h: number,
   hp: number, hp_max: number,
@@ -703,7 +704,7 @@ function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: 
   let y2 = y1 + 8;
   portraits.draw({
     x: x + 2, y: y1, z, w: 16, h: 16,
-    frame: merc && merc.portrait || 0,
+    frame: merc && merc.hp <= 0 ? 63 : (merc && merc.portrait || 0),
   });
   if (merc) {
     spritesheet_ui.sprite.draw({
@@ -922,13 +923,16 @@ function recruitMenu(): void {
 
 
 function engagedEnemy(): Entity | null {
+  if (buildModeActive() || engine.defines.PEACE) {
+    return null;
+  }
   let me = crawlerMyEnt();
   // search, needs game_state, returns list of foes
   let ents: Entity[] = entitiesAdjacentTo(crawlerGameState(),
     entityManager(),
     me.data.floor, me.data.pos, crawlerScriptAPI());
   ents = ents.filter((ent: Entity) => {
-    return ent.is_enemy;
+    return ent.is_enemy && ent.isAlive();
   });
   if (ents.length) {
     return ents[0];
@@ -937,9 +941,9 @@ function engagedEnemy(): Entity | null {
 }
 
 export function onEnterCell(pos: Vec2): void {
-  if (engagedEnemy()) {
-    controller.cancelAllMoves();
-  }
+  // if (engagedEnemy()) {
+  //   controller.cancelAllMoves();
+  // }
 }
 
 
@@ -1007,6 +1011,11 @@ const MOVE_BUTTONS_Y0 = 179;
 const MERC_BOTTOM_Y = MOVE_BUTTONS_Y0 - 2;
 const MERC_X0 = MOVE_BUTTONS_X0;
 
+let last_merc_pos: Vec2[] = [];
+export function mercPos(index: number): Vec2 {
+  return last_merc_pos[index];
+}
+
 function drawMercs(): void {
   let me = myEntOptional();
   if (!me) {
@@ -1024,6 +1033,8 @@ function drawMercs(): void {
       x, y, z, w: MERC_W, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
+    last_merc_pos[ii] = last_merc_pos[ii] || vec2();
+    v2set(last_merc_pos[ii], x, y);
     drawMerc(merc, x, y, z, false, true);
     if (x === MERC_X0) {
       x += MERC_W;
@@ -1040,14 +1051,19 @@ function playCrawl(): void {
 
   let down = {
     menu: 0,
+    inv: 0,
+    flee: 0,
   };
   type ValidKeys = keyof typeof down;
   let up_edge = {
     menu: 0,
+    inv: 0,
+    flee: 0,
   } as Record<ValidKeys, number>;
 
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
+  let frame_combat = engagedEnemy();
   let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
@@ -1063,6 +1079,7 @@ function playCrawl(): void {
       h: MOVE_BUTTONS_Y0 - build_y - 2,
       map_view: frame_map_view,
     });
+
   }
 
 
@@ -1092,7 +1109,11 @@ function playCrawl(): void {
         z = Z.MENUBUTTON;
       }
     } else {
-      my_disabled = my_disabled || overlay_menu_up;
+      if (overlay_menu_up && toggled_down) {
+        no_visible_ui = true;
+      } else {
+        my_disabled = my_disabled || overlay_menu_up;
+      }
     }
     let ret = crawlerOnScreenButton({
       x: button_x0 + (BUTTON_W + 2) * rx,
@@ -1123,6 +1144,17 @@ function playCrawl(): void {
     menu_pads.push(PAD.B);
   }
   button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, menu_pads);
+  // if (!overlay_menu_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
+  //   inventory_up = true;
+  // } else if (inventory_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
+  //   inventory_up = false;
+  // }
+  if (!build_mode) {
+    button(0, 1, 7, 'inv', [KEYS.I], [PAD.Y], inventory_up);
+    if (up_edge.inv) {
+      inventory_up = !inventory_up;
+    }
+  }
 
   if (pause_menu_up) {
     pauseMenu();
@@ -1135,33 +1167,38 @@ function playCrawl(): void {
   inventoryMenu();
   recruitMenu();
 
-  if (engagedEnemy() && engagedEnemy() !== crawlerEntInFront()) {
+  if (frame_combat && engagedEnemy() !== crawlerEntInFront()) {
     // turn to face
-    let target = engagedEnemy();
-    assert(target);
     let me = crawlerMyEnt();
-    let dir = dirFromDelta(v2sub(temp_delta, target.data.pos, me.data.pos));
+    let dir = dirFromDelta(v2sub(temp_delta, frame_combat.data.pos, me.data.pos));
     controller.forceFaceDir(dir);
   } else {
     controller.forceFaceDir(null);
   }
 
+  button_x0 = MOVE_BUTTONS_X0;
+  button_y0 = MOVE_BUTTONS_Y0;
+
+  let dt = getScaledFrameDt();
+  if (frame_combat) {
+    button(1, 1, 8, 'flee', [KEYS.S, KEYS.NUMPAD2, KEYS.NUMPAD5], [PAD.B, PAD.DOWN]);
+
+    doCombat(frame_combat, dt * (shift() ? 3 : 1), menu_up, Boolean(up_edge.flee));
+  }
+
   controller.doPlayerMotion({
-    dt: getScaledFrameDt(),
+    dt,
     button_x0: MOVE_BUTTONS_X0,
     button_y0: MOVE_BUTTONS_Y0,
     no_visible_ui: frame_map_view,
     button_w: BUTTON_W,
     button_sprites,
     disable_move: moveBlocked() || overlay_menu_up,
-    disable_player_impulse: Boolean(engagedEnemy()),
-    show_buttons: true,
+    disable_player_impulse: Boolean(frame_combat),
+    show_buttons: !frame_combat,
     do_debug_move: engine.defines.LEVEL_GEN || build_mode,
     show_debug: Boolean(settings.show_fps),
   });
-
-  button_x0 = MOVE_BUTTONS_X0;
-  button_y0 = MOVE_BUTTONS_Y0;
 
   // Check for intentional events
   // if (!build_mode) {
@@ -1204,12 +1241,6 @@ function playCrawl(): void {
   }
   if (!overlay_menu_up && keyDownEdge(KEYS.M)) {
     mapViewToggle();
-  }
-  // TODO: use crawlerOnScreenButton
-  if (!overlay_menu_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
-    inventory_up = true;
-  } else if (inventory_up && (keyDownEdge(KEYS.I) || padButtonDownEdge(PAD.Y))) {
-    inventory_up = false;
   }
   let game_state = crawlerGameState();
   let script_api = crawlerScriptAPI();
@@ -1508,6 +1539,7 @@ export function playStartup(tiny_font_in: Font): void {
   });
 
   renderAppStartup();
+  combatStartup();
   crawlerLoadData(webFSAPI());
   crawlerMapViewStartup();
 }

@@ -1,3 +1,4 @@
+import { clone } from 'glov/common/util';
 import {
   CrawlerScriptAPI,
   CrawlerScriptEventMapIcon,
@@ -8,12 +9,12 @@ import {
   CrawlerCell,
   JSVec3,
 } from '../common/crawler_state';
-import { EntityDemoClient } from './entity_demo_client';
-
+import { EntityDemoClient, StatsData } from './entity_demo_client';
 import {
   startRecruiting,
   startShopping,
 } from './play';
+
 import type { TraitFactory } from 'glov/common/trait_factory';
 import type { DataObject } from 'glov/common/types';
 
@@ -64,4 +65,22 @@ export function jamTraitsStartup(ent_factory: TraitFactory<Entity, DataObject>):
       return ret;
     }
   });
+  ent_factory.registerTrait<StatsData, undefined>('stats_default', {
+    default_opts: {
+      hp: 10,
+      hp_max: 0, // inherit from hp
+      attack: 4,
+      defense: 4,
+    },
+    alloc_state: function (opts: StatsData, ent: Entity) {
+      if (!ent.data.stats) {
+        ent.data.stats = clone(opts);
+        if (!ent.data.stats.hp_max) {
+          ent.data.stats.hp_max = ent.data.stats.hp;
+        }
+      }
+      return undefined;
+    }
+  });
+
 }

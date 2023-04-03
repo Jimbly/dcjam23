@@ -1232,6 +1232,9 @@ export class CrawlerController {
     assert(move_for_abs_pos.pos);
     if (!v2same(move_for_abs_pos.pos, last_pos)) {
       this.playerMoveFinish(level, inst_cell, move_for_abs_pos.pos);
+      if (disable_player_impulse) {
+        this.cancelAllMoves();
+      }
     }
 
     this.flagCellNextToUsVisible(instantaneous_move.pos);
