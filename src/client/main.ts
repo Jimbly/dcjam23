@@ -147,6 +147,7 @@ export function main(): void {
       sell: 'sell',
       drop: 'drop',
       victory: 'victory',
+      footstep: ['footstep/footstep1', 'footstep/footstep2', 'footstep/footstep3', 'footstep/footstep4'],
     },
   })) {
     return;

@@ -16,6 +16,7 @@ import * as ui from 'glov/client/ui';
 import {
   ButtonStateString,
   modalDialog,
+  playUISound,
   uiHandlingNav,
 } from 'glov/client/ui';
 import { EntityID, NetErrorCallback } from 'glov/common/types';
@@ -861,6 +862,7 @@ export class CrawlerController {
   playerMoveStart(action_id: string, new_pos: JSVec3): void {
     const { game_state, script_api } = this;
     let new_cell = game_state.level!.getCell(new_pos[0], new_pos[1]);
+    playUISound('footstep');
     if (new_cell && new_cell.events) {
       assert(new_cell.events.length);
       if (action_id === 'move_debug') {
