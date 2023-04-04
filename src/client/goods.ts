@@ -1,7 +1,7 @@
 export type GoodAvail = Record<number, [number, number]>;  // floor -> [count, cost]
 export type GoodDef = {
   name: string;
-  realm: 'phys' | 'spirit';
+  realm: 'phys' | 'spirit' | 'both';
   avail: GoodAvail;
   key?: string;
 };
@@ -16,6 +16,15 @@ function physWants(cost: number): GoodAvail {
   return ret;
 }
 export const GOODS: Partial<Record<string, GoodDef>> = {
+  supply: {
+    name: 'Supplies',
+    realm: 'both',
+    avail: {
+      5: [99, 10],
+      6: [99, 10],
+    },
+  },
+
   phys1: {
     name: 'Spoons',
     realm: 'phys',

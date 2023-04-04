@@ -365,11 +365,19 @@ const style_not_allowed = fontStyle(null, {
 
 
 const style_by_realm = {
+  both: fontStyle(null, {
+    color: dawnbringer.font_colors[9],
+  }),
   phys: fontStyle(null, {
-    color: 0xFFFFFFff,
+    color: dawnbringer.font_colors[21],
   }),
   spirit: fontStyle(null, {
-    color: 0x000000ff,
+    color: dawnbringer.font_colors[0],
+  }),
+  key: fontStyle(null, {
+    color: dawnbringer.font_colors[21],
+    outline_width: 4,
+    outline_color: dawnbringer.font_colors[2],
   }),
 };
 
@@ -621,6 +629,7 @@ function inventoryMenu(): boolean {
     if (trader_only_buys && !trader_good?.count && !player_good?.count) {
       continue;
     }
+    let style = style_by_realm[good_def.key ? 'key' : good_def.realm];
     if (trader_good) {
       let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
       let show_value = true;
@@ -632,7 +641,7 @@ function inventoryMenu(): boolean {
         }
       } else {
         font.draw({
-          style: style_by_realm[good_def.realm],
+          style,
           align: ALIGN.HLEFT,
           x: trader_x, y, z,
           w,
@@ -694,7 +703,7 @@ function inventoryMenu(): boolean {
         text: 'Not interested',
       });
     }
-    if (player_good) {
+    if (player_good || good_id === 'supply') {
       let good_name_x = player_count_x + 1;
       if (good_def.key) {
         // show no count
@@ -703,18 +712,18 @@ function inventoryMenu(): boolean {
           align: ALIGN.HCENTER,
           x: player_count_x, y, z,
           w: count_w,
-          text: `${player_good.count}`,
+          text: `${player_good?.count || 0}`,
         });
         good_name_x += count_w;
       }
       font.draw({
-        style: style_by_realm[good_def.realm],
+        style,
         align: ALIGN.HLEFT,
         x: good_name_x, y, z,
         w,
         text: good_def.name,
       });
-      if (trader_good) {
+      if (trader_good && player_good) {
         let num_to_sell = 1;
         if (shift()) {
           num_to_sell = player_good.count;
@@ -733,7 +742,7 @@ function inventoryMenu(): boolean {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
         }
-      } else if (!trader && (!good_def.key || engine.DEBUG && shift())) {
+      } else if (!trader && (!good_def.key || engine.DEBUG && shift()) && player_good) {
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
           w: button_w, z,
