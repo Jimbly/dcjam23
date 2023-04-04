@@ -42,6 +42,8 @@ export interface CrawlerScriptAPIClient extends CrawlerScriptAPI {
 
   localDataSet(data: CrawlerScriptLocalData): void;
   localDataGet(): CrawlerScriptLocalData;
+
+  pos: [number, number];
 }
 
 class CrawlerScriptAPIClientBase {

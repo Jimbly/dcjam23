@@ -930,6 +930,12 @@
         "door",
         "open",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Sign: Mercenary's Guild"
+        }
       ]
     },
     {
@@ -1056,6 +1062,12 @@
         "open",
         "open",
         "open"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Sign: General Store"
+        }
       ]
     },
     {
@@ -1359,6 +1371,12 @@
         "solid",
         "solid",
         "open"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Mags: Hey there, make sure you've got enough supplies to make it somewhere good!"
+        }
       ]
     },
     {
@@ -2349,6 +2367,14 @@
       "pos": [
         4,
         8,
+        3
+      ]
+    },
+    {
+      "type": "shopkeeper",
+      "pos": [
+        2,
+        9,
         3
       ]
     }

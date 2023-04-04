@@ -9,6 +9,7 @@ import {
   CrawlerCell,
   JSVec3,
 } from '../common/crawler_state';
+import { dialog } from './dialog_data';
 import { EntityDemoClient, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {
@@ -28,6 +29,7 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    dialog('greet', 'Welcome to my shop!');
     startShopping();
   },
 });
@@ -36,6 +38,7 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    dialog('greet', 'Need some protection?');
     startRecruiting();
   },
 });
@@ -95,6 +98,15 @@ crawlerScriptRegisterEvent({
   map_icon: CrawlerScriptEventMapIcon.NONE,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
     api.status('key', 'You win!');
+  },
+});
+
+crawlerScriptRegisterEvent({
+  key: 'sign',
+  when: CrawlerScriptWhen.PRE,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    dialog('sign', param || '...');
   },
 });
 

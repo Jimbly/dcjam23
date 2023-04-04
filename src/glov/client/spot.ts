@@ -917,13 +917,15 @@ function keyCheck(nav_dir: SpotNavEnum): boolean {
   }
   switch (nav_dir) {
     case SPOT_NAV_LEFT:
-      return keyDownEdge(KEYS.LEFT) || padButtonDownEdge(PAD.LEFT);
+      return keyDownEdge(KEYS.A) || keyDownEdge(KEYS.NUMPAD4) || keyDownEdge(KEYS.LEFT) || padButtonDownEdge(PAD.LEFT);
     case SPOT_NAV_UP:
-      return keyDownEdge(KEYS.UP) || padButtonDownEdge(PAD.UP);
+      return keyDownEdge(KEYS.W) || keyDownEdge(KEYS.NUMPAD8) || keyDownEdge(KEYS.UP) || padButtonDownEdge(PAD.UP);
     case SPOT_NAV_RIGHT:
-      return keyDownEdge(KEYS.RIGHT) || padButtonDownEdge(PAD.RIGHT);
+      return keyDownEdge(KEYS.D) || keyDownEdge(KEYS.NUMPAD6) || keyDownEdge(KEYS.RIGHT) ||
+        padButtonDownEdge(PAD.RIGHT);
     case SPOT_NAV_DOWN:
-      return keyDownEdge(KEYS.DOWN) || padButtonDownEdge(PAD.DOWN);
+      return keyDownEdge(KEYS.S) || keyDownEdge(KEYS.NUMPAD5) || keyDownEdge(KEYS.NUMPAD2) ||
+        keyDownEdge(KEYS.DOWN) || padButtonDownEdge(PAD.DOWN);
     case SPOT_NAV_PREV:
       return keyDown(KEYS.SHIFT) && keyDownEdge(KEYS.TAB) || padButtonDownEdge(PAD.LEFT_BUMPER);
     case SPOT_NAV_NEXT:

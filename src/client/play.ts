@@ -124,6 +124,12 @@ import { crawlerScriptAPIDummyServer } from './crawler_script_api_client';
 import { crawlerOnScreenButton } from './crawler_ui';
 import * as dawnbringer from './dawnbringer32';
 import {
+  dialogMoveLocked,
+  dialogReset,
+  dialogRun,
+  dialogStartup,
+} from './dialog_system';
+import {
   EntityDemoClient,
   Good,
   Merc,
@@ -407,9 +413,9 @@ const OVERLAY_SUB_W = OVERLAY_W / 2;
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
 let inventory_scroll: ScrollArea;
-function inventoryMenu(): void {
+function inventoryMenu(): boolean {
   if (!inventory_up) {
-    return;
+    return false;
   }
   recruit_up = false;
   let reset = false;
@@ -580,6 +586,9 @@ function inventoryMenu(): void {
       }
     }
     let trader_only_buys = trader_good && good_def.avail[floor_id] && !good_def.avail[floor_id][0];
+    if (trader_only_buys && !trader_good?.count && !player_good?.count) {
+      continue;
+    }
     if (trader_good) {
       let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
       let show_value = true;
@@ -733,6 +742,7 @@ function inventoryMenu(): void {
       w: OVERLAY_SUB_W, h: OVERLAY_H, z: z - 1,
     });
   }
+  return Boolean(trader);
 }
 
 let MERC_LIST: Merc[] = [{
@@ -1151,9 +1161,13 @@ function playCrawl(): void {
     flee: 0,
   } as Record<ValidKeys, number>;
 
+  let dt = getScaledFrameDt();
+  dialogRun(dt);
+
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
   let frame_combat = engagedEnemy();
+  let locked_dialog = dialogMoveLocked();
   let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
@@ -1247,10 +1261,8 @@ function playCrawl(): void {
 
   if (buildModeActive()) {
     inventory_up = recruit_up = false;
+    dialogReset();
   }
-
-  inventoryMenu();
-  recruitMenu();
 
   if (frame_combat && engagedEnemy() !== crawlerEntInFront()) {
     // turn to face
@@ -1264,7 +1276,6 @@ function playCrawl(): void {
   button_x0 = MOVE_BUTTONS_X0;
   button_y0 = MOVE_BUTTONS_Y0;
 
-  let dt = getScaledFrameDt();
   if (frame_combat) {
     button(1, 1, 8, 'flee', [KEYS.S, KEYS.NUMPAD2, KEYS.NUMPAD5], [PAD.B, PAD.DOWN]);
 
@@ -1281,8 +1292,8 @@ function playCrawl(): void {
     button_w: BUTTON_W,
     button_sprites,
     disable_move: moveBlocked() || overlay_menu_up,
-    disable_player_impulse: Boolean(frame_combat),
-    show_buttons: !frame_combat,
+    disable_player_impulse: Boolean(frame_combat || locked_dialog),
+    show_buttons: !frame_combat && !locked_dialog,
     do_debug_move: engine.defines.LEVEL_GEN || build_mode,
     show_debug: Boolean(settings.show_fps),
   });
@@ -1344,11 +1355,18 @@ function playCrawl(): void {
       false, script_api, overlay_menu_up);
   }
 
+  let is_fullscreen_ui = inventoryMenu() || recruit_up;
+  recruitMenu();
+
   if (!menu_up) {
     drawMercs();
   }
 
-  statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
+  if (is_fullscreen_ui) {
+    statusTick(0, 0, Z.STATUS, game_width, game_height - 4);
+  } else {
+    statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
+  }
 
   profilerStopFunc();
 }
@@ -1451,7 +1469,8 @@ export function play(dt: number): void {
     let script_api = crawlerScriptAPI();
     script_api.is_visited = true; // Always visited for AI
     aiDoFloor(game_state.floor_id, game_state, entityManager(), engine.defines,
-      settings.ai_pause || engine.defines.LEVEL_GEN || overlay_menu_up || engagedEnemy(), script_api);
+      settings.ai_pause || engine.defines.LEVEL_GEN || overlay_menu_up || engagedEnemy() ||
+      dialogMoveLocked(), script_api);
   }
 
   if (crawlerCommWant()) {
@@ -1485,6 +1504,7 @@ function playInitShared(online: boolean): void {
   pause_menu_up = false;
   inventory_up = false;
   recruit_up = false;
+  dialogReset();
 }
 
 
@@ -1680,6 +1700,7 @@ export function playStartup(tiny_font_in: Font): void {
 
   renderAppStartup();
   combatStartup();
+  dialogStartup(font);
   crawlerLoadData(webFSAPI());
   crawlerMapViewStartup();
 }

@@ -101,7 +101,9 @@ class GlovUIEditBox {
     this.custom_nav = {
       // We want left/right to be handled by the input element, not used to change focus.
       [SPOT_NAV_LEFT]: null,
+      [SPOT_NAV_UP]: null, // JAM: prevent KEYS.S from triggering
       [SPOT_NAV_RIGHT]: null,
+      [SPOT_NAV_DOWN]: null,
     };
     this.sticky_focus = true;
     this.applyParams(params);
