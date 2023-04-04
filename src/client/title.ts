@@ -1,10 +1,15 @@
 import * as engine from 'glov/client/engine.js';
-import { localStorageGet } from 'glov/client/local_storage.js';
+import { ALIGN } from 'glov/client/font.js';
+import { localStorageGetJSON } from 'glov/client/local_storage.js';
 import * as ui from 'glov/client/ui.js';
 import * as urlhash from 'glov/client/urlhash.js';
 import { createAccountUI } from './account_ui.js';
 import { crawlerCommStart, crawlerCommStartup, crawlerCommWant } from './crawler_comm.js';
-import { crawlerPlayWantNewGame } from './crawler_play.js';
+import {
+  SavedGameData,
+  crawlerPlayWantMode,
+  crawlerPlayWantNewGame,
+} from './crawler_play.js';
 import * as main from './main.js';
 
 
@@ -42,20 +47,87 @@ function title(dt: number): void {
   y += ui.font_height + 2;
   for (let ii = 0; ii < 3; ++ii) {
     let slot = ii + 1;
-    ui.print(null, x, y, Z.UI, `Slot ${slot}`);
+    let yy = y;
+    ui.font.draw({
+      align: ALIGN.HCENTER, w: ui.button_width,
+      x, y: yy,
+      text: `Slot ${slot}`,
+    });
+    yy += ui.button_height;
+    let manual_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
+    let auto_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, {});
+
     if (ui.buttonText({
-      x, y: y + ui.button_height, text: 'Load Game',
-      disabled: !localStorageGet(`savedgame_${slot}`)
+      x, y: yy, text: 'New Game',
     })) {
+      if (manual_data.timestamp || auto_data.timestamp) {
+        ui.modalDialog({
+          text: 'This will overwrite your existing game when you next save.  Continue?',
+          buttons: {
+            yes: function () {
+              crawlerPlayWantNewGame();
+              urlhash.go(`?c=local&slot=${slot}`);
+            },
+            no: null,
+          }
+        });
+      } else {
+        crawlerPlayWantNewGame();
+        urlhash.go(`?c=local&slot=${slot}`);
+      }
+    }
+    yy += ui.button_height + 2;
+
+    if (ui.buttonText({
+      x, y: yy, text: 'Load Game',
+      disabled: !manual_data.timestamp
+    })) {
+      crawlerPlayWantMode('manual');
       urlhash.go(`?c=local&slot=${slot}`);
     }
+    yy += ui.button_height;
+    if (manual_data.timestamp) {
+      ui.font.draw({
+        align: ALIGN.HCENTER, w: ui.button_width,
+        x, y: yy,
+        text: new Date(manual_data.timestamp).toLocaleDateString(),
+      });
+      yy += ui.font_height;
+      ui.font.draw({
+        align: ALIGN.HCENTER, w: ui.button_width,
+        x, y: yy,
+        text: new Date(manual_data.timestamp).toLocaleTimeString(),
+      });
+      yy += ui.font_height;
+    }
+    yy += 2;
+
     if (ui.buttonText({
-      x, y: y + ui.button_height * 2 + 2, text: 'New Game',
+      x, y: yy, text: 'Load Autosave',
+      disabled: !auto_data.timestamp
     })) {
-      crawlerPlayWantNewGame();
+      crawlerPlayWantMode('auto');
       urlhash.go(`?c=local&slot=${slot}`);
     }
-    x += ui.button_width + 2;
+    yy += ui.button_height;
+    if (auto_data.timestamp) {
+      ui.font.draw({
+        align: ALIGN.HCENTER, w: ui.button_width,
+        x, y: yy,
+        text: new Date(auto_data.timestamp).toLocaleDateString(),
+      });
+      yy += ui.font_height;
+      ui.font.draw({
+        align: ALIGN.HCENTER, w: ui.button_width,
+        x, y: yy,
+        text: new Date(auto_data.timestamp).toLocaleTimeString(),
+      });
+      yy += ui.font_height;
+    }
+
+    y += 2;
+
+    x += ui.button_width + 4;
   }
   x = 10;
   y += ui.button_height * 3 + 6;

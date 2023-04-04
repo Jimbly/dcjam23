@@ -3,19 +3,28 @@ import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
 import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
 import { EAST } from '../common/crawler_state';
-import { crawlerController, crawlerSaveGame, crawlerScriptAPI } from './crawler_play';
+import {
+  crawlerController,
+  crawlerScriptAPI,
+} from './crawler_play';
 import { dialogPush, dialogTextStyle } from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
 import { SUPPLY_GOOD } from './jam_events';
-import { myEnt, playerConsumeGood, playerHasGood, playerHasKeyGood } from './play';
+import {
+  autosave,
+  myEnt,
+  playerConsumeGood,
+  playerHasGood,
+  playerHasKeyGood,
+} from './play';
 import { statusPush, statusSet } from './status';
 
 type DialogFunc = (() => void) | ((param: string) => void) | ((param: string) => CrawlerScriptEventMapIcon);
 
 function leaveTownBlocked(): string[] | null {
   let { data } = myEnt();
-  if (data.journeys > 0) {
+  if (data.town_visits > 0) {
     return null;
   }
   let reasons = [];
@@ -165,12 +174,22 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
   leavetown: function () {
     let reasons = leaveTownBlocked();
     if (!reasons) {
-      let { data } = myEnt();
-      if (data.journeys === 0) {
+      let me = myEnt();
+      let { data } = me;
+      if (data.journeys === 0 && data.town_visits === 0) {
         dialogPush({
           text: 'Mags: Good luck out there!  Follow the road Spiritward to get to Spiriton.',
           transient: true,
         });
+      } else if (data.journeys === 0) {
+        dialogPush({
+          text: 'Mags: Remember, head Spiritward to get to Spiriton.',
+          transient: true,
+        });
+      }
+      if (data.autosave_journey !== data.journeys) {
+        data.autosave_journey = data.journeys;
+        autosave();
       }
       return;
     }
@@ -184,16 +203,15 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         },
       }],
     });
-
   },
   final: function () {
     dialogPush({
-      text: 'I have finally escaped this realm.  Where was I?  Why was I here?' +
-        '  Perhaps I will contemplate these things in the next life...',
+      text: 'I have reclaimed that which was lost.  Perhaps now I am whole again.' +
+        '  For now...',
       buttons: [{
         label: 'Rest. (Return to main menu)',
         cb: function () {
-          crawlerSaveGame();
+          autosave();
           urlhash.go('');
         },
       }, {

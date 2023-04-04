@@ -40,8 +40,8 @@ class DialogState {
   pos: JSVec2 = crawlerScriptAPI().pos.slice(0) as JSVec2;
   fade_time = 0;
   counter = 0;
-  frame = 0;
   ff_down = true;
+  buttons_vis = false;
 }
 let active_state: DialogState;
 
@@ -75,7 +75,7 @@ export function dialogMoveLocked(): boolean {
 const HPAD = 4;
 const BUTTON_HEAD = 4;
 const BUTTON_PAD = 1;
-export function dialogRun(dt: number): void {
+export function dialogRun(dt: number): number {
   if (buildModeActive()) {
     active_dialog = null;
   }
@@ -85,12 +85,11 @@ export function dialogRun(dt: number): void {
   let h = 61;
   let z = Z.DIALOG;
   if (!active_dialog) {
-    return;
+    return 0;
   }
   let { transient, text, buttons } = active_dialog;
-  active_state.frame++;
   active_state.counter += dt;
-  let { frame, counter } = active_state;
+  let { buttons_vis, counter } = active_state;
   if (transient && !active_state.fade_time) {
     let my_pos = crawlerMyEnt().getData<JSVec3>('pos')!;
     if (!v2same(my_pos, active_state.pos)) {
@@ -101,7 +100,7 @@ export function dialogRun(dt: number): void {
   if (active_state.fade_time) {
     if (dt >= active_state.fade_time) {
       active_dialog = null;
-      return;
+      return 0;
     }
     active_state.fade_time -= dt;
     alpha = active_state.fade_time / FADE_TIME;
@@ -152,7 +151,7 @@ export function dialogRun(dt: number): void {
       let button = buttons![ii];
       if (ui.buttonText({
         auto_focus: ii === 0,
-        focus_steal: ii === 0 && (num_buttons === 1 || frame === 1),
+        focus_steal: ii === 0 && (num_buttons === 1 || !buttons_vis),
         text: button.label,
         x: x + 4,
         w: w - HPAD * 2,
@@ -170,6 +169,7 @@ export function dialogRun(dt: number): void {
       }
       yy += ui.button_height + BUTTON_PAD;
     }
+    active_state.buttons_vis = true;
   }
 
   temp_color[3] = alpha;
@@ -195,6 +195,8 @@ export function dialogRun(dt: number): void {
   if (!transient) {
     eatAllInput();
   }
+
+  return y - STATUS_PAD_TOP;
 }
 
 export function dialogPush(param: DialogParam): void {

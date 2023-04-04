@@ -63,6 +63,7 @@ import {
 import { getEffCell } from '../common/crawler_script';
 import {
   CrawlerLevel,
+  DIR_CELL,
   crawlerLoadData,
   dirFromDelta,
 } from '../common/crawler_state';
@@ -98,16 +99,15 @@ import {
   mapViewToggle,
 } from './crawler_map_view';
 import {
-  SavedGameData,
   crawlerBuildModeActivate,
   crawlerController,
   crawlerGameState,
-  crawlerLoadOfflineGame,
+  crawlerPlayInitOffline,
   crawlerPlayStartup,
+  crawlerPlayWantMode,
   crawlerRenderFrame,
   crawlerRenderFramePrep,
   crawlerSaveGame,
-  crawlerSaveGameGetData,
   crawlerScriptAPI,
   getScaledFrameDt,
 } from './crawler_play';
@@ -151,6 +151,7 @@ import { levelGenTest } from './level_gen_test';
 import { MERC_LIST } from './mercs';
 import { renderAppStartup } from './render_app';
 import {
+  statusPush,
   statusSet,
   statusTick,
 } from './status';
@@ -251,12 +252,24 @@ function pauseMenu(): void {
     name: isOnline() ? 'Return to Title' : 'Save and Exit',
     cb: function () {
       if (!isOnline()) {
-        crawlerSaveGame();
+        crawlerSaveGame('manual');
       }
       urlhash.go('');
     },
   }];
   if (isLocal()) {
+    // let slot = urlhash.get('slot') || '1';
+    // let manual_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
+    // let auto_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, {});
+    // if (manual_data.timestamp) {
+    //   items.push({
+    //     name: 'Load Game',
+    //     cb: function () {
+    //       // ?
+    //     },
+    //   });
+    // }
+
     items.push({
       name: 'Exit without saving',
       cb: function () {
@@ -1363,7 +1376,7 @@ function playCrawl(): void {
   } as Record<ValidKeys, number>;
 
   let dt = getScaledFrameDt();
-  dialogRun(dt);
+  let dialog_y = dialogRun(dt);
 
   const build_mode = buildModeActive();
   let frame_map_view = mapViewActive();
@@ -1571,7 +1584,11 @@ function playCrawl(): void {
   if (is_fullscreen_ui) {
     statusTick(0, 0, Z.STATUS, game_width, game_height - 4);
   } else {
-    statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
+    if (dialog_y) {
+      statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, dialog_y - VIEWPORT_Y0);
+    } else {
+      statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
+    }
   }
 
   profilerStopFunc();
@@ -1731,21 +1748,14 @@ function playInitEarly(room: ClientChannelWorker): void {
   playInitShared(true);
 }
 
-function saveUponLeavingTown(me: Entity): void {
-  me.data.last_save_in_town = '';
-  me.data.last_save_in_town = JSON.stringify(crawlerSaveGameGetData());
+export function autosave(): void {
+  statusPush('Auto-saved.');
+  crawlerSaveGame('auto');
 }
 
-export function restartInTown(): void {
-  let me = myEnt();
-  assert(me);
-  let data = me.data.last_save_in_town;
-  assert(data);
-  let data2 = JSON.parse(data) as SavedGameData;
-  crawlerLoadOfflineGame(data2);
-  me = myEnt();
-  assert(me);
-  me.data.last_save_in_town = data;
+export function restartFromLastSave(): void {
+  crawlerPlayWantMode('recent');
+  crawlerPlayInitOffline();
 }
 
 function resetFloorOnJourney(entity_manager: ClientEntityManagerInterface,
@@ -1771,6 +1781,20 @@ function resetFloorOnJourney(entity_manager: ClientEntityManagerInterface,
       }
     }
   }
+
+  let { w, h } = level;
+  let script_api = crawlerScriptAPI();
+  for (let yy = 0; yy < h; ++yy) {
+    for (let xx = 0; xx < w; ++xx) {
+      let cell = level.getCell(xx, yy)!;
+      if (cell.desc.code === 'BRIDGE') {
+        let key_name = cell.getKeyNameForWall(DIR_CELL);
+        if (key_name) {
+          script_api.keyClear(key_name);
+        }
+      }
+    }
+  }
 }
 
 function initLevel(entity_manager: ClientEntityManagerInterface,
@@ -1781,11 +1805,14 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
   if (level.props.is_town && floor_id !== me.data.last_journey_town) {
     me.data.last_journey_town = floor_id;
     me.data.journeys++;
+    autosave();
   }
-  if (last_level && last_level.props.is_town && !level.props.is_town) {
+  if (last_level && !last_level.props.is_town && level.props.is_town) {
     // Save our state as of when we left town last
     me.data.town_visits++;
-    saveUponLeavingTown(me);
+    statusPush('Safe at last...\n' +
+      'Threats respawn.\n' +
+      'Bridges collapse.');
   }
   last_level = level;
   if (me.data.floor_town_init[floor_id] !== me.data.town_visits) {

@@ -30,7 +30,7 @@ import {
   drawHealthBar,
   mercPos,
   myEnt,
-  restartInTown,
+  restartFromLastSave,
 } from './play';
 
 const { abs, floor, max, pow, random } = Math;
@@ -230,8 +230,8 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
         text: 'With no mercenaries to defend you, the being quickly finishes you off.',
         button_width: 160,
         buttons: {
-          'Restart from entrance': () => {
-            restartInTown();
+          'Restart from last save': () => {
+            restartFromLastSave();
           },
         }
       });

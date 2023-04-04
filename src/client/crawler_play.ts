@@ -227,6 +227,7 @@ export type SavedGameData = {
   floors_inited?: Partial<Record<number, true>>;
   vis_data?: Partial<Record<number, string>>;
   script_data?: DataObject;
+  timestamp?: number;
 };
 let local_game_data: SavedGameData = {};
 
@@ -285,13 +286,14 @@ export function crawlerSaveGameGetData(): SavedGameData {
   }
   local_game_data.entities = ent_list;
   local_game_data.script_data = script_api.localDataGet();
+  local_game_data.timestamp = Date.now();
   return local_game_data;
 }
 
-export function crawlerSaveGame(): void {
+export function crawlerSaveGame(mode: 'auto' | 'manual'): void {
   let slot = urlhash.get('slot') || '1';
   let data = crawlerSaveGameGetData();
-  localStorageSetJSON<SavedGameData>(`savedgame_${slot}`, data);
+  localStorageSetJSON<SavedGameData>(`savedgame_${slot}.${mode}`, data);
 }
 
 type LocalVisData = {
@@ -467,6 +469,11 @@ export function crawlerPlayWantNewGame(): void {
   want_new_game = true;
 }
 
+let load_mode: 'auto' | 'manual' | 'recent' = 'recent';
+export function crawlerPlayWantMode(mode: 'auto' | 'manual' | 'recent'): void {
+  load_mode = mode;
+}
+
 export type CrawlerOfflineData = {
   new_player_data: DataObject;
   loading_state: EngineState;
@@ -581,7 +588,7 @@ export function crawlerBuildModeActivate(build_mode: boolean): void {
       controller.buildModeSwitch({
         entity_manager: crawlerEntityManager(),
       });
-      crawlerSaveGame();
+      crawlerSaveGame('manual');
     }
   }
 }
@@ -671,7 +678,24 @@ export function crawlerLoadOfflineGame(data: SavedGameData): void {
 
 export function crawlerPlayInitOffline(): void {
   let slot = urlhash.get('slot') || '1';
-  let data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}`, {});
+  let data_manual = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
+  let data_auto = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, {});
+  let data;
+  if (load_mode === 'manual') {
+    data = data_manual;
+  } else if (load_mode === 'auto') {
+    data = data_auto;
+  } else {
+    if (data_manual.timestamp) {
+      if (data_auto.timestamp && data_auto.timestamp > data_manual.timestamp) {
+        data = data_auto;
+      } else {
+        data = data_manual;
+      }
+    } else {
+      data = data_auto;
+    }
+  }
   crawlerLoadOfflineGame(data);
 }
 
