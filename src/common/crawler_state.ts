@@ -121,7 +121,7 @@ import {
   vec2,
   vec3,
 } from 'glov/common/vmath';
-import { CrawlerScriptAPI, getEffWall } from './crawler_script';
+import { CrawlerScriptAPI, getEffCell, getEffWall } from './crawler_script';
 
 export type JSVec2 = [number, number];
 export type JSVec3 = [number, number, number];
@@ -625,8 +625,11 @@ export class CrawlerLevel {
         ret |= BLOCK_MOVE;
       } else {
         let neighbor_cell = this.getCell(pos[0] + DX[dir], pos[1] + DY[dir]);
-        if (neighbor_cell && !neighbor_cell.desc.open_move) {
-          ret |= BLOCK_MOVE;
+        if (neighbor_cell) {
+          let cell_desc = getEffCell(script_api, neighbor_cell);
+          if (!cell_desc.open_move) {
+            ret |= BLOCK_MOVE;
+          }
         }
       }
       if (!wall_desc.open_vis) { // e.g. doors

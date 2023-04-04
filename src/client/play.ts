@@ -60,6 +60,7 @@ import {
   vec2,
   vec4,
 } from 'glov/common/vmath';
+import { getEffCell } from '../common/crawler_script';
 import {
   CrawlerLevel,
   crawlerLoadData,
@@ -149,6 +150,7 @@ import { jamTraitsStartup } from './jam_events';
 import { levelGenTest } from './level_gen_test';
 import { renderAppStartup } from './render_app';
 import {
+  statusSet,
   statusTick,
 } from './status';
 import { UPGRADES } from './upgrades';
@@ -1353,6 +1355,18 @@ function drawMercs(): void {
   }
 }
 
+function drawHints(): void {
+  let cell = controller.getCellInFront();
+  if (!cell) {
+    return;
+  }
+
+  let cell_desc = getEffCell(crawlerScriptAPI(), cell);
+  if (cell_desc.code === 'BRIDGE') {
+    statusSet('bridge', 'Repair cost: 1 Supply').fade();
+  }
+}
+
 let temp_delta = vec2();
 function playCrawl(): void {
   profilerStartFunc();
@@ -1569,6 +1583,10 @@ function playCrawl(): void {
 
   if (!menu_up) {
     drawMercs();
+  }
+
+  if (!menu_up && !frame_combat) {
+    drawHints();
   }
 
   if (is_fullscreen_ui) {

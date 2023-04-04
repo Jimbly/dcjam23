@@ -1,0 +1,9 @@
+---
+open_move: true
+open_vis: true
+visuals:
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: wall_pit
+    offs: [0, 1]

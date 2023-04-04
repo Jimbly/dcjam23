@@ -456,6 +456,20 @@ export class CrawlerController {
     }
   }
 
+  getCellInFront(): CrawlerCell | null {
+    const { game_state, last_pos, last_rot, script_api } = this;
+    const { level } = game_state;
+    assert(level);
+    script_api.setLevel(level);
+    script_api.setPos(last_pos);
+    if (!this.isMoving() && !level.wallsBlock(last_pos, last_rot, script_api)) {
+      v2add(temp_pos, last_pos, DXY[last_rot]);
+      return !buildModeActive() && level.getCell(temp_pos[0], temp_pos[1]) || null;
+    } else {
+      return null;
+    }
+  }
+
   startMove(dir: DirType): MoveState {
     return this.pushImpulseState(DXY[dir], this.moveEffRot(), ACTION_MOVE, dir);
   }

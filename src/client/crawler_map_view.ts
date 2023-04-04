@@ -564,7 +564,7 @@ export function crawlerMapViewStartup(color_rollover?: ROVec4): void {
   map_sprite = spriteCreate({
     name: 'map_tileset',
     ws: [7,7,7,7,7,7,7,7,7],
-    hs: [7,7,7,7],
+    hs: [7,7,7,7,7,7,7,7,7],
     filter_min: gl.NEAREST,
     filter_mag: gl.NEAREST,
   });

@@ -4,20 +4,27 @@ import {
   CrawlerScriptEventMapIcon,
   CrawlerScriptWhen,
   crawlerScriptRegisterEvent,
+  crawlerScriptRegisterFunc,
 } from '../common/crawler_script';
 import {
   CrawlerCell,
+  DIR_CELL,
+  DirTypeOrCell,
   JSVec3,
 } from '../common/crawler_state';
+import { crawlerMyEntOptional } from './crawler_entity_client';
 import { dialog, dialogMapIcon } from './dialog_data';
-import { EntityDemoClient, StatsData } from './entity_demo_client';
+import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {
   myEnt,
+  playerConsumeGood,
+  playerHasGood,
   startRecruiting,
   startShopping,
   startUpgrade,
 } from './play';
+import { statusPush } from './status';
 
 import type { TraitFactory } from 'glov/common/trait_factory';
 import type { DataObject } from 'glov/common/types';
@@ -152,6 +159,41 @@ crawlerScriptRegisterEvent({
     dialog(id, param);
   },
 });
+
+const supply_good: Good = {
+  type: 'supply',
+  count: 1,
+  cost: 0,
+};
+
+crawlerScriptRegisterEvent({
+  key: 'bridge',
+  when: CrawlerScriptWhen.PRE,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    let key_name = cell.getKeyNameForWall(DIR_CELL);
+    if (!key_name) {
+      return statusPush('Missing key');
+    }
+    if (api.keyGet(key_name)) {
+      return;
+    }
+    playerConsumeGood(supply_good);
+    statusPush('Bridge fixed');
+    statusPush('-1 Supplies');
+    api.keySet(key_name);
+  },
+});
+
+crawlerScriptRegisterFunc('BRIDGE', function (
+  script_api: CrawlerScriptAPI, cell: CrawlerCell, dir: DirTypeOrCell
+): boolean {
+  if (!crawlerMyEntOptional()) {
+    return false;
+  }
+  return playerHasGood(supply_good);
+});
+
 
 export function jamEventsStartup(): void {
   // ?

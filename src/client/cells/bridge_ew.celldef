@@ -1,0 +1,20 @@
+---
+open_vis: true
+open_move: true
+default_wall: path_chasm
+map_view_detail_frame: 37
+
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: bridge_ew
+# - pass: bg
+#   type: simple_ceiling
+#   opts:
+#     spritesheet: path
+#     tile: ceiling
+
+
+corners: # pillars and floor/ceiling details

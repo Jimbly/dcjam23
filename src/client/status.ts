@@ -12,7 +12,7 @@ const STATUS_PAD_BOTTOM = 4;
 class StatusMessage {
   counter = 0;
   time_fade = 4000;
-  time_end = 5000;
+  time_end = 4500;
   text: string;
   key?: string;
   style: FontStyle;

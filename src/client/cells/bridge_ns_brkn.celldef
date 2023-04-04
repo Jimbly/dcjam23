@@ -1,0 +1,30 @@
+---
+open_vis: true
+open_move: false
+default_wall: path_chasm
+map_view_detail_frame: 38
+code: 'BRIDGE'
+default_props:
+- key_cell
+default_events:
+- bridge
+
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: bridge_ns_brkn
+# - pass: bg
+#   type: simple_ceiling
+#   opts:
+#     spritesheet: path
+#     tile: ceiling
+
+replace:
+  - func: KEY
+    name: bridge_ns
+  - func: BRIDGE
+    name: bridge_ns_fixable
+
+corners: # pillars and floor/ceiling details
