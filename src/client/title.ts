@@ -11,6 +11,7 @@ import {
   crawlerPlayWantNewGame,
 } from './crawler_play.js';
 import * as main from './main.js';
+import { tickMusic } from './play.js';
 
 
 const { max } = Math;
@@ -23,6 +24,8 @@ function title(dt: number): void {
   main.chat_ui.run({
     hide: true,
   });
+
+  tickMusic(true, false);
 
   let y = 40;
   if (engine.DEBUG || true) {

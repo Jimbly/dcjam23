@@ -1,4 +1,7 @@
 ---
+# Patrolling
+properties:
+  danger_dist: 2
 traits:
 - id: patrol
 - id: enemy

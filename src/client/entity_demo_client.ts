@@ -97,6 +97,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   declare is_player: boolean;
   declare is_enemy: boolean;
   declare is_trader: boolean;
+  declare danger_dist: number;
 
   constructor(data_in: DataObject) {
     super(data_in);
@@ -164,3 +165,4 @@ EntityDemoClient.prototype.draw2D = crawlerEntClientDefaultDraw2D;
 EntityDemoClient.prototype.onDelete = crawlerEntClientDefaultOnDelete;
 EntityDemoClient.prototype.do_split = true;
 EntityDemoClient.prototype.is_trader = false;
+EntityDemoClient.prototype.danger_dist = 0;

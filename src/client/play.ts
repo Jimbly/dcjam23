@@ -1,7 +1,10 @@
 import assert from 'assert';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
-import { getFrameIndex } from 'glov/client/engine';
+import {
+  getFrameDt,
+  getFrameIndex,
+} from 'glov/client/engine';
 import { ClientEntityManagerInterface } from 'glov/client/entity_manager_client';
 import {
   ALIGN,
@@ -22,6 +25,7 @@ import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
 import { SimpleMenu, simpleMenuCreate } from 'glov/client/simple_menu';
+import { FADE, soundPlayMusic } from 'glov/client/sound';
 import {
   spotSuppressPad,
 } from 'glov/client/spot';
@@ -55,6 +59,7 @@ import {
 } from 'glov/common/util';
 import {
   Vec2,
+  v2dist,
   v2set,
   v2sub,
   vec2,
@@ -160,12 +165,13 @@ import { UPGRADES } from './upgrades';
 const spritesheet_ui = require('./img/ui');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const { floor, max, min, round } = Math;
+const { floor, max, min, round, sqrt } = Math;
 
 declare module 'glov/client/settings' {
   export let ai_pause: 0 | 1; // TODO: move to ai.ts
   export let show_fps: 0 | 1;
-  export let volume: number;
+  export let volume_sound: number;
+  export let volume_music: number;
 }
 
 declare module 'glov/client/ui' {
@@ -242,8 +248,13 @@ function pauseMenu(): void {
       pause_menu_up = false;
     },
   }, {
-    name: 'Volume',
-    //plus_minus: true,
+    name: 'SFX Vol',
+    slider: true,
+    value_inc: 0.05,
+    value_min: 0,
+    value_max: 1,
+  }, {
+    name: 'Mus Vol',
     slider: true,
     value_inc: 0.05,
     value_min: 0,
@@ -279,15 +290,19 @@ function pauseMenu(): void {
   }
 
   let volume_item = items[1];
-  volume_item.value = settings.volume;
-  volume_item.name = `Volume: ${(settings.volume * 100).toFixed(0)}`;
+  volume_item.value = settings.volume_sound;
+  volume_item.name = `SFX Vol: ${(settings.volume_sound * 100).toFixed(0)}`;
+  volume_item = items[2];
+  volume_item.value = settings.volume_music;
+  volume_item.name = `Mus Vol: ${(settings.volume_music * 100).toFixed(0)}`;
 
   pause_menu.run({
     slider_w: 80,
     items,
   });
 
-  settings.set('volume', pause_menu.getItem(1).value);
+  settings.set('volume_sound', pause_menu.getItem(1).value);
+  settings.set('volume_music', pause_menu.getItem(2).value);
 
   ui.menuUp();
 }
@@ -1359,6 +1374,73 @@ function drawHints(): void {
   }
 }
 
+function calcDanger(): number {
+  let { floor_id, pos } = crawlerGameState();
+  let { entities } = entityManager();
+  let nearest = Infinity;
+  for (let ent_id_str in entities) {
+    let ent = entities[ent_id_str]!;
+    if (ent.data.floor === floor_id &&
+      ent.is_enemy && ent.isAlive()
+    ) {
+      nearest = min(nearest, v2dist(pos, ent.data.pos) - ent.danger_dist);
+    }
+  }
+  return nearest;
+}
+
+let music = [
+  '',
+  'bgm_phys',
+  'bgm_spirit',
+  'bgm_path_danger',
+  'bgm_path_explore',
+];
+let active_music = 0;
+let music_danger = 0;
+const SAFE_DIST = 4.5;
+const DANGER_DIST = 2.5;
+export function tickMusic(force_none: boolean, force_danger: boolean): void {
+  let desired;
+  if (force_none || buildModeActive()) {
+    desired = 0;
+  } else {
+    let level = crawlerGameState().level;
+    if (!level) {
+      desired = 0;
+    } else {
+      if (level.props.realm === 'phys') {
+        desired = 1;
+        music_danger = 0;
+      } else if (level.props.realm === 'spirit') {
+        desired = 2;
+        music_danger = 0;
+      } else {
+        let danger = calcDanger();
+        if (!isFinite(danger) || danger >= SAFE_DIST) {
+          music_danger = 0;
+        } else {
+          let ddanger = getFrameDt() / 4000;
+          music_danger += (DANGER_DIST - danger) * ddanger;
+          music_danger = clamp(music_danger, 0, 1);
+        }
+        if (force_danger) {
+          music_danger = 1;
+        }
+        desired = music_danger > 0.75 ? 3 : 4;
+      }
+    }
+  }
+  if (desired !== active_music) {
+    if (!desired) {
+      soundPlayMusic(music[active_music], 0, FADE);
+    } else {
+      soundPlayMusic(music[desired], 1, FADE);
+    }
+    active_music = desired;
+  }
+}
+
 let temp_delta = vec2();
 function playCrawl(): void {
   profilerStartFunc();
@@ -1400,6 +1482,7 @@ function playCrawl(): void {
 
   }
 
+  tickMusic(false, Boolean(frame_combat));
 
   let button_x0: number;
   let button_y0: number;
@@ -1749,8 +1832,9 @@ function playInitEarly(room: ClientChannelWorker): void {
 }
 
 export function autosave(): void {
-  statusPush('Auto-saved.');
+  myEnt().data.autosave_journey = myEnt().data.journeys;
   crawlerSaveGame('auto');
+  statusPush('Auto-saved.');
 }
 
 export function restartFromLastSave(): void {
