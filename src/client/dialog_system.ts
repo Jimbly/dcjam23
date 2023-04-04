@@ -1,5 +1,12 @@
 import { Font, FontStyle, fontStyleColored } from 'glov/client/font';
-import { eatAllInput } from 'glov/client/input';
+import {
+  KEYS,
+  PAD,
+  eatAllInput,
+  keyDown,
+  mouseDownAnywhere,
+  padButtonDown,
+} from 'glov/client/input';
 import * as ui from 'glov/client/ui';
 import {
   v2same,
@@ -12,7 +19,7 @@ import { crawlerGameState, crawlerScriptAPI } from './crawler_play';
 import * as dawnbringer from './dawnbringer32';
 import { dialog } from './dialog_data';
 
-const { floor } = Math;
+const { ceil, floor } = Math;
 
 const FADE_TIME = 1000;
 const STATUS_PAD_TOP = 2;
@@ -32,7 +39,9 @@ let active_dialog: DialogParam | null = null;
 class DialogState {
   pos: JSVec2 = crawlerScriptAPI().pos.slice(0) as JSVec2;
   fade_time = 0;
+  counter = 0;
   frame = 0;
+  ff_down = true;
 }
 let active_state: DialogState;
 
@@ -49,6 +58,13 @@ export function dialogTextStyle(): FontStyle {
   } else {
     return style_text_phys;
   }
+}
+
+function ff(): boolean {
+  return keyDown(KEYS.SPACE) || keyDown(KEYS.ENTER) ||
+    padButtonDown(PAD.LEFT_TRIGGER) || padButtonDown(PAD.RIGHT_TRIGGER) ||
+    padButtonDown(PAD.A) || padButtonDown(PAD.B) ||
+    mouseDownAnywhere();
 }
 
 
@@ -72,8 +88,9 @@ export function dialogRun(dt: number): void {
     return;
   }
   let { transient, text, buttons } = active_dialog;
-  let { frame } = active_state;
   active_state.frame++;
+  active_state.counter += dt;
+  let { frame, counter } = active_state;
   if (transient && !active_state.fade_time) {
     let my_pos = crawlerMyEnt().getData<JSVec3>('pos')!;
     if (!v2same(my_pos, active_state.pos)) {
@@ -96,37 +113,63 @@ export function dialogRun(dt: number): void {
   let style = dialogTextStyle();
   let dims = font.dims(style, w - HPAD * 2, 0, size, text);
   y += h - dims.h - STATUS_PAD_BOTTOM - buttons_h;
-  font.draw({
-    style,
-    size,
-    x: x + HPAD, y, z, w: w - HPAD * 2,
-    align: font.ALIGN.HCENTER|font.ALIGN.HWRAP,
-    text: text,
-    alpha,
-  });
-  let yy = y + dims.h + BUTTON_HEAD;
-
-  for (let ii = 0; ii < num_buttons; ++ii) {
-    let button = buttons![ii];
-    if (ui.buttonText({
-      auto_focus: ii === 0,
-      focus_steal: ii === 0 && (num_buttons === 1 || frame === 0),
-      text: button.label,
-      x: x + 4,
-      w: w - HPAD * 2,
-      y: yy,
-      z,
-    })) {
-      active_dialog = null;
-      if (button.cb) {
-        if (typeof button.cb === 'string') {
-          dialog(button.cb);
-        } else {
-          button.cb();
-        }
+  let text_len = ceil(counter / 18);
+  let text_full = text_len >= text.length;
+  if (!transient) {
+    if (!text_full && !active_state.ff_down) {
+      if (ff()) {
+        active_state.ff_down = true;
+        text_full = true;
+        active_state.counter += 10000000;
       }
     }
-    yy += ui.button_height + BUTTON_PAD;
+    if (active_state.ff_down) {
+      // Eat these keys until released
+      active_state.ff_down = ff();
+    }
+    font.draw({
+      style,
+      size,
+      x: x + HPAD, y, z, w: w - HPAD * 2,
+      align: font.ALIGN.HLEFT|font.ALIGN.HWRAP,
+      text: text_full ? text : text.slice(0, text_len),
+      alpha,
+    });
+  } else {
+    font.draw({
+      style,
+      size,
+      x: x + HPAD, y, z, w: w - HPAD * 2,
+      align: font.ALIGN.HCENTER|font.ALIGN.HWRAP,
+      text: text_full ? text : text.slice(0, text_len),
+      alpha,
+    });
+  }
+  let yy = y + dims.h + BUTTON_HEAD;
+
+  if (text_full && !active_state.ff_down) {
+    for (let ii = 0; ii < num_buttons; ++ii) {
+      let button = buttons![ii];
+      if (ui.buttonText({
+        auto_focus: ii === 0,
+        focus_steal: ii === 0 && (num_buttons === 1 || frame === 1),
+        text: button.label,
+        x: x + 4,
+        w: w - HPAD * 2,
+        y: yy,
+        z,
+      })) {
+        active_dialog = null;
+        if (button.cb) {
+          if (typeof button.cb === 'string') {
+            dialog(button.cb);
+          } else {
+            button.cb();
+          }
+        }
+      }
+      yy += ui.button_height + BUTTON_PAD;
+    }
   }
 
   temp_color[3] = alpha;
