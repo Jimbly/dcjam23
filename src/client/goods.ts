@@ -5,14 +5,45 @@ export type GoodDef = {
   avail: GoodAvail;
   key?: string;
 };
-function spiritWants(cost: number): GoodAvail {
+function spiritWants(s1: number, s2: number, s3: number): GoodAvail {
   let ret: GoodAvail = {};
-  ret[6] = [0, cost];
+  ret[4] = [0, s1];
+  ret[5] = [0, s2];
+  ret[6] = [0, s3];
   return ret;
 }
-function physWants(cost: number): GoodAvail {
+function physWants(p1: number, p2: number, p3: number): GoodAvail {
   let ret: GoodAvail = {};
-  ret[5] = [0, cost];
+  ret[1] = [0, p1];
+  ret[2] = [0, p2];
+  ret[3] = [0, p3];
+  return ret;
+}
+const SELL_AMT = 15;
+function spiritSells(cost: number, s1: number, s2: number, s3: number): GoodAvail {
+  let ret: GoodAvail = {};
+  if (s1) {
+    ret[1+3] = [SELL_AMT, cost];
+  }
+  if (s2) {
+    ret[2+3] = [SELL_AMT, cost];
+  }
+  if (s3) {
+    ret[3+3] = [SELL_AMT, cost];
+  }
+  return ret;
+}
+function physSells(cost: number, p1: number, p2: number, p3: number): GoodAvail {
+  let ret: GoodAvail = {};
+  if (p1) {
+    ret[1] = [SELL_AMT, cost];
+  }
+  if (p2) {
+    ret[2] = [SELL_AMT, cost];
+  }
+  if (p3) {
+    ret[3] = [SELL_AMT, cost];
+  }
   return ret;
 }
 export const GOODS: Partial<Record<string, GoodDef>> = {
@@ -20,8 +51,12 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Supplies',
     realm: 'both',
     avail: {
-      5: [99, 10],
-      6: [99, 10],
+      1: [99, 5],
+      2: [99, 5],
+      3: [99, 5],
+      4: [99, 5],
+      5: [99, 5],
+      6: [99, 5],
     },
   },
 
@@ -29,120 +64,121 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Spoons',
     realm: 'phys',
     avail: {
-      ...spiritWants(10),
-      5: [7, 5],
+      ...spiritWants(22, 31, 43),
+      ...physSells(15, 1, 0, 0),
     },
   },
   phys2: {
     name: 'Table Legs',
     realm: 'phys',
     avail: {
-      ...spiritWants(20),
-      5: [7, 14],
+      ...spiritWants(37, 52, 72),
+      ...physSells(25, 1, 0, 0),
     },
   },
   phys3: {
     name: 'Dead Leaves',
     realm: 'phys',
     avail: {
-      ...spiritWants(30),
-      5: [7, 23],
+      ...spiritWants(117, 139, 168),
+      ...physSells(60, 0, 1, 0),
     },
   },
   phys4: {
     name: 'Fresh Soil',
     realm: 'phys',
     avail: {
-      ...spiritWants(40),
-      5: [7, 32],
+      ...spiritWants(175, 209, 252),
+      ...physSells(60, 0, 1, 0),
     },
   },
   phys5: {
     name: 'Books',
     realm: 'phys',
     avail: {
-      ...spiritWants(50),
-      5: [7, 40],
+      ...spiritWants(177, 251, 341),
+      ...physSells(120, 1, 0, 1),
     },
   },
   phys6: {
     name: 'Stone Carvings',
     realm: 'phys',
     avail: {
-      ...spiritWants(60),
-      5: [7, 48],
+      ...spiritWants(292, 349, 420),
+      ...physSells(150, 0, 1, 1),
     },
   },
   phys7: {
     name: 'Metal Trinkets',
     realm: 'phys',
     avail: {
-      ...spiritWants(70),
-      5: [7, 55],
+      ...spiritWants(475, 437, 483),
+      ...physSells(170, 0, 0, 1),
     },
   },
 
   spirit1: {
-    name: 'Canned Greed',
-    realm: 'spirit',
-    avail: {
-      ...physWants(10),
-      6: [7, 5],
-    },
-  },
-  spirit2: {
     name: 'Bottled Joy',
     realm: 'spirit',
     avail: {
-      ...physWants(20),
-      6: [7, 14],
+      ...physWants(29, 39, 56),
+      ...spiritSells(20, 1, 0, 0),
     },
   },
-  spirit3: {
+  spirit2: {
     name: 'Distil\'n of Anger',
     realm: 'spirit',
     avail: {
-      ...physWants(30),
-      6: [7, 23],
+      ...physWants(44, 58, 84),
+      ...spiritSells(30, 1, 0, 0),
+    },
+  },
+  spirit3: {
+    name: 'Canned Greed',
+    realm: 'spirit',
+    avail: {
+      ...physWants(147, 163, 180),
+      ...spiritSells(70, 0, 1, 0),
     },
   },
   spirit4: {
     name: 'Nostalgia Syrup',
     realm: 'spirit',
     avail: {
-      ...physWants(40),
-      6: [7, 32],
+      ...physWants(210, 232, 257),
+      ...spiritSells(100, 0, 1, 0),
     },
   },
   spirit5: {
     name: 'Despair Dust',
     realm: 'spirit',
     avail: {
-      ...physWants(50),
-      6: [7, 40],
+      ...physWants(191, 253, 364),
+      ...spiritSells(130, 1, 0, 1),
     },
   },
   spirit6: {
-    name: 'Bliss Extract',
-    realm: 'spirit',
-    avail: {
-      ...physWants(60),
-      6: [7, 48],
-    },
-  },
-  spirit7: {
     name: 'Generosity Gel',
     realm: 'spirit',
     avail: {
-      ...physWants(70),
-      6: [7, 55],
+      ...physWants(314, 349, 385),
+      ...spiritSells(150, 0, 1, 1),
     },
   },
+  spirit7: {
+    name: 'Bliss Extract',
+    realm: 'spirit',
+    avail: {
+      ...physWants(578, 559, 569),
+      ...spiritSells(200, 0, 0, 1),
+    },
+  },
+
   mcguff1: {
     name: 'Painting of Beloved',
     realm: 'phys',
     avail: {
-      5: [1, 190],
+      1: [1, 200],
     },
     key: 'mcguff1',
   },
@@ -150,7 +186,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Dad\'s Pocketwatch',
     realm: 'phys',
     avail: {
-      5: [1, 999],
+      3: [1, 5000],
     },
     key: 'mcguff2',
   },
@@ -158,7 +194,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Memories of Childhood',
     realm: 'spirit',
     avail: {
-      6: [1, 999],
+      5: [1, 5000],
     },
     key: 'mcguff3',
   },
@@ -166,7 +202,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Hope',
     realm: 'spirit',
     avail: {
-      6: [1, 999],
+      6: [1, 5000],
     },
     key: 'mcguff4',
   },

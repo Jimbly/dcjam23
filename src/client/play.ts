@@ -1958,8 +1958,8 @@ export function playStartup(tiny_font_in: Font): void {
       new_player_data: {
         type: 'player',
         pos: [0, 0, 0],
-        floor: 5,
-        last_journey_town: 5,
+        floor: 1,
+        last_journey_town: 1,
         stats: { hp: 10, hp_max: 10 },
         money: 0,
         good_capacity: 0,

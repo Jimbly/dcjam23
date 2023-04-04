@@ -35,25 +35,25 @@ export const UPGRADES: Upgrade[] = [{
   name: 'Hunter',
   merc_capacity: 5,
   good_capacity: 17,
-  cost: 350,
+  cost: 2500,
   realm: 'spirit',
 }, {
   name: 'Merchantman',
   merc_capacity: 3,
   good_capacity: 20,
-  cost: 400,
+  cost: 3000,
   realm: 'phys',
 
 }, {
   name: 'Defender',
   merc_capacity: 6,
   good_capacity: 20,
-  cost: 800,
+  cost: 5000,
   realm: 'spirit',
 }, {
   name: 'Hauler',
   merc_capacity: 4,
   good_capacity: 30,
-  cost: 900,
+  cost: 9000,
   realm: 'phys',
 }];

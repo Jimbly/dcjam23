@@ -4,6 +4,7 @@ open_move: true
 default_wall: path_chasm
 map_view_detail_frame: 39
 code: 'BRIDGE'
+build_hide: true
 
 visuals:
 - pass: bg

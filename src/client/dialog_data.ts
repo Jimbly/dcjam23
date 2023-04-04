@@ -127,9 +127,9 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         need: {
           type: 'phys2',
           count: 1,
-          cost: 100,
+          cost: 50,
         },
-        text_need: 'I\'ll pay you 100 if you bring me a box of Table Legs.',
+        text_need: 'I\'ll pay you 50 if you bring me a box of Table Legs.',
       },
     };
     let quest = QUEST[quest_key];
@@ -181,6 +181,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
           text: 'Mags: Good luck out there!  Follow the road Spiritward to get to Spiriton.',
           transient: true,
         });
+        autosave();
       } else if (data.journeys === 0) {
         dialogPush({
           text: 'Mags: Remember, head Spiritward to get to Spiriton.',

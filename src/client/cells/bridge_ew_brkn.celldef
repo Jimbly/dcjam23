@@ -1,7 +1,7 @@
 ---
 open_vis: true
 open_move: false
-default_wall: path_chasm
+default_wall: path_chasm_double
 map_view_detail_frame: 39
 code: 'BRIDGE'
 default_props:

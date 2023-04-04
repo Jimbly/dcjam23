@@ -187,10 +187,12 @@ export function crawlerMapViewDraw(
       ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2), z + 1, ui.font_height,
         ui.font.ALIGN.HCENTER, w, 0, `${level.seen_cells}/${level.total_cells}`);
     } else {
-      ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2)*2, z + 1, ui.font_height,
-        ui.font.ALIGN.HCENTER, w, 0, `${num_enemies} enemies remaining`);
-      ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2), z + 1, ui.font_height,
-        ui.font.ALIGN.HCENTER, w, 0, `${percLabel(level.seen_cells, level.total_cells)} explored`);
+      // ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2)*2, z + 1, ui.font_height,
+      //   ui.font.ALIGN.HCENTER, w, 0, `${num_enemies} enemies remaining`);
+      if (level.seen_cells === level.total_cells) {
+        ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2), z + 1, ui.font_height,
+          ui.font.ALIGN.HCENTER, w, 0, `${percLabel(level.seen_cells, level.total_cells)} explored`);
+      }
     }
   }
 

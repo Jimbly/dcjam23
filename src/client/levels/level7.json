@@ -2387,10 +2387,10 @@
   ],
   "initial_entities": [
     {
-      "type": "enemy1",
+      "type": "enemy0",
       "pos": [
-        7,
-        8,
+        3,
+        6,
         0
       ]
     },
@@ -2411,11 +2411,11 @@
       ]
     },
     {
-      "type": "enemy0",
+      "type": "enemy1",
       "pos": [
-        3,
-        6,
-        0
+        7,
+        8,
+        2
       ]
     }
   ],

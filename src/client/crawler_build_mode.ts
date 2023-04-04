@@ -999,13 +999,13 @@ function showCurrentCell(param: {
   let tx = myx + DX[dir];
   let ty = myy + DY[dir];
   let font_height = ui.font_height * 0.75;
-  let my_cell = level.getCell(myx, myy)!;
+  let my_cell = level.getCell(myx, myy);
   let target_cell = level.getCell(tx, ty);
   font.draw({
     style: palette_style.wall,
     x, y, z,
     size: font_height,
-    text: `Wall: ${my_cell.walls[dir].id}`,
+    text: `Wall: ${my_cell && my_cell.walls[dir].id}`,
   });
   y += font_height + 1;
   if (target_cell) {
