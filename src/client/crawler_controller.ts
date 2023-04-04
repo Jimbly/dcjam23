@@ -463,7 +463,7 @@ export class CrawlerController {
     assert(level);
     script_api.setLevel(level);
     script_api.setPos(last_pos);
-    if (!this.isMoving() && !level.wallsBlock(last_pos, last_rot, script_api)) {
+    if (!this.isMoving() && !(level.wallsBlock(last_pos, last_rot, script_api) & BLOCK_VIS)) {
       v2add(temp_pos, last_pos, DXY[last_rot]);
       return !buildModeActive() && level.getCell(temp_pos[0], temp_pos[1]) || null;
     } else {

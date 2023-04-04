@@ -855,7 +855,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -989,6 +989,15 @@
     {
       "id": "open",
       "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
         "solid",
         "open",
         "open",
@@ -1001,15 +1010,6 @@
         "open",
         "solid",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "open",
         "open"
       ]
     },
@@ -1124,6 +1124,15 @@
     {
       "id": "solid",
       "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
         "solid",
         "solid",
         "open",
@@ -1134,18 +1143,9 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "open",
         "solid",
         "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
       ]
     },
     {
@@ -1404,10 +1404,10 @@
       ]
     },
     {
-      "id": "open",
+      "id": "solid",
       "walls": [
-        "solid",
         "open",
+        "solid",
         "solid",
         "solid"
       ]
@@ -1417,7 +1417,7 @@
       "walls": [
         "solid",
         "solid",
-        "solid",
+        "open",
         "solid"
       ]
     },
@@ -1553,7 +1553,7 @@
         "secret_door",
         "solid",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -1579,7 +1579,7 @@
       "events": [
         {
           "id": "bridge",
-          "param": ""
+          "param": "2"
         }
       ]
     },

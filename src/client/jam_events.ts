@@ -23,6 +23,7 @@ import { dialog, dialogMapIcon } from './dialog_data';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {
+  bridgeRepairCost,
   myEnt,
   playerConsumeGood,
   playerHasGood,
@@ -178,9 +179,14 @@ crawlerScriptRegisterEvent({
     if (api.keyGet(key_name)) {
       return;
     }
-    playerConsumeGood(SUPPLY_GOOD);
+    let count = bridgeRepairCost(cell);
+    playerConsumeGood({
+      type: 'supply',
+      count,
+      cost: 0,
+    });
     statusPush('Bridge fixed');
-    statusPush('-1 Supplies');
+    statusPush(`-${count} Supplies`);
     api.keySet(key_name);
   },
 });
@@ -191,7 +197,12 @@ crawlerScriptRegisterFunc('BRIDGE', function (
   if (!crawlerMyEntOptional()) {
     return false;
   }
-  return playerHasGood(SUPPLY_GOOD);
+  let count = bridgeRepairCost(cell);
+  return playerHasGood({
+    type: 'supply',
+    count,
+    cost: 0,
+  });
 });
 
 

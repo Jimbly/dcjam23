@@ -67,6 +67,7 @@ import {
 } from 'glov/common/vmath';
 import { getEffCell } from '../common/crawler_script';
 import {
+  CrawlerCell,
   CrawlerLevel,
   DIR_CELL,
   crawlerLoadData,
@@ -1362,6 +1363,23 @@ function drawMercs(): void {
   }
 }
 
+export function bridgeRepairCost(cell: CrawlerCell): number {
+  let cost = 1;
+  let { events } = cell;
+  if (events) {
+    for (let ii = 0; ii < events.length; ++ii) {
+      let event = events[ii];
+      if (event.id === 'bridge') {
+        let n = Number(event.param);
+        if (isFinite(n)) {
+          cost = n;
+        }
+      }
+    }
+  }
+  return cost;
+}
+
 function drawHints(): void {
   let cell = controller.getCellInFront();
   if (!cell) {
@@ -1370,7 +1388,8 @@ function drawHints(): void {
 
   let cell_desc = getEffCell(crawlerScriptAPI(), cell);
   if (cell_desc.code === 'BRIDGE') {
-    statusSet('bridge', 'Repair cost: 1 Supply').fade();
+    let cost = bridgeRepairCost(cell);
+    statusSet('bridge', `Repair cost: ${cost} Suppl${cost === 1 ? 'y' : 'ies'}`).fade();
   }
 }
 
@@ -1427,7 +1446,21 @@ export function tickMusic(force_none: boolean, force_danger: boolean): void {
         if (force_danger) {
           music_danger = 1;
         }
-        desired = music_danger > 0.75 ? 3 : 4;
+        if (active_music === 4) {
+          if (music_danger > 0.5) {
+            desired = 3;
+          } else {
+            desired = 4;
+          }
+        } else if (active_music === 3) {
+          if (music_danger < 0.25) {
+            desired = 4;
+          } else {
+            desired = 3;
+          }
+        } else {
+          desired = music_danger > 0.5 ? 3 : 4;
+        }
       }
     }
   }
