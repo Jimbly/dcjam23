@@ -2,8 +2,10 @@
 import { dataError } from 'glov/common/data_error';
 import { crawlerScriptAPI } from './crawler_play';
 import { dialogPush, dialogTextStyle } from './dialog_system';
-import { playerHasKeyGood } from './play';
-import { statusSet } from './status';
+import { Good } from './entity_demo_client';
+import { GOODS } from './goods';
+import { myEnt, playerConsumeGood, playerHasGood, playerHasKeyGood } from './play';
+import { statusPush, statusSet } from './status';
 
 type DialogFunc = (() => void) | ((param: string) => void);
 
@@ -67,6 +69,60 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         label: 'I\'ll do that!',
       }],
     });
+  },
+  quest: function (quest_key: string) {
+    let key = `quest${quest_key}`;
+    if (crawlerScriptAPI().keyGet(key)) {
+      return dialogPush({
+        text: 'Thanks for helping me out earlier!',
+        transient: true,
+      });
+    }
+    type Quest = {
+      text_have?: string;
+      text_need?: string;
+      need: Good;
+    };
+    const QUEST: Record<string, Quest> = {
+      1: {
+        need: {
+          type: 'phys2',
+          count: 1,
+          cost: 100,
+        },
+        text_need: 'I\'ll pay you 100 if you bring me a box of Table Legs.',
+      },
+    };
+    let quest = QUEST[quest_key];
+    if (!quest) {
+      return void statusSet('error', `Unknown quest "${key}"`);
+    }
+    let good_name = GOODS[quest.need.type]!.name;
+    if (playerHasGood(quest.need)) {
+      dialogPush({
+        text: quest.text_have || (`Ooh, some ${good_name}!  I love it!` +
+          `  I'll pay you ${quest.need.cost} for ${quest.need.count}` +
+          ' of them.'),
+        buttons: [{
+          label: 'Maybe later...',
+        }, {
+          label: 'It\'s a deal!',
+          cb: function () {
+            playerConsumeGood(quest.need);
+            let me = myEnt();
+            me.data.money += quest.need.cost;
+            statusPush(`+${quest.need.cost} Coins`);
+            statusPush(`-${quest.need.count} ${good_name}`);
+          },
+        }],
+      });
+    } else {
+      dialogPush({
+        text: quest.text_need || (`I'll pay you ${quest.need.cost} if you bring me ${quest.need.count}` +
+          ` ${good_name}.`),
+        transient: true,
+      });
+    }
   },
 };
 

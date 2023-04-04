@@ -286,6 +286,34 @@ export function playerHasKeyGood(key: string): boolean {
   return false;
 }
 
+export function playerHasGood(good: Good): boolean {
+  let me = myEnt();
+  let { goods } = me.data;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let pg = goods[ii];
+    if (pg.type === good.type && pg.count >= good.count) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function playerConsumeGood(good: Good): void {
+  let me = myEnt();
+  let { goods } = me.data;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let pg = goods[ii];
+    if (pg.type === good.type && pg.count >= good.count) {
+      pg.count -= good.count;
+      if (!pg.count) {
+        goods.splice(ii, 1);
+      }
+      return;
+    }
+  }
+  assert(false);
+}
+
 function initGoods(trader: Entity): void {
   let data = trader.data;
   let floor_id = data.floor;
