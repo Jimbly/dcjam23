@@ -19,13 +19,14 @@ import {
 } from 'glov/common/vmath';
 import {
   CrawlerScriptEventMapIcon,
-  crawlerScriptEventsGetIcon,
+  crawlerScriptEventFunc,
   crawlerScriptRegisterFunc,
   getEffCell,
   getEffWall,
 } from '../common/crawler_script';
 import {
   CrawlerCell,
+  CrawlerCellEvent,
   CrawlerState,
   DX, DY,
   DirType,
@@ -54,6 +55,27 @@ let sprite_mult: Shader;
 const MAP_TILE_SIZE = 7;
 const MAP_STEP_SIZE = 6;
 const MAP_CENTER_OFFS = 3;
+
+function crawlerScriptEventsGetIcon(events: CrawlerCellEvent[]): CrawlerScriptEventMapIcon {
+  let ret = CrawlerScriptEventMapIcon.NONE;
+  for (let ii = 0; ii < events.length; ++ii) {
+    let event = events[ii];
+    let { id, param } = event;
+    let func = crawlerScriptEventFunc(id);
+    if (func) {
+      let { map_icon } = func;
+      if (typeof map_icon === 'function') {
+        if (buildModeActive()) {
+          map_icon = CrawlerScriptEventMapIcon.NONE;
+        } else {
+          map_icon = map_icon(param);
+        }
+      }
+      ret = max(ret, map_icon);
+    }
+  }
+  return ret;
+}
 
 let map_view: boolean = engine.defines.MAP || false;
 export function mapViewActive(): boolean {

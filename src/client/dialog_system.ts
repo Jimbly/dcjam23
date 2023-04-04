@@ -173,7 +173,7 @@ export function dialogRun(dt: number): void {
   }
 
   temp_color[3] = alpha;
-  if (transient) {
+  if (transient && dims.h === ui.font_height) {
     let text_w = dims.w;
     ui.panel({
       x: x + floor((w - text_w)/2) - HPAD,

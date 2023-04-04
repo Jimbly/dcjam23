@@ -4,15 +4,12 @@ import { ROVec2 } from 'glov/common/vmath';
 import {
   CellDesc,
   CrawlerCell,
-  CrawlerCellEvent,
   CrawlerLevel,
   DIR_CELL,
   DirType,
   DirTypeOrCell,
   WallDesc,
 } from './crawler_state';
-
-const { max } = Math;
 
 export type RandProvider = {
   random(): number;
@@ -91,6 +88,7 @@ export enum CrawlerScriptEventMapIcon {
   SHOP1=8,
   SHOP2=9,
   SHOP3=10,
+  X=24,
   QUESTION=27,
   EXCLAIMATION=28,
 }
@@ -137,19 +135,6 @@ export function crawlerScriptRunEvents(
   }
 }
 
-export function crawlerScriptEventsGetIcon(events: CrawlerCellEvent[]): CrawlerScriptEventMapIcon {
-  let ret = CrawlerScriptEventMapIcon.NONE;
-  for (let ii = 0; ii < events.length; ++ii) {
-    let event = events[ii];
-    let { id, param } = event;
-    let func = event_funcs[id];
-    if (func) {
-      let { map_icon } = func;
-      if (typeof map_icon === 'function') {
-        map_icon = map_icon(param);
-      }
-      ret = max(ret, map_icon);
-    }
-  }
-  return ret;
+export function crawlerScriptEventFunc(id: string): CrawlerScriptEventInfo | null {
+  return event_funcs[id] || null;
 }

@@ -148,6 +148,7 @@ import {
 } from './goods';
 import { jamTraitsStartup } from './jam_events';
 import { levelGenTest } from './level_gen_test';
+import { MERC_LIST } from './mercs';
 import { renderAppStartup } from './render_app';
 import {
   statusSet,
@@ -787,28 +788,6 @@ function inventoryMenu(): boolean {
   }
   return Boolean(trader);
 }
-
-let MERC_LIST: Merc[] = [{
-  portrait: 1,
-  hp: 10, hp_max: 10,
-  attack: 1, defense: 1,
-  cost: 10,
-}, {
-  portrait: 2,
-  hp: 10, hp_max: 10,
-  attack: 1, defense: 3,
-  cost: 20,
-}, {
-  portrait: 3,
-  hp: 10, hp_max: 10,
-  attack: 3, defense: 0,
-  cost: 30,
-}, {
-  portrait: 4,
-  hp: 1, hp_max: 1,
-  attack: 1, defense: 0,
-  cost: 1,
-}];
 
 let style_dead = fontStyleColored(null, dawnbringer.font_colors[25]);
 let color_black = vec4(0, 0, 0, 1);
@@ -1803,7 +1782,7 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
     me.data.last_journey_town = floor_id;
     me.data.journeys++;
   }
-  if (last_level && last_level.props.is_town) {
+  if (last_level && last_level.props.is_town && !level.props.is_town) {
     // Save our state as of when we left town last
     me.data.town_visits++;
     saveUponLeavingTown(me);
@@ -1836,6 +1815,7 @@ export function playStartup(tiny_font_in: Font): void {
         type: 'player',
         pos: [0, 0, 0],
         floor: 5,
+        last_journey_town: 5,
         stats: { hp: 10, hp_max: 10 },
         money: 0,
         good_capacity: 0,

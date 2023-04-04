@@ -1227,6 +1227,12 @@
         "open",
         "stairs_out",
         "open"
+      ],
+      "events": [
+        {
+          "id": "dialog",
+          "param": "leavetown"
+        }
       ]
     },
     {

@@ -2,14 +2,34 @@
 import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
 import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
-import { crawlerSaveGame, crawlerScriptAPI } from './crawler_play';
+import { EAST } from '../common/crawler_state';
+import { crawlerController, crawlerSaveGame, crawlerScriptAPI } from './crawler_play';
 import { dialogPush, dialogTextStyle } from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
+import { SUPPLY_GOOD } from './jam_events';
 import { myEnt, playerConsumeGood, playerHasGood, playerHasKeyGood } from './play';
 import { statusPush, statusSet } from './status';
 
 type DialogFunc = (() => void) | ((param: string) => void) | ((param: string) => CrawlerScriptEventMapIcon);
+
+function leaveTownBlocked(): string[] | null {
+  let { data } = myEnt();
+  if (data.journeys > 0) {
+    return null;
+  }
+  let reasons = [];
+  if (!playerHasGood(SUPPLY_GOOD)) {
+    reasons.push('at least one Supply');
+  }
+  if (!data.mercs.length) {
+    reasons.push('at least one Mercenary');
+  }
+  if (data.goods.length < 2) {
+    reasons.push('some Trade Goods');
+  }
+  return reasons.length ? reasons : null;
+}
 
 const DIALOGS: Partial<Record<string, DialogFunc>> = {
   sign: function (param: string) {
@@ -134,6 +154,37 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         transient: true,
       });
     }
+  },
+  leavetown_icon: function (): CrawlerScriptEventMapIcon {
+    if (leaveTownBlocked()) {
+      return CrawlerScriptEventMapIcon.X;
+    } else {
+      return CrawlerScriptEventMapIcon.NONE;
+    }
+  },
+  leavetown: function () {
+    let reasons = leaveTownBlocked();
+    if (!reasons) {
+      let { data } = myEnt();
+      if (data.journeys === 0) {
+        dialogPush({
+          text: 'Mags: Good luck out there!  Follow the road Spiritward to get to Spiriton.',
+          transient: true,
+        });
+      }
+      return;
+    }
+    dialogPush({
+      text: 'Mags: Hey there!  Don\'t leave just yet, make sure you have' +
+        ` ${reasons.join(' and ')}.`,
+      buttons: [{
+        label: 'Okay',
+        cb: function () {
+          crawlerController().forceMove(EAST);
+        },
+      }],
+    });
+
   },
   final: function () {
     dialogPush({

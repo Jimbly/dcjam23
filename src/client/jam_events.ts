@@ -1,3 +1,9 @@
+export const SUPPLY_GOOD: Good = {
+  type: 'supply',
+  count: 1,
+  cost: 0,
+};
+
 import { clone } from 'glov/common/util';
 import {
   CrawlerScriptAPI,
@@ -47,7 +53,7 @@ crawlerScriptRegisterEvent({
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
     if (!myEnt().data.merc_capacity) {
-      return dialog('sign', 'Come back after you\'ve bought a Covenant.');
+      return dialog('sign', 'Come back after you\'ve signed a Covenant.');
     }
     dialog('greet', 'Need some protection?');
     startRecruiting();
@@ -160,12 +166,6 @@ crawlerScriptRegisterEvent({
   },
 });
 
-const supply_good: Good = {
-  type: 'supply',
-  count: 1,
-  cost: 0,
-};
-
 crawlerScriptRegisterEvent({
   key: 'bridge',
   when: CrawlerScriptWhen.PRE,
@@ -178,7 +178,7 @@ crawlerScriptRegisterEvent({
     if (api.keyGet(key_name)) {
       return;
     }
-    playerConsumeGood(supply_good);
+    playerConsumeGood(SUPPLY_GOOD);
     statusPush('Bridge fixed');
     statusPush('-1 Supplies');
     api.keySet(key_name);
@@ -191,7 +191,7 @@ crawlerScriptRegisterFunc('BRIDGE', function (
   if (!crawlerMyEntOptional()) {
     return false;
   }
-  return playerHasGood(supply_good);
+  return playerHasGood(SUPPLY_GOOD);
 });
 
 
