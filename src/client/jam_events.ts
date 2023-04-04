@@ -110,6 +110,26 @@ crawlerScriptRegisterEvent({
   },
 });
 
+crawlerScriptRegisterEvent({
+  key: 'dialog', // id [string parameter]
+  when: CrawlerScriptWhen.PRE,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (!param) {
+      return api.status('dialog', 'Missing dialog ID');
+    }
+    let idx = param.indexOf(' ');
+    let id = param;
+    if (idx !== -1) {
+      id = param.slice(0, idx);
+      param = param.slice(idx + 1);
+    } else {
+      param = '';
+    }
+    dialog(id, param);
+  },
+});
+
 export function jamEventsStartup(): void {
   // ?
 }

@@ -115,7 +115,7 @@ export function main(): void {
       ...spriteSetGet('pixely'),
       // color_set_shades: [1, 1, 1],
       // button: { name: 'button', ws: [3, 20, 3], hs: [26] },
-      // button_rollover: { name: 'button_rollover', ws: [3, 20, 3], hs: [26] },
+      button_rollover: { name: 'pixely/button_rollover', ws: [4, 5, 4], hs: [13] },
       // button_down: { name: 'button_down', ws: [3, 20, 3], hs: [26] },
       // button_disabled: { name: 'button_disabled', ws: [3, 20, 3], hs: [26] },
       buttonselected_regular: { name: 'pixely/buttonselected', ws: [4, 5, 4], hs: [13] },

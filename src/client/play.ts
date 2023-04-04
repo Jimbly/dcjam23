@@ -144,7 +144,6 @@ import {
 } from './globals';
 import {
   GOODS,
-  GoodDef,
 } from './goods';
 import { jamTraitsStartup } from './jam_events';
 import { levelGenTest } from './level_gen_test';
@@ -273,14 +272,14 @@ function pauseMenu(): void {
   ui.menuUp();
 }
 
-function playerHasKeyGood(good_def: GoodDef): boolean {
-  assert(good_def.key);
+export function playerHasKeyGood(key: string): boolean {
+  assert(key);
   let me = myEnt();
   let { goods } = me.data;
   for (let ii = 0; ii < goods.length; ++ii) {
     let pgd = GOODS[goods[ii].type];
     assert(pgd);
-    if (goods[ii] && pgd.key === good_def.key) {
+    if (goods[ii] && pgd.key === key) {
       return true;
     }
   }
@@ -304,7 +303,7 @@ function initGoods(trader: Entity): void {
           // already activated, completely hide
           continue;
         }
-        if (playerHasKeyGood(good_def)) {
+        if (playerHasKeyGood(good_def.key)) {
           // player has it, do not stock another one
           count = 0;
         }
@@ -1427,7 +1426,7 @@ export function play(dt: number): void {
   frame_wall_time = max(frame_wall_time, walltime()); // strictly increasing
 
   const map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
+  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || dialogMoveLocked();
   if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }
@@ -1609,9 +1608,13 @@ export function playStartup(tiny_font_in: Font): void {
         pos: [0, 0, 0],
         floor: 5,
         stats: { hp: 10, hp_max: 10 },
-        money: 100,
-        good_capacity: 10,
-        merc_capacity: 1,
+        money: 0,
+        good_capacity: 0,
+        goods: [{
+          type: 'mcguff1',
+          count: 1,
+        }],
+        merc_capacity: 0,
       },
       loading_state: playOfflineLoading,
     },
