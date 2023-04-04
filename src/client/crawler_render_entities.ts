@@ -243,7 +243,10 @@ export function drawableSpriteDrawSub(this: EntityDrawableSprite, param: EntityD
     // Dist 0 = 0.5 (half blend between nearest and linear)
     // Dist 2 = 0.25
     // Dist 4 = 0 (fully linear mipmapped)
-    (shader_params.lod_bias as Vec2)[1] = clamp(settings.hybrid_base - dist * settings.hybrid_scalar, 0, 1);
+    shader_params.lod_bias = vec2(
+      (shader_params.lod_bias as Vec2)[0],
+      clamp(settings.hybrid_base - dist * settings.hybrid_scalar, 0, 1)
+    );
     shader_type = ShaderType.SpriteHybridFragment;
     sprite = sprite_hybrid;
   }

@@ -151,6 +151,7 @@ import { renderAppStartup } from './render_app';
 import {
   statusTick,
 } from './status';
+import { UPGRADES } from './upgrades';
 
 const spritesheet_ui = require('./img/ui');
 
@@ -177,6 +178,8 @@ const MINIMAP_W = 5+7*(MINIMAP_RADIUS*2 + 1);
 const VIEWPORT_X0 = 3;
 const VIEWPORT_Y0 = 3;
 
+const BUTTON_W = 26;
+
 type Entity = EntityDemoClient;
 
 let font: Font;
@@ -190,6 +193,7 @@ let controller: CrawlerController;
 let pause_menu_up = false;
 let inventory_up = false;
 let recruit_up = false;
+let upgrade_up = false;
 
 let last_level: CrawlerLevel | null = null;
 
@@ -445,6 +449,7 @@ function inventoryMenu(): boolean {
     return false;
   }
   recruit_up = false;
+  upgrade_up = false;
   let reset = false;
   if (inventory_last_frame !== getFrameIndex() - 1) {
     reset = true;
@@ -1038,6 +1043,171 @@ function recruitMenu(): void {
   });
 }
 
+let covenant_style = fontStyle(null, {
+  color: dawnbringer.font_colors[8],
+  outline_color: dawnbringer.font_colors[0],
+  outline_width: 2,
+});
+
+function upgradeMenu(): void {
+  if (!upgrade_up) {
+    return;
+  }
+
+  let me = myEnt();
+  let data = me.data;
+
+  let z = Z.OVERLAY_UI;
+  // const y1 = OVERLAY_Y0 + OVERLAY_H;
+  // half width
+  const w = OVERLAY_SUB_W - OVERLAY_PAD * 2;
+
+
+  font.draw({
+    align: ALIGN.HCENTER,
+    x: OVERLAY_X0, y: OVERLAY_Y0 + OVERLAY_PAD, z,
+    w: OVERLAY_W,
+    text: 'COVENANTS',
+  });
+
+
+  let num_mercs = 0;
+  let num_goods = 0;
+  for (let ii = 0; ii < data.mercs.length; ++ii) {
+    if (data.mercs[ii]) {
+      ++num_mercs;
+    }
+  }
+  for (let ii = 0; ii < data.goods.length; ++ii) {
+    if (data.goods[ii] && !GOODS[data.goods[ii].type]!.key) {
+      num_goods += data.goods[ii].count;
+    }
+  }
+
+  // Player inventory header
+  const inv_x = OVERLAY_PLAYER_X0 + OVERLAY_PAD;
+  {
+    let x = inv_x;
+    let y = OVERLAY_Y0 + OVERLAY_PAD;
+    y += ui.font_height + 1;
+    font.draw({
+      align: ALIGN.HCENTER,
+      x, y, z,
+      w,
+      text: 'Player',
+    });
+    let text_w = font.draw({
+      style: style_money,
+      align: ALIGN.HRIGHT,
+      x, w: w - BUTTON_W, y, z,
+      text: `${data.money}`,
+    });
+    spritesheet_ui.sprite.draw({
+      x: x + w - BUTTON_W - text_w - 8 - 2, y: y + 2, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_COIN,
+    });
+    y += ui.font_height + 9;
+
+    font.draw({
+      x, y, z, w: w/2,
+      text: 'Current Covenant:',
+    });
+    y += ui.font_height + 1;
+    font.draw({
+      style: covenant_style,
+      x, y, z, w: w/2,
+      text: `${UPGRADES[data.upgrade].name}`,
+    });
+    y += ui.font_height + 1;
+    if (data.upgrade) {
+      font.draw({
+        x, y, z, w: w/2,
+        text: `Trade Goods: ${num_goods} / ${data.good_capacity}`,
+      });
+      y += ui.font_height + 1;
+      font.draw({
+        x, y, z, w: w/2,
+        text: `Mercenaries: ${num_mercs} / ${data.merc_capacity}`,
+      });
+      y += ui.font_height + 1;
+    }
+  }
+
+  // Shop header
+  const trader_x = OVERLAY_X0 + OVERLAY_PAD;
+  let x = trader_x;
+  let y = OVERLAY_Y0 + OVERLAY_PAD;
+  y += ui.font_height + 1;
+  font.draw({
+    align: ALIGN.HCENTER,
+    x, y, z,
+    w,
+    text: 'Ministry of Trade',
+  });
+  y += ui.font_height + 9;
+
+  let realm = crawlerGameState().level!.props.realm;
+  let shop = UPGRADES.filter((upgrade) => upgrade.realm === realm);
+  for (let ii = 0; ii < shop.length; ++ii) {
+    let upgrade = shop[ii];
+
+
+    font.draw({
+      style: covenant_style,
+      x, y, z, w: w/2,
+      text: `${upgrade.name}`,
+    });
+    let text_w = font.draw({
+      style: upgrade.cost > data.money ? style_not_allowed : style_money,
+      align: ALIGN.HRIGHT,
+      x, y, z, w,
+      text: `${upgrade.cost}`,
+    });
+    spritesheet_ui.sprite.draw({
+      x: x + w - text_w - 8 - 2, y: y + 2, z, w: 8, h: 8,
+      frame: spritesheet_ui.FRAME_ICON_COIN,
+    });
+    y += ui.font_height + 1;
+    font.draw({
+      style: num_goods > upgrade.good_capacity ? style_not_allowed : undefined,
+      x, y, z, w: w/2,
+      text: `Trade Goods: ${upgrade.good_capacity}`,
+    });
+    let idx = UPGRADES.indexOf(upgrade);
+    if (ui.buttonText({
+      text: 'Sign',
+      x: x + w - 56, y: y + 3, w: 56, z,
+      disabled: num_goods > upgrade.good_capacity || num_mercs > upgrade.merc_capacity ||
+        upgrade.cost >= data.money || data.upgrade === idx,
+      sound: 'buy',
+    })) {
+      data.money -= upgrade.cost;
+      data.upgrade = idx;
+      data.merc_capacity = upgrade.merc_capacity;
+      data.good_capacity = upgrade.good_capacity;
+    }
+    y += ui.font_height + 1;
+    font.draw({
+      style: num_mercs > upgrade.merc_capacity ? style_not_allowed : undefined,
+      x, y, z, w: w/2,
+      text: `Mercenaries: ${upgrade.merc_capacity}`,
+    });
+    y += ui.font_height + 1;
+
+    y += 8;
+
+    // uiPanel({
+    //   x, y, z, w: 72 + 56 + 3, h: MERC_H,
+    //   sprite: ui.sprites.panel_mini,
+    // });
+  }
+
+  uiPanel({
+    x: OVERLAY_X0, y: OVERLAY_Y0,
+    w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
+  });
+}
+
 
 function engagedEnemy(): Entity | null {
   if (buildModeActive() || engine.defines.PEACE) {
@@ -1074,6 +1244,10 @@ export function startShopping(): void {
 
 export function startRecruiting(): void {
   recruit_up = true;
+}
+
+export function startUpgrade(): void {
+  upgrade_up = true;
 }
 
 // TODO: move into crawler_play?
@@ -1119,8 +1293,6 @@ function moveBlockDead(): boolean {
 
   return true;
 }
-
-const BUTTON_W = 26;
 
 const MOVE_BUTTONS_X0 = 261;
 const MOVE_BUTTONS_Y0 = 179;
@@ -1195,7 +1367,7 @@ function playCrawl(): void {
   let frame_map_view = mapViewActive();
   let frame_combat = engagedEnemy();
   let locked_dialog = dialogMoveLocked();
-  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up;
+  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || upgrade_up;
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
   let compass_h = show_compass ? 11 : 0;
@@ -1287,7 +1459,7 @@ function playCrawl(): void {
   }
 
   if (buildModeActive()) {
-    inventory_up = recruit_up = false;
+    inventory_up = recruit_up = upgrade_up = false;
     dialogReset();
   }
 
@@ -1346,7 +1518,7 @@ function playCrawl(): void {
         crawlerBuildModeActivate(false);
       } else {
         // close whatever other menu
-        inventory_up = recruit_up = false;
+        inventory_up = recruit_up = upgrade_up = false;
       }
       pause_menu_up = false;
     } else {
@@ -1367,6 +1539,9 @@ function playCrawl(): void {
   if (!overlay_menu_up && keyDownEdge(KEYS.M)) {
     mapViewToggle();
   }
+  let is_fullscreen_ui = inventoryMenu() || recruit_up || upgrade_up;
+  recruitMenu();
+  upgradeMenu();
   let game_state = crawlerGameState();
   let script_api = crawlerScriptAPI();
   if (frame_map_view) {
@@ -1382,8 +1557,6 @@ function playCrawl(): void {
       false, script_api, overlay_menu_up);
   }
 
-  let is_fullscreen_ui = inventoryMenu() || recruit_up;
-  recruitMenu();
 
   if (!menu_up) {
     drawMercs();
@@ -1454,7 +1627,7 @@ export function play(dt: number): void {
   frame_wall_time = max(frame_wall_time, walltime()); // strictly increasing
 
   const map_view = mapViewActive();
-  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || dialogMoveLocked();
+  let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || upgrade_up || dialogMoveLocked();
   if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }
@@ -1531,6 +1704,7 @@ function playInitShared(online: boolean): void {
   pause_menu_up = false;
   inventory_up = false;
   recruit_up = false;
+  upgrade_up = false;
   dialogReset();
 }
 

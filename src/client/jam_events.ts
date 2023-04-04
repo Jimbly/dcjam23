@@ -16,6 +16,7 @@ import {
   myEnt,
   startRecruiting,
   startShopping,
+  startUpgrade,
 } from './play';
 
 import type { TraitFactory } from 'glov/common/trait_factory';
@@ -38,8 +39,20 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (!myEnt().data.merc_capacity) {
+      return dialog('sign', 'Come back after you\'ve bought a Covenant.');
+    }
     dialog('greet', 'Need some protection?');
     startRecruiting();
+  },
+});
+crawlerScriptRegisterEvent({
+  key: 'upgrade',
+  when: CrawlerScriptWhen.POST,
+  map_icon: CrawlerScriptEventMapIcon.SHOP3,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    dialog('greet', 'No refunds!');
+    startUpgrade();
   },
 });
 

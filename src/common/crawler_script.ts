@@ -90,6 +90,7 @@ export enum CrawlerScriptEventMapIcon {
   NONE=0,
   SHOP1=8,
   SHOP2=9,
+  SHOP3=10,
   QUESTION=27,
   EXCLAIMATION=28,
 }

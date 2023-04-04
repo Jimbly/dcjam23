@@ -67,6 +67,7 @@ export type EntityDataClient = {
   good_capacity: number;
   mercs: Merc[];
   merc_capacity: number;
+  upgrade: number;
   journeys: number;
   last_journey_town: number;
   last_save_in_town: string;
@@ -118,6 +119,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
       data.journeys = data.journeys || 0;
       data.town_visits = data.town_visits || 0;
       data.floor_town_init = data.floor_town_init || {};
+      data.upgrade = data.upgrade || 0;
     }
     this.floaters = [];
     this.aiResetMoveTime(true);

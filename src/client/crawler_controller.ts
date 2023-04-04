@@ -507,7 +507,7 @@ export class CrawlerController {
           }
         }
         if (!(blocked & BLOCK_MOVE)) {
-          statusPush('Build mode open_move bypassed');
+          statusPush('Build mode open_move bypassed').fade();
         }
       }
       if (blocked & BLOCK_MOVE) {
