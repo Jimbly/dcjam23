@@ -9,7 +9,7 @@ import {
   CrawlerCell,
   JSVec3,
 } from '../common/crawler_state';
-import { dialog } from './dialog_data';
+import { dialog, dialogMapIcon } from './dialog_data';
 import { EntityDemoClient, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {
@@ -126,7 +126,17 @@ crawlerScriptRegisterEvent({
 crawlerScriptRegisterEvent({
   key: 'dialog', // id [string parameter]
   when: CrawlerScriptWhen.PRE,
-  map_icon: CrawlerScriptEventMapIcon.NONE,
+  map_icon: (param: string) => {
+    let idx = param.indexOf(' ');
+    let id = param;
+    if (idx !== -1) {
+      id = param.slice(0, idx);
+      param = param.slice(idx + 1);
+    } else {
+      param = '';
+    }
+    return dialogMapIcon(id, param);
+  },
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
     if (!param) {
       return api.status('dialog', 'Missing dialog ID');

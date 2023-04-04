@@ -1143,6 +1143,12 @@
         "solid",
         "open",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "upgrade",
+          "param": ""
+        }
       ]
     },
     {
@@ -2344,6 +2350,14 @@
         11,
         6,
         1
+      ]
+    },
+    {
+      "type": "shopkeeper",
+      "pos": [
+        12,
+        7,
+        2
       ]
     }
   ],

@@ -100,7 +100,7 @@ export type CrawlerScriptEventInfo = {
   key: string;
   func: CrawlerScriptEvent;
   when: CrawlerScriptWhen; // Default = PRE
-  map_icon: CrawlerScriptEventMapIcon; // Default = NONE
+  map_icon: CrawlerScriptEventMapIcon | ((param: string) => CrawlerScriptEventMapIcon); // Default = NONE
 };
 export type CrawlerScriptEventInfoParam = WithRequired<Partial<CrawlerScriptEventInfo>, 'key' | 'func'>;
 let event_funcs: Partial<Record<string, CrawlerScriptEventInfo>> = {};
@@ -141,9 +141,14 @@ export function crawlerScriptEventsGetIcon(events: CrawlerCellEvent[]): CrawlerS
   let ret = CrawlerScriptEventMapIcon.NONE;
   for (let ii = 0; ii < events.length; ++ii) {
     let event = events[ii];
-    let { id } = event;
-    if (event_funcs[id]) {
-      ret = max(ret, event_funcs[id]!.map_icon);
+    let { id, param } = event;
+    let func = event_funcs[id];
+    if (func) {
+      let { map_icon } = func;
+      if (typeof map_icon === 'function') {
+        map_icon = map_icon(param);
+      }
+      ret = max(ret, map_icon);
     }
   }
   return ret;

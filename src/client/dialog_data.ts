@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/no-use-before-define:off */
 import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
+import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
 import { crawlerSaveGame, crawlerScriptAPI } from './crawler_play';
 import { dialogPush, dialogTextStyle } from './dialog_system';
 import { Good } from './entity_demo_client';
@@ -8,7 +9,7 @@ import { GOODS } from './goods';
 import { myEnt, playerConsumeGood, playerHasGood, playerHasKeyGood } from './play';
 import { statusPush, statusSet } from './status';
 
-type DialogFunc = (() => void) | ((param: string) => void);
+type DialogFunc = (() => void) | ((param: string) => void) | ((param: string) => CrawlerScriptEventMapIcon);
 
 const DIALOGS: Partial<Record<string, DialogFunc>> = {
   sign: function (param: string) {
@@ -71,6 +72,14 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
       }],
     });
   },
+  quest_icon: function (quest_key: string): CrawlerScriptEventMapIcon {
+    let key = `quest${quest_key}`;
+    if (crawlerScriptAPI().keyGet(key)) {
+      return CrawlerScriptEventMapIcon.NONE;
+    } else {
+      return CrawlerScriptEventMapIcon.EXCLAIMATION;
+    }
+  },
   quest: function (quest_key: string) {
     let key = `quest${quest_key}`;
     if (crawlerScriptAPI().keyGet(key)) {
@@ -114,6 +123,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
             me.data.money += quest.need.cost;
             statusPush(`+${quest.need.cost} Coins`);
             statusPush(`-${quest.need.count} ${good_name}`);
+            crawlerScriptAPI().keySet(key);
           },
         }],
       });
@@ -143,11 +153,18 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
 };
 
 export function dialog(id: string, param?: unknown): void {
-  // TODO
   let dlg = DIALOGS[id];
   if (!dlg) {
     dataError(`Unknown dialog "${id}"`);
     return;
   }
   (dlg as ((param: unknown) => void))(param);
+}
+
+export function dialogMapIcon(id: string, param?: unknown): CrawlerScriptEventMapIcon {
+  let dlg = DIALOGS[`${id}_icon`];
+  if (!dlg) {
+    return CrawlerScriptEventMapIcon.NONE;
+  }
+  return (dlg as ((param: unknown) => CrawlerScriptEventMapIcon))(param);
 }
