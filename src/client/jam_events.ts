@@ -110,7 +110,7 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.NONE,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    api.status('key', 'You win!');
+    dialog('final');
   },
 });
 

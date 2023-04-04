@@ -1,6 +1,7 @@
 /* eslint @typescript-eslint/no-use-before-define:off */
+import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
-import { crawlerScriptAPI } from './crawler_play';
+import { crawlerSaveGame, crawlerScriptAPI } from './crawler_play';
 import { dialogPush, dialogTextStyle } from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
@@ -123,6 +124,21 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         transient: true,
       });
     }
+  },
+  final: function () {
+    dialogPush({
+      text: 'I have finally escaped this realm.  Where was I?  Why was I here?' +
+        '  Perhaps I will contemplate these things in the next life...',
+      buttons: [{
+        label: 'Rest. (Return to main menu)',
+        cb: function () {
+          crawlerSaveGame();
+          urlhash.go('');
+        },
+      }, {
+        label: 'I\'ll explore some more.',
+      }],
+    });
   },
 };
 
