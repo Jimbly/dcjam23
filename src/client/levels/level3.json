@@ -2375,7 +2375,7 @@
   ],
   "initial_entities": [
     {
-      "type": "shopkeeper",
+      "type": "phys_trade3",
       "pos": [
         4,
         8,
@@ -2383,11 +2383,27 @@
       ]
     },
     {
-      "type": "shopkeeper",
+      "type": "phys_upg3",
       "pos": [
         3,
         10,
         3
+      ]
+    },
+    {
+      "type": "phys_recr3",
+      "pos": [
+        5,
+        8,
+        3
+      ]
+    },
+    {
+      "type": "phys_cat3",
+      "pos": [
+        4,
+        9,
+        2
       ]
     }
   ],

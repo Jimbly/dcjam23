@@ -7,13 +7,13 @@ traits:
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [2]
+      frames: [47]
       times: 10000
   sprite_data:
-    name: sprites/ultimo
-    ws: [40, 40, 40, 40]
-    hs: [40, 40, 40, 40]
+    name: sprites/utumno
+    ws: [40, 40, 40, 40, 40, 40]
+    hs: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
     filter_min: LINEAR_MIPMAP_LINEAR
     filter_mag: LINEAR
     origin: [0.5, 1]
-  scale: 0.8
+  scale: 0.62 # 0.72

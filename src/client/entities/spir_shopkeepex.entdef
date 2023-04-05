@@ -10,9 +10,9 @@ traits:
       frames: [1]
       times: 10000
   sprite_data:
-    name: sprites/ultimo
-    ws: [40, 40, 40, 40]
-    hs: [40, 40, 40, 40]
+    name: sprites/utumno
+    ws: [40, 40, 40, 40, 40, 40]
+    hs: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
     filter_min: LINEAR_MIPMAP_LINEAR
     filter_mag: LINEAR
     origin: [0.5, 1]

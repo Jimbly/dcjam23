@@ -4614,7 +4614,7 @@
       "id": "open",
       "walls": [
         "open",
-        "phys_door",
+        "phys_entrance",
         "open",
         "open"
       ]

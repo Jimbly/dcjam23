@@ -385,6 +385,8 @@ export function playerAddSupply(count: number): void {
   // let overloaded = num_goods >= data.good_capacity;
   if (matching_good) {
     matching_good.count += count;
+    matching_good.cost = (matching_good.cost * matching_good.count) /
+      (matching_good.count + count);
   } else {
     data.goods.push({
       type: 'supply',
@@ -781,6 +783,7 @@ function inventoryMenu(): boolean {
         tooltip: `Buy ${num_to_buy}`,
         disabled: trader_good.count === 0 || trader_good.cost > data.money ||
           overloaded && !good_def.key,
+        auto_focus: good_id === 'supply' && reset,
       })) {
         if (!player_good) {
           player_good = {
@@ -1078,6 +1081,7 @@ function recruitMenu(): void {
     text: heal_label,
     disabled: !missing_hp || data.money < missing_hp,
     sound: 'heal',
+    auto_focus: true,
   })) {
     data.money -= missing_hp;
     for (let ii = 0; ii < mercs.length; ++ii) {
@@ -1269,7 +1273,8 @@ function upgradeMenu(): void {
       text: 'Sign',
       x: x + w - 56, y: y + 3, w: 56, z,
       disabled: num_goods > upgrade.good_capacity || num_mercs > upgrade.merc_capacity ||
-        upgrade.cost >= data.money || data.upgrade === idx,
+        upgrade.cost >= data.money || data.upgrade === idx ||
+        upgrade.good_capacity <= data.good_capacity && upgrade.merc_capacity <= data.merc_capacity,
       sound: 'buy',
     })) {
       data.money -= upgrade.cost;

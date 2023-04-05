@@ -7,7 +7,7 @@ traits:
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [5]
+      frames: [2]
       times: 10000
   sprite_data:
     name: sprites/utumno

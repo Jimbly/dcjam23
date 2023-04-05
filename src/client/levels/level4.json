@@ -2363,7 +2363,7 @@
   ],
   "initial_entities": [
     {
-      "type": "spir_shopkeepex",
+      "type": "spir_recr1",
       "pos": [
         8,
         10,
@@ -2371,7 +2371,7 @@
       ]
     },
     {
-      "type": "spir_shopkeep",
+      "type": "spir_trade1",
       "pos": [
         9,
         9,
@@ -2379,7 +2379,7 @@
       ]
     },
     {
-      "type": "spir_shopkeepex",
+      "type": "spir_upg1",
       "pos": [
         10,
         10,
@@ -2392,6 +2392,14 @@
         10,
         11,
         2
+      ]
+    },
+    {
+      "type": "spir_cat1",
+      "pos": [
+        8,
+        11,
+        0
       ]
     }
   ],

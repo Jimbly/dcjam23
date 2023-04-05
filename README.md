@@ -18,5 +18,6 @@ GLOV.js is MIT licensed.
 Credits for assets used (may not make it into final version)
 ============================================================
 
+* Most NPCs/Monsters from Project Utumno
 * Some icons derived from work by Aleksandr Makarov @IknowKingRabbit
 * Fonts from https://nimblebeastscollective.itch.io/nb-pixel-font-bundle

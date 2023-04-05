@@ -1,11 +1,6 @@
 ---
 traits:
-# - id: enemy
-# - id: stats_default
-#   hp: 10
-#   level: 1
-#   attack: 4
-#   defense: 4
+- id: wander
 - id: drawable
   biasL: [-0.25, 0.3]
   biasF: [0, -0.25]
@@ -13,14 +8,13 @@ traits:
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [0, 1, 2, 1]
-      times: 500
+      frames: [54]
+      times: 10000
   sprite_data:
-    name: sprites/TinyTales_Knight_M8_B
-    ws: [16, 16, 16]
-    hs: [20, 20, 20, 20]
+    name: sprites/utumno
+    ws: [40, 40, 40, 40, 40, 40]
+    hs: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
     filter_min: LINEAR_MIPMAP_LINEAR
     filter_mag: LINEAR
     origin: [0.5, 0.9]
   scale: 0.62
-

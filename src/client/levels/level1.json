@@ -936,7 +936,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "phys_bldg",
         "open",
         "solid"
       ]
@@ -1117,7 +1117,7 @@
       "walls": [
         "open",
         "open",
-        "solid",
+        "phys_bldg",
         "open"
       ]
     },
@@ -1238,7 +1238,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "phys_bldg",
         "open",
         "open",
         "open"
@@ -1279,7 +1279,7 @@
       "walls": [
         "solid",
         "open",
-        "solid",
+        "phys_bldg",
         "open"
       ]
     },
@@ -1386,7 +1386,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "open",
         "solid",
         "open"
       ],
@@ -1416,18 +1416,18 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "phys_bldg",
         "open",
-        "solid"
+        "phys_bldg"
       ]
     },
     {
       "id": "open",
       "walls": [
         "open",
-        "solid",
         "open",
-        "solid"
+        "open",
+        "phys_bldg"
       ]
     },
     {
@@ -1532,19 +1532,19 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
+        "phys_bldg",
         "solid",
-        "open",
-        "open",
-        "solid"
+        "solid",
+        "open"
       ]
     },
     {
@@ -1565,6 +1565,24 @@
     {
       "id": "solid",
       "walls": [
+        "solid",
+        "open",
+        "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "solid",
+        "phys_bldg",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
         "open",
         "open",
         "solid",
@@ -1577,6 +1595,105 @@
         "open",
         "open",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
         "solid"
       ]
     },
@@ -1604,124 +1721,7 @@
         "open",
         "open",
         "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
       ]
     },
     {
@@ -2393,7 +2393,7 @@
   ],
   "initial_entities": [
     {
-      "type": "shopkeeper",
+      "type": "phys_trade1",
       "pos": [
         4,
         8,
@@ -2409,7 +2409,7 @@
       ]
     },
     {
-      "type": "shopkeeperextra",
+      "type": "phys_tut",
       "pos": [
         7,
         7,
@@ -2417,15 +2417,15 @@
       ]
     },
     {
-      "type": "villager",
+      "type": "phys_welc1",
       "pos": [
         2,
         5,
-        0
+        1
       ]
     },
     {
-      "type": "shopkeeperextra",
+      "type": "phys_upg1",
       "pos": [
         3,
         10,
@@ -2433,11 +2433,19 @@
       ]
     },
     {
-      "type": "shopkeeperextra",
+      "type": "phys_recr1",
       "pos": [
         5,
         8,
         3
+      ]
+    },
+    {
+      "type": "phys_cat1",
+      "pos": [
+        2,
+        7,
+        0
       ]
     }
   ],
