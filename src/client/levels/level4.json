@@ -1392,7 +1392,7 @@
       ]
     },
     {
-      "id": "open",
+      "id": "spirit_indoor",
       "walls": [
         "solid",
         "open",
@@ -1533,7 +1533,7 @@
       ]
     },
     {
-      "id": "open",
+      "id": "spirit_indoor",
       "walls": [
         "open",
         "solid",
@@ -1548,7 +1548,7 @@
       ]
     },
     {
-      "id": "open",
+      "id": "spirit_indoor",
       "walls": [
         "open",
         "door",
@@ -1557,7 +1557,7 @@
       ]
     },
     {
-      "id": "open",
+      "id": "spirit_indoor",
       "walls": [
         "solid",
         "solid",
