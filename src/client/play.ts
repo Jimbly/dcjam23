@@ -366,6 +366,36 @@ export function playerConsumeGood(good: Good): void {
   assert(false);
 }
 
+export function playerAddSupply(count: number): void {
+  let me = myEnt();
+  let { data } = me;
+  let matching_good: Good | null = null;
+  // let num_goods = 0;
+  for (let ii = 0; ii < data.goods.length; ++ii) {
+    let good = data.goods[ii];
+    if (good.type === 'supply') {
+      matching_good = good;
+    }
+    // let good_def = GOODS[good.type];
+    // assert(good_def);
+    // if (!good_def.key) {
+    //   num_goods += data.goods[ii].count;
+    // }
+  }
+  // let overloaded = num_goods >= data.good_capacity;
+  if (matching_good) {
+    matching_good.count += count;
+  } else {
+    data.goods.push({
+      type: 'supply',
+      count,
+      cost: 0,
+    });
+  }
+
+  statusPush(`+${count} Supply`);
+}
+
 function initGoods(trader: Entity): void {
   let data = trader.data;
   let floor_id = data.floor;

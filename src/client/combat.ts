@@ -30,6 +30,7 @@ import {
   drawHealthBar,
   mercPos,
   myEnt,
+  playerAddSupply,
   restartFromLastSave,
 } from './play';
 
@@ -286,6 +287,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
     //cleanDeadMercs();
     playUISound('victory');
     entityManager().deleteEntity(target.id, 'killed');
+    playerAddSupply(1);
   }
 
 
