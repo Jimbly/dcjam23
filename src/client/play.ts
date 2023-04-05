@@ -530,6 +530,7 @@ const OVERLAY_SUB_W = OVERLAY_W / 2;
 let inventory_last_frame: number = -1;
 let inventory_goods: string[];
 let inventory_scroll: ScrollArea;
+let buy_mode_max = false;
 function inventoryMenu(): boolean {
   if (!inventory_up) {
     return false;
@@ -563,6 +564,18 @@ function inventoryMenu(): boolean {
   }
 
   let z = Z.OVERLAY_UI;
+
+  let local_buy_max = Boolean((buy_mode_max ? 1 : 0) ^ (shift() ? 1 : 0));
+  if (trader && ui.buttonText({
+    x: OVERLAY_X0 + (OVERLAY_W - ui.button_width) / 2,
+    y: OVERLAY_Y0 + OVERLAY_H - ui.button_height - OVERLAY_PAD,
+    z,
+    text: local_buy_max ? 'Buy/Sell: MAX' : 'Buy/Sell: 1',
+    tooltip: 'Hint: Hold SHIFT or LeftTrigger to toggle',
+  })) {
+    buy_mode_max = !buy_mode_max;
+  }
+
   const y1 = OVERLAY_Y0 + OVERLAY_H;
   // half width
   const w = OVERLAY_SUB_W - OVERLAY_PAD * 2;
@@ -667,7 +680,7 @@ function inventoryMenu(): boolean {
   inventory_scroll.keyboardScroll();
 
   inventory_scroll.begin({
-    x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6, h: y1 - OVERLAY_PAD - y + 3,
+    x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6, h: y1 - OVERLAY_PAD - y + 2 - ui.button_height,
   });
   y = 2;
 
@@ -747,7 +760,7 @@ function inventoryMenu(): boolean {
         });
       }
       let num_to_buy = 1;
-      if (shift()) {
+      if (local_buy_max) {
         num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost), data.good_capacity - num_goods);
       }
       if (show_buy_button && ui.buttonText({
@@ -804,7 +817,7 @@ function inventoryMenu(): boolean {
       });
       if (trader_good && player_good) {
         let num_to_sell = 1;
-        if (shift()) {
+        if (local_buy_max) {
           num_to_sell = player_good.count;
         }
         if (ui.buttonText({
