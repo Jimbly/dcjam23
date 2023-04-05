@@ -175,7 +175,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
   },
 
   mcguff1: {
-    name: 'Painting of Beloved',
+    name: 'Painting of Belov\'d',
     realm: 'phys',
     avail: {
       1: [1, 200],
@@ -191,7 +191,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     key: 'mcguff2',
   },
   mcguff3: {
-    name: 'Memories of Childhood',
+    name: 'Childhood Mem\'ry',
     realm: 'spirit',
     avail: {
       5: [1, 5000],

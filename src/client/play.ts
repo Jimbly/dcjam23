@@ -20,6 +20,7 @@ import {
   keyDownEdge,
   keyUpEdge,
   padButtonDown,
+  padButtonUpEdge,
 } from 'glov/client/input';
 import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
@@ -38,6 +39,7 @@ import * as ui from 'glov/client/ui';
 import {
   ButtonStateString,
   isMenuUp,
+  playUISound,
   uiPanel,
 } from 'glov/client/ui';
 import * as urlhash from 'glov/client/urlhash';
@@ -724,7 +726,8 @@ function inventoryMenu(): boolean {
         text: '->',
         sound: 'buy',
         tooltip: `Buy ${num_to_buy}`,
-        disabled: trader_good.count === 0 || trader_good.cost > data.money || overloaded,
+        disabled: trader_good.count === 0 || trader_good.cost > data.money ||
+          overloaded && !good_def.key,
       })) {
         if (!player_good) {
           player_good = {
@@ -1377,12 +1380,13 @@ function drawCurrency(): void {
     x, y, z, w: 8, h: 8,
     frame: spritesheet_ui.FRAME_ICON_KEY,
   });
+  let victp = victoryProgress();
   tiny_font.draw({
     color: dawnbringer.font_colors[19],
     align: ALIGN.HLEFT,
     size: 8,
     x: x + 10 + (bigmoney ? -1 : 0), y, z,
-    text: `${victoryProgress()}/5`,
+    text: victp === 5 ? 'WIN ' : `${victoryProgress()}/4`,
   });
   x += 33;
 
@@ -1510,10 +1514,12 @@ let active_music = 0;
 let music_danger = 0;
 const SAFE_DIST = 4.5;
 const DANGER_DIST = 2.5;
-export function tickMusic(force_none: boolean, force_danger: boolean): void {
+export function tickMusic(is_title: boolean, force_danger: boolean): void {
   let desired;
-  if (force_none || buildModeActive() || !settings.volume_music) {
+  if (buildModeActive() || !settings.volume_music) {
     desired = 0;
+  } else if (is_title) {
+    desired = active_music ? 1 : 0;
   } else {
     let level = crawlerGameState().level;
     if (!level) {
@@ -1663,9 +1669,9 @@ function playCrawl(): void {
   button_y0 = 3;
   let menu_up = frame_map_view || build_mode || overlay_menu_up;
   let menu_keys = [KEYS.ESC];
-  let menu_pads = [PAD.BACK];
+  let menu_pads = [PAD.START];
   if (menu_up) {
-    menu_pads.push(PAD.B);
+    menu_pads.push(PAD.B, PAD.BACK);
   }
   button(0, 0, menu_up ? 10 : 6, 'menu', menu_keys, menu_pads);
   if (!build_mode) {
@@ -1759,7 +1765,8 @@ function playCrawl(): void {
       mapViewToggle();
     }
   }
-  if (!overlay_menu_up && keyDownEdge(KEYS.M)) {
+  if (!overlay_menu_up && (keyDownEdge(KEYS.M) || padButtonUpEdge(PAD.BACK))) {
+    playUISound('button_click');
     mapViewToggle();
   }
   let is_fullscreen_ui = inventoryMenu() || recruit_up || upgrade_up;
