@@ -1592,10 +1592,9 @@ function playCrawl(): void {
   let minimap_display_h = build_mode ? BUTTON_W : MINIMAP_W;
   let show_compass = !build_mode;
   let compass_h = show_compass ? 11 : 0;
-  let minimap_h = minimap_display_h + compass_h;
 
   if (build_mode && !controller.ignoreGameplay()) {
-    let build_y = MINIMAP_Y + minimap_h + 2;
+    let build_y = MINIMAP_Y + minimap_display_h + 2;
     crawlerBuildModeUI({
       x: MINIMAP_X,
       y: build_y,
@@ -2156,5 +2155,5 @@ export function playStartup(tiny_font_in: Font): void {
   combatStartup();
   dialogStartup(font);
   crawlerLoadData(webFSAPI());
-  crawlerMapViewStartup();
+  crawlerMapViewStartup(dawnbringer.colors[8]);
 }

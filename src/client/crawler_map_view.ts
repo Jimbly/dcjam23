@@ -155,11 +155,11 @@ export function crawlerMapViewDraw(
 
   if (!fullscreen) {
     let { ret, state } = ui.buttonShared({
-      x, y, w, h: h + compass_h,
+      x, y, w, h, // JAM : h + compass_h,
       disabled: button_disabled,
     });
     if (state === 'rollover') {
-      ui.drawRect(x - 1, y - 1, x + w + 1, y + h + compass_h + 1,
+      ui.drawRect(x - 1, y - 1, x + w + 1, y + h /*JAM+ compass_h*/ + 1,
         Z.MAP - 1, color_map_rollover);
     }
     if (ret) {
