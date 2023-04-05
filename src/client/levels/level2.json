@@ -930,7 +930,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "phys_bldg",
         "open",
         "solid"
       ]
@@ -1085,10 +1085,10 @@
     {
       "id": "phys_indoor",
       "walls": [
-        "solid",
+        "phys_bldg",
         "open",
         "door",
-        "solid"
+        "phys_bldg"
       ]
     },
     {
@@ -1111,7 +1111,7 @@
       "walls": [
         "solid",
         "open",
-        "solid",
+        "phys_bldg",
         "open"
       ]
     },
@@ -1226,7 +1226,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "phys_bldg",
         "open",
         "open",
         "open"
@@ -1235,9 +1235,9 @@
     {
       "id": "phys_indoor",
       "walls": [
-        "solid",
-        "solid",
-        "solid",
+        "phys_bldg",
+        "phys_bldg",
+        "phys_bldg",
         "open"
       ],
       "events": [
@@ -1267,7 +1267,7 @@
       "walls": [
         "solid",
         "open",
-        "solid",
+        "phys_bldg",
         "open"
       ]
     },
@@ -1374,7 +1374,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "phys_bldg",
         "solid",
         "open"
       ]
@@ -1400,7 +1400,7 @@
         "open",
         "solid",
         "open",
-        "solid"
+        "phys_bldg"
       ]
     },
     {
@@ -1409,7 +1409,7 @@
         "open",
         "solid",
         "open",
-        "solid"
+        "phys_bldg"
       ]
     },
     {

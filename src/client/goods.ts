@@ -24,26 +24,40 @@ function spiritSells(cost: number, s1: number, s2: number, s3: number): GoodAvai
   let ret: GoodAvail = {};
   if (s1) {
     ret[1+3] = [SELL_AMT, cost];
+  } else {
+    ret[1+3] = [0, cost];
   }
   if (s2) {
     ret[2+3] = [SELL_AMT, cost];
+  } else {
+    ret[2+3] = [0, cost];
   }
   if (s3) {
     ret[3+3] = [SELL_AMT, cost];
+  } else {
+    ret[3+3] = [0, cost];
   }
+  ret[0] = [SELL_AMT, cost];
   return ret;
 }
 function physSells(cost: number, p1: number, p2: number, p3: number): GoodAvail {
   let ret: GoodAvail = {};
   if (p1) {
     ret[1] = [SELL_AMT, cost];
+  } else {
+    ret[1] = [0, cost];
   }
   if (p2) {
     ret[2] = [SELL_AMT, cost];
+  } else {
+    ret[2] = [0, cost];
   }
   if (p3) {
     ret[3] = [SELL_AMT, cost];
+  } else {
+    ret[3] = [0, cost];
   }
+  ret[0] = [SELL_AMT, cost];
   return ret;
 }
 export const GOODS: Partial<Record<string, GoodDef>> = {
@@ -51,6 +65,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Supplies',
     realm: 'both',
     avail: {
+      0: [99, 5],
       1: [99, 5],
       2: [99, 5],
       3: [99, 5],
@@ -177,6 +192,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Painting of Belov\'d',
     realm: 'phys',
     avail: {
+      0: [1, 200],
       1: [1, 200],
     },
     key: 'mcguff1',
@@ -185,6 +201,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Dad\'s Pocketwatch',
     realm: 'phys',
     avail: {
+      0: [1, 5000],
       3: [1, 5000],
     },
     key: 'mcguff2',
@@ -193,6 +210,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Childhood Mem\'ry',
     realm: 'spirit',
     avail: {
+      0: [1, 5000],
       5: [1, 5000],
     },
     key: 'mcguff3',
@@ -201,6 +219,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Hope',
     realm: 'spirit',
     avail: {
+      0: [1, 5000],
       6: [1, 5000],
     },
     key: 'mcguff4',

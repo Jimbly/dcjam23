@@ -9,6 +9,7 @@ import { ClientEntityManagerInterface } from 'glov/client/entity_manager_client'
 import {
   ALIGN,
   Font,
+  FontStyle,
   fontStyle,
   fontStyleColored,
 } from 'glov/client/font';
@@ -446,7 +447,7 @@ const style_not_allowed = fontStyle(null, {
 });
 
 
-const style_by_realm = {
+const style_by_realm: Record<string, FontStyle> = {
   both: fontStyle(null, {
     color: dawnbringer.font_colors[9],
   }),
@@ -456,10 +457,15 @@ const style_by_realm = {
   spirit: fontStyle(null, {
     color: dawnbringer.font_colors[0],
   }),
-  key: fontStyle(null, {
+  key_phys: fontStyle(null, {
     color: dawnbringer.font_colors[21],
-    outline_width: 4,
-    outline_color: dawnbringer.font_colors[2],
+    outline_width: 3,
+    outline_color: dawnbringer.font_colors[5],
+  }),
+  key_spirit: fontStyle(null, {
+    color: dawnbringer.font_colors[0],
+    outline_width: 3,
+    outline_color: dawnbringer.font_colors[5],
   }),
 };
 
@@ -734,7 +740,7 @@ function inventoryMenu(): boolean {
     if (trader_only_buys && !trader_good?.count && !player_good?.count) {
       continue;
     }
-    let style = style_by_realm[good_def.key ? 'key' : good_def.realm];
+    let style = style_by_realm[good_def.key ? `key_${good_def.realm}` : good_def.realm];
     if (trader_good) {
       let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
       let show_value = true;
@@ -1797,6 +1803,7 @@ function playCrawl(): void {
 
   if (keyUpEdge(KEYS.B)) {
     crawlerBuildModeActivate(!build_mode);
+    inventory_up = recruit_up = upgrade_up = false;
   }
 
   if (up_edge.menu) {

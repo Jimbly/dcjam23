@@ -1329,6 +1329,12 @@
         "open",
         "solid",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": ""
+        }
       ]
     },
     {
@@ -2354,7 +2360,7 @@
   ],
   "initial_entities": [
     {
-      "type": "demo_wander",
+      "type": "phys_cat2",
       "pos": [
         4,
         10,
@@ -2362,7 +2368,7 @@
       ]
     },
     {
-      "type": "demo_wander",
+      "type": "phys_cat1",
       "pos": [
         4,
         9,
@@ -2370,39 +2376,15 @@
       ]
     },
     {
-      "type": "demo_wander",
+      "type": "phys_cat3",
       "pos": [
-        0,
+        3,
         11,
-        0
-      ]
-    },
-    {
-      "type": "demo_tt_naga",
-      "pos": [
-        0,
-        9,
-        0
-      ]
-    },
-    {
-      "type": "demo_tt_knight",
-      "pos": [
-        0,
-        12,
-        0
-      ]
-    },
-    {
-      "type": "demo_wander",
-      "pos": [
-        5,
-        9,
         2
       ]
     },
     {
-      "type": "demo_wander",
+      "type": "phys_cat1",
       "pos": [
         5,
         10,
@@ -2410,15 +2392,7 @@
       ]
     },
     {
-      "type": "demo_wander",
-      "pos": [
-        5,
-        11,
-        2
-      ]
-    },
-    {
-      "type": "demo_wander",
+      "type": "phys_cat1",
       "pos": [
         4,
         11,
@@ -2426,23 +2400,49 @@
       ]
     },
     {
-      "type": "shopkeeper",
+      "type": "phys_cat1",
       "pos": [
-        0,
+        3,
         10,
-        0
+        2
       ]
     },
     {
-      "type": "shopkeeper",
+      "type": "phys_cat2",
+      "pos": [
+        3,
+        9,
+        2
+      ]
+    },
+    {
+      "type": "phys_cat2",
       "pos": [
         5,
-        13,
+        11,
         2
+      ]
+    },
+    {
+      "type": "phys_cat3",
+      "pos": [
+        5,
+        9,
+        2
+      ]
+    },
+    {
+      "type": "phys_trade1",
+      "pos": [
+        0,
+        9,
+        0
       ]
     }
   ],
   "state": {},
-  "vstyle": "demo",
-  "seed": "32845502"
+  "vstyle": "phys",
+  "seed": "32845502",
+  "props": {},
+  "paths": {}
 }
