@@ -136,6 +136,8 @@ export function crawlerMapViewDraw(
   level_gen_test: boolean,
   script_api: CrawlerScriptAPIClient,
   button_disabled: boolean,
+  compass_x: number,
+  compass_y: number,
 ): void {
   const build_mode = buildModeActive();
   let { level } = game_state;
@@ -206,24 +208,24 @@ export function crawlerMapViewDraw(
     uoffs = round(uoffs * 256) / 256;
     // overlays
     compass_sprite.draw({
-      x, y: y+h, z: z+1,
+      x: compass_x, y: compass_y, z: z+3,
       w: 6, h: compass_h,
       frame: 1,
     });
     compass_sprite.draw({
-      x: x + 54-6, y: y+h, z: z+1,
+      x: compass_x + 54-6, y: compass_y, z: z+3,
       w: 6, h: compass_h,
       frame: 2,
     });
     // background
     compass_sprite.draw({
-      x, y: y + h, z,
+      x: compass_x, y: compass_y, z,
       w, h: compass_h,
       uvs: [uoffs, 11/32, 54/256+uoffs, 22/32],
     });
     // text
     compass_sprite.draw({
-      x, y: y + h, z: z + 2,
+      x: compass_x, y: compass_y, z: z + 2,
       w, h: compass_h - 1,
       uvs: [0, 22/32, 54/256, 1],
       shader: sprite_mult,

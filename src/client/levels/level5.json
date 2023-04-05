@@ -1,9 +1,9 @@
 {
   "special_pos": {
     "stairs_in": [
-      14,
-      8,
-      2
+      9,
+      13,
+      3
     ],
     "stairs_out": [
       9,
@@ -2387,7 +2387,7 @@
   "props": {
     "realm": "spirit",
     "is_town": "1",
-    "title": "Spiriton"
+    "title": "Cognity"
   },
   "paths": {}
 }

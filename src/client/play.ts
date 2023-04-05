@@ -186,6 +186,8 @@ const MINIMAP_RADIUS = 3;
 const MINIMAP_X = 261;
 const MINIMAP_Y = 3;
 const MINIMAP_W = 5+7*(MINIMAP_RADIUS*2 + 1);
+const COMPASS_X = 116;
+const COMPASS_Y = 2;
 const VIEWPORT_X0 = 3;
 const VIEWPORT_Y0 = 3;
 
@@ -332,6 +334,18 @@ export function playerHasGood(good: Good): boolean {
     }
   }
   return false;
+}
+
+export function playerSupplies(): number {
+  let me = myEnt();
+  let { goods } = me.data;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let pg = goods[ii];
+    if (pg.type === 'supply') {
+      return pg.count;
+    }
+  }
+  return 0;
 }
 
 export function playerConsumeGood(good: Good): void {
@@ -1324,6 +1338,83 @@ export function mercPos(index: number): Vec2 {
   return last_merc_pos[index];
 }
 
+export function victoryProgress(): number {
+  let count = 0;
+  let script_api = crawlerScriptAPI();
+  count += script_api.keyGet('mcguff1') ? 1 : 0;
+  count += script_api.keyGet('mcguff2') ? 1 : 0;
+  count += script_api.keyGet('mcguff3') ? 1 : 0;
+  count += script_api.keyGet('mcguff4') ? 1 : 0;
+  if (count === 4) {
+    return 5;
+  }
+  let me = myEnt();
+  let { goods } = me.data;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let good = goods[ii];
+    if (GOODS[good.type]!.key) {
+      count++;
+    }
+  }
+  return count;
+}
+
+const CURRENCY_X0 = 261;
+const CURRENCY_Y0 = 60;
+const CURRENCY_W = 82;
+function drawCurrency(): void {
+  let me = myEntOptional();
+  if (!me) {
+    return;
+  }
+  let x = CURRENCY_X0 - 1;
+  let y = CURRENCY_Y0;
+  let w = CURRENCY_W;
+  let z = Z.UI;
+  let money = me.data.money;
+  let bigmoney = money > 99999;
+  spritesheet_ui.sprite.draw({
+    x, y, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_KEY,
+  });
+  tiny_font.draw({
+    color: dawnbringer.font_colors[19],
+    align: ALIGN.HLEFT,
+    size: 8,
+    x: x + 10 + (bigmoney ? -1 : 0), y, z,
+    text: `${victoryProgress()}/5`,
+  });
+  x += 33;
+
+  if (bigmoney) {
+    x -= 8;
+  }
+  spritesheet_ui.sprite.draw({
+    x, y, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_SUPPLY,
+  });
+  tiny_font.draw({
+    color: dawnbringer.font_colors[20],
+    align: ALIGN.HLEFT,
+    size: 8,
+    x: x + 10 + (bigmoney ? -1 : 0), y, z,
+    text: `${playerSupplies()}`,
+  });
+
+  let text_w = tiny_font.draw({
+    color: dawnbringer.font_colors[8],
+    align: ALIGN.HRIGHT,
+    size: 8,
+    x: CURRENCY_X0, y, z,
+    w,
+    text: `${money}`,
+  });
+  spritesheet_ui.sprite.draw({
+    x: CURRENCY_X0 + w - text_w - 10 + (bigmoney ? 1 : 0), y, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_COIN,
+  });
+}
+
 function drawMercs(): void {
   let me = myEntOptional();
   if (!me) {
@@ -1643,12 +1734,14 @@ function playCrawl(): void {
 
   if (up_edge.menu) {
     if (menu_up) {
-      if (mapViewActive()) {
+      if (build_mode && mapViewActive()) {
         mapViewSetActive(false);
+        // but stay in build mode
       } else if (build_mode) {
         crawlerBuildModeActivate(false);
       } else {
-        // close whatever other menu
+        // close everything
+        mapViewSetActive(false);
         inventory_up = recruit_up = upgrade_up = false;
       }
       pause_menu_up = false;
@@ -1682,10 +1775,15 @@ function playCrawl(): void {
       }
     }
     crawlerMapViewDraw(game_state, 0, 0, game_width, game_height, 0, Z.MAP,
-      engine.defines.LEVEL_GEN, script_api, overlay_menu_up);
+      engine.defines.LEVEL_GEN, script_api, overlay_menu_up,
+      (game_width - MINIMAP_W)/2, COMPASS_Y);
   } else {
     crawlerMapViewDraw(game_state, MINIMAP_X, MINIMAP_Y, MINIMAP_W, minimap_display_h, compass_h, Z.MAP,
-      false, script_api, overlay_menu_up);
+      false, script_api, overlay_menu_up,
+      COMPASS_X, COMPASS_Y);
+    if (!build_mode) {
+      drawCurrency();
+    }
   }
 
 
@@ -1697,7 +1795,7 @@ function playCrawl(): void {
     drawHints();
   }
 
-  if (is_fullscreen_ui) {
+  if (is_fullscreen_ui || frame_map_view) {
     statusTick(0, 0, Z.STATUS, game_width, game_height - 4);
   } else {
     if (dialog_y) {

@@ -1,9 +1,9 @@
 {
   "special_pos": {
     "stairs_in": [
-      8,
-      7,
-      2
+      2,
+      4,
+      1
     ],
     "stairs_out": [
       2,
@@ -2397,7 +2397,7 @@
   "props": {
     "is_town": "1",
     "realm": "phys",
-    "title": "Physopolis"
+    "title": "Phystopia"
   },
   "paths": {}
 }
