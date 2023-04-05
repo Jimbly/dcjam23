@@ -2211,7 +2211,7 @@
       "id": "open",
       "walls": [
         "open",
-        "demo_walldetail2",
+        "solid",
         "open",
         "open"
       ]

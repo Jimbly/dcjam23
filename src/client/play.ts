@@ -72,8 +72,10 @@ import {
   CrawlerCell,
   CrawlerLevel,
   DIR_CELL,
+  DirType,
   crawlerLoadData,
   dirFromDelta,
+  dirMod,
 } from '../common/crawler_state';
 import {
   aiDoFloor,
@@ -1987,10 +1989,20 @@ export function play(dt: number): void {
   profilerStopFunc();
 }
 
-function onPlayerMove(old_pos: Vec2, new_pos: Vec2): void {
-  // let game_state = crawlerGameState();
+function onPlayerMove(old_pos: Vec2, new_pos: Vec2, move_dir: DirType): void {
+  let game_state = crawlerGameState();
   // aiOnPlayerMoved(game_state, myEnt(), old_pos, new_pos,
   //   settings.ai_pause || engine.defines.LEVEL_GEN, script_api);
+  let level = game_state.level!;
+  let cell1 = level.getCell(old_pos[0], old_pos[1]);
+  let wall1 = cell1 && cell1.walls[move_dir];
+  let cell2 = level.getCell(new_pos[0], new_pos[1]);
+  let wall2 = cell2 && cell2.walls[dirMod(move_dir + 2)];
+  if (wall1 && wall1.swapped.sound_id) {
+    playUISound(wall1.swapped.sound_id);
+  } else if (wall2 && wall2.swapped.sound_id) {
+    playUISound(wall2.swapped.sound_id);
+  }
 }
 
 function onInitPos(): void {

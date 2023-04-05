@@ -136,6 +136,8 @@ export function main(): void {
       // scrollbar_handle: { name: 'scrollbar_handle', ws: [11], hs: [3, 5, 3] },
     },
     ui_sounds: {
+      button_click: 'button_click',
+      rollover: { file: 'rollover', volume: 0.25 },
       user_join: 'user_join',
       user_leave: 'user_leave',
       msg_in: 'msg_in',
@@ -147,7 +149,17 @@ export function main(): void {
       sell: 'sell',
       drop: 'drop',
       victory: 'victory',
-      footstep: ['footstep/footstep1'], // , 'footstep/footstep2', 'footstep/footstep3', 'footstep/footstep4'],
+      defeat: 'defeat',
+      bridge_repair: 'bridge_repair',
+      door_secret: 'door_secret',
+      door_phys: 'door_phys',
+      door_path: 'door_path',
+      door_spir: 'door_spir',
+      flee: 'flee',
+      pedastal: 'pedastal',
+      footstep: ['footstep/footstep1', 'footstep/footstep2', 'footstep/footstep3', 'footstep/footstep4'],
+      hit_enemy: ['hit_enemy/1', 'hit_enemy/2', 'hit_enemy/3'],
+      hit_player: ['hit_player/1', 'hit_player/2', 'hit_player/3'],
     },
   })) {
     return;

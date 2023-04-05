@@ -4,6 +4,7 @@ export const SUPPLY_GOOD: Good = {
   cost: 0,
 };
 
+import { playUISound } from 'glov/client/ui';
 import { clone } from 'glov/common/util';
 import {
   CrawlerScriptAPI,
@@ -123,6 +124,7 @@ crawlerScriptRegisterEvent({
           let good_def = GOODS[good.type];
           if (good_def && good_def.key === param) {
             api.keySet(param);
+            playUISound('pedastal');
             api.status('key', `You reverently place your ${good_def.name} on the altar`);
             let has_all = true;
             for (let good_id in GOODS) {
@@ -219,6 +221,7 @@ crawlerScriptRegisterEvent({
       count,
       cost: 0,
     });
+    playUISound('bridge_repair');
     statusPush('Bridge fixed');
     statusPush(`-${count} Supplies`);
     api.keySet(key_name);

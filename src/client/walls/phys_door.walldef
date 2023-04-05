@@ -2,6 +2,7 @@
 open_move: true
 open_vis: false
 advertise_other_side: true
+sound_id: door_phys
 visuals:
   type: simple_wall
   opts:

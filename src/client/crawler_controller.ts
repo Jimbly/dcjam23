@@ -195,8 +195,8 @@ export class CrawlerController {
     this.script_api.setController(this);
   }
 
-  on_player_move?: (old_pos: Vec2, new_pos: Vec2) => void;
-  setOnPlayerMove(fn: (old_pos: Vec2, new_pos: Vec2) => void): void {
+  on_player_move?: (old_pos: Vec2, new_pos: Vec2, move_dir: DirType) => void;
+  setOnPlayerMove(fn: (old_pos: Vec2, new_pos: Vec2, move_dir: DirType) => void): void {
     this.on_player_move = fn;
   }
   on_init_pos?: (pos: Vec2, rot: DirType) => void;
@@ -569,11 +569,12 @@ export class CrawlerController {
       } else {
         script_api.is_visited = true; // Always visited for AI
         if (this.on_player_move) {
-          this.on_player_move(cur.pos, new_pos);
+          this.on_player_move(cur.pos, new_pos, next.action_dir);
         }
         this.pushInterpState(new_pos, next.rot, action_type, next);
         let action_id = do_debug_move ? 'move_debug' : 'move';
         let new_pos_triplet: JSVec3 = [new_pos[0], new_pos[1], next.rot];
+        // JAM: refactor sound playback here
         this.playerMoveStart(action_id, new_pos_triplet);
         this.applyPlayerMove(action_id, new_pos_triplet, this.resyncPosOnError.bind(this));
       }

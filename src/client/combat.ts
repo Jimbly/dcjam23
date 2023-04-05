@@ -183,7 +183,10 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
 
   function drawDamageAt(pos: Vec2, dam: number, rise: boolean): void {
     if (rise) {
+      playUISound('hit_enemy');
       pos[0] += (random() - 0.5) * 64;
+    } else {
+      playUISound('hit_player');
     }
     let anim = animationSequencerCreate();
     anim.add(0, ENEMY_ATTACK_TIME, (progress) => {
@@ -301,6 +304,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
         yes: () => {
           stats.hp = 0;
           entityManager().deleteEntity(target.id, 'killed');
+          playUISound('flee');
           me.data.mercs = [];
         },
       }

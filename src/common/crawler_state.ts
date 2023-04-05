@@ -32,6 +32,7 @@ export type WallDesc = {
   open_vis: boolean;
   open_move: boolean;
   advertise_other_side: boolean;
+  sound_id?: string;
   build_hide?: boolean;
   is_secret?: boolean; // Not allowed for pathfinding, not shown on map, until traversed
   map_view_wall_frame_north?: number;

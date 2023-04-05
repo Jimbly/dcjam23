@@ -3426,7 +3426,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "solid"
       ]
@@ -3722,19 +3722,19 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "solid",
         "open",
-        "open",
-        "open"
+        "solid",
+        "solid"
       ]
     },
     {
@@ -4001,15 +4001,6 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
         "open",
         "open",
@@ -4019,9 +4010,18 @@
     {
       "id": "open",
       "walls": [
-        "open",
-        "open",
+        "door",
         "solid",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "door",
         "open"
       ]
     },
@@ -4319,7 +4319,7 @@
         "solid",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
