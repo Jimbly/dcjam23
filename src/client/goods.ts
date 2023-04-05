@@ -72,7 +72,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Table Legs',
     realm: 'phys',
     avail: {
-      ...spiritWants(37, 52, 72),
+      ...spiritWants(35, 48, 65),
       ...physSells(25, 1, 0, 0),
     },
   },
@@ -80,7 +80,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Dead Leaves',
     realm: 'phys',
     avail: {
-      ...spiritWants(117, 139, 168),
+      ...spiritWants(100, 116, 135),
       ...physSells(60, 0, 1, 0),
     },
   },
@@ -88,15 +88,15 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Fresh Soil',
     realm: 'phys',
     avail: {
-      ...spiritWants(175, 209, 252),
-      ...physSells(60, 0, 1, 0),
+      ...spiritWants(141, 162, 187),
+      ...physSells(90, 0, 1, 0),
     },
   },
   phys5: {
     name: 'Books',
     realm: 'phys',
     avail: {
-      ...spiritWants(177, 251, 341),
+      ...spiritWants(148, 186, 231),
       ...physSells(120, 1, 0, 1),
     },
   },
@@ -104,19 +104,18 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Stone Carvings',
     realm: 'phys',
     avail: {
-      ...spiritWants(292, 349, 420),
-      ...physSells(150, 0, 1, 1),
+      ...spiritWants(280, 316, 361),
+      ...physSells(190, 0, 1, 1),
     },
   },
   phys7: {
     name: 'Metal Trinkets',
     realm: 'phys',
     avail: {
-      ...spiritWants(475, 437, 483),
-      ...physSells(170, 0, 0, 1),
+      ...spiritWants(520, 485, 527),
+      ...physSells(250, 0, 0, 1),
     },
   },
-
   spirit1: {
     name: 'Bottled Joy',
     realm: 'spirit',
@@ -129,15 +128,15 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Distil\'n of Anger',
     realm: 'spirit',
     avail: {
-      ...physWants(44, 58, 84),
-      ...spiritSells(30, 1, 0, 0),
+      ...physWants(55, 70, 97),
+      ...spiritSells(40, 1, 0, 0),
     },
   },
   spirit3: {
     name: 'Canned Greed',
     realm: 'spirit',
     avail: {
-      ...physWants(147, 163, 180),
+      ...physWants(116, 126, 136),
       ...spiritSells(70, 0, 1, 0),
     },
   },
@@ -145,15 +144,15 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Nostalgia Syrup',
     realm: 'spirit',
     avail: {
-      ...physWants(210, 232, 257),
-      ...spiritSells(100, 0, 1, 0),
+      ...physWants(170, 183, 196),
+      ...spiritSells(110, 0, 1, 0),
     },
   },
   spirit5: {
     name: 'Despair Dust',
     realm: 'spirit',
     avail: {
-      ...physWants(191, 253, 364),
+      ...physWants(161, 191, 247),
       ...spiritSells(130, 1, 0, 1),
     },
   },
@@ -161,16 +160,16 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Generosity Gel',
     realm: 'spirit',
     avail: {
-      ...physWants(314, 349, 385),
-      ...spiritSells(150, 0, 1, 1),
+      ...physWants(279, 299, 321),
+      ...spiritSells(180, 0, 1, 1),
     },
   },
   spirit7: {
     name: 'Bliss Extract',
     realm: 'spirit',
     avail: {
-      ...physWants(578, 559, 569),
-      ...spiritSells(200, 0, 0, 1),
+      ...physWants(576, 561, 569),
+      ...spiritSells(270, 0, 0, 1),
     },
   },
 
