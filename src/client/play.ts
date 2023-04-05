@@ -531,6 +531,7 @@ let inventory_last_frame: number = -1;
 let inventory_goods: string[];
 let inventory_scroll: ScrollArea;
 let buy_mode_max = false;
+let inventory_profit = 0;
 function inventoryMenu(): boolean {
   if (!inventory_up) {
     return false;
@@ -540,6 +541,7 @@ function inventoryMenu(): boolean {
   let reset = false;
   if (inventory_last_frame !== getFrameIndex() - 1) {
     reset = true;
+    inventory_profit = 0;
     inventory_scroll?.resetScroll();
   }
   inventory_last_frame = getFrameIndex();
@@ -587,6 +589,14 @@ function inventoryMenu(): boolean {
   {
     let x = inv_x;
     let y = OVERLAY_Y0 + OVERLAY_PAD;
+    if (inventory_profit) {
+      font.draw({
+        align: ALIGN.HRIGHT,
+        x, y: y1 - ui.font_height - 3, z,
+        w,
+        text: `Profit: ${round(inventory_profit)}`,
+      });
+    }
     font.draw({
       align: ALIGN.HCENTER,
       x, y, z,
@@ -829,7 +839,9 @@ function inventoryMenu(): boolean {
         })) {
           player_good.count -= num_to_sell;
           trader_good.count += num_to_sell;
-          data.money += trader_good.cost * num_to_sell;
+          let dmoney = trader_good.cost * num_to_sell;
+          inventory_profit += dmoney - player_good.cost * num_to_sell;
+          data.money += dmoney;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }

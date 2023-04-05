@@ -177,6 +177,7 @@ export type CrawlerDrawableOpts2 = {
   debug_visible: boolean;
   split_set: SplitSet;
   draw_dist_sq: number;
+  no_blend: boolean;
 };
 export type CrawlerDrawable = (
   rot: ROVec4, pos: ROVec3,
@@ -429,7 +430,7 @@ function simpleGetSpriteParam(
     if (visual_opts.color) {
       color = v4mul(temp_color, color, visual_opts.color);
     }
-    if (do_blend) {
+    if (do_blend && !opts.no_blend) {
       let times = visual_opts.times || 250;
       if (!Array.isArray(times)) {
         let arr: number[] = [];
@@ -465,6 +466,7 @@ const dummy_opts: CrawlerDrawableOpts2 = {
   debug_visible: false,
   split_set: SPLIT_ALL,
   draw_dist_sq: 0,
+  no_blend: true,
 };
 function simpleGetThumbnail(visual: VisualOpts | undefined, desc: WallDesc | CellDesc): CrawlerThumbnailPair {
   let [sprite, param] = simpleGetSpriteParam(visual, dummy_opts, desc.id, 'sprite');
@@ -915,11 +917,13 @@ const opts_visible: CrawlerDrawableOpts2 = {
   debug_visible: false,
   split_set: SPLIT_ALL,
   draw_dist_sq: 0,
+  no_blend: false,
 };
 const opts_occluded: CrawlerDrawableOpts2 = {
   debug_visible: true,
   split_set: SPLIT_ALL,
   draw_dist_sq: 0,
+  no_blend: false,
 };
 function drawCell(
   game_state: CrawlerState,

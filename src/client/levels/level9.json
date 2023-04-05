@@ -321,10 +321,10 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_spirit",
       "walls": [
         "solid",
-        "spirit_door",
+        "door",
         "solid",
         "solid"
       ],
@@ -417,10 +417,10 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_spirit",
       "walls": [
         "solid",
-        "spirit_door",
+        "door",
         "solid",
         "solid"
       ],
@@ -1089,10 +1089,10 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_spirit",
       "walls": [
         "solid",
-        "spirit_door",
+        "door",
         "solid",
         "solid"
       ],
@@ -4899,12 +4899,12 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_phys",
       "walls": [
         "solid",
         "solid",
         "solid",
-        "phys_door"
+        "door"
       ],
       "events": [
         {
@@ -4995,12 +4995,12 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_phys",
       "walls": [
         "solid",
         "solid",
         "solid",
-        "phys_door"
+        "door"
       ],
       "events": [
         {
@@ -6519,12 +6519,12 @@
       ]
     },
     {
-      "id": "stairs_in",
+      "id": "path_stairs_in_phys",
       "walls": [
         "solid",
         "solid",
         "solid",
-        "phys_door"
+        "door"
       ],
       "events": [
         {

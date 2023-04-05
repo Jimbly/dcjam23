@@ -38,13 +38,45 @@ import type { DataObject } from 'glov/common/types';
 
 type Entity = EntityDemoClient;
 
+const NAMES: Record<string, Record<number, string>> = {
+  shop: {
+    1: 'Kalded',
+    2: 'Ontadrez',
+    3: 'Hiberk',
+    4: 'Merchant',
+    5: 'Trader',
+    6: 'Seller',
+  },
+  recruit: {
+    1: 'Tuldor',
+    2: 'Medjer',
+    3: 'Norken',
+    4: 'Innkeep',
+    5: 'Brewer',
+    6: 'Barman',
+  },
+  upgrade: {
+    1: 'Frodrurth',
+    2: 'Mezer',
+    3: 'Ientison',
+    4: 'Contractor',
+    5: 'Inspector',
+    6: 'Mayor',
+  },
+};
+
+function floorID(): number {
+  return myEnt().data.floor;
+}
+
 
 crawlerScriptRegisterEvent({
   key: 'shop',
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    dialog('greet', 'Welcome to my shop!');
+    let name = NAMES.shop[floorID()] || 'Merchant';
+    dialog('greet', `${name}: Welcome to my shop!`);
     startShopping();
   },
 });
@@ -53,10 +85,11 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    let name = NAMES.recruit[floorID()] || 'Innkeeper';
     if (!myEnt().data.merc_capacity) {
-      return dialog('sign', 'Come back after you\'ve signed a Covenant.');
+      return dialog('sign', `${name}: Come back after you've signed a Covenant.`);
     }
-    dialog('greet', 'Need some protection?');
+    dialog('greet', `${name}: Need some protection?`);
     startRecruiting();
   },
 });
@@ -65,7 +98,8 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP3,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    dialog('greet', 'No refunds!');
+    let name = NAMES.upgrade[floorID()] || 'Govtman';
+    dialog('greet', `${name}: No refunds!`);
     startUpgrade();
   },
 });

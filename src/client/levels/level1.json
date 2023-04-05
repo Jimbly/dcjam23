@@ -2401,7 +2401,7 @@
       ]
     },
     {
-      "type": "shopkeeper",
+      "type": "villager",
       "pos": [
         2,
         9,
@@ -2409,26 +2409,34 @@
       ]
     },
     {
-      "type": "shopkeeper",
+      "type": "shopkeeperextra",
       "pos": [
         7,
         7,
+        2
+      ]
+    },
+    {
+      "type": "villager",
+      "pos": [
+        2,
+        5,
         0
       ]
     },
     {
-      "type": "shopkeeper",
-      "pos": [
-        2,
-        5,
-        1
-      ]
-    },
-    {
-      "type": "shopkeeper",
+      "type": "shopkeeperextra",
       "pos": [
         3,
         10,
+        3
+      ]
+    },
+    {
+      "type": "shopkeeperextra",
+      "pos": [
+        5,
+        8,
         3
       ]
     }

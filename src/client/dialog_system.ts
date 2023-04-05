@@ -30,6 +30,7 @@ export type DialogButton = {
   cb?: string | (() => void);
 };
 export type DialogParam = {
+  name: string;
   text: string;
   transient?: boolean;
   buttons?: DialogButton[];
@@ -87,7 +88,10 @@ export function dialogRun(dt: number): number {
   if (!active_dialog) {
     return 0;
   }
-  let { transient, text, buttons } = active_dialog;
+  let { transient, text, name, buttons } = active_dialog;
+  if (name) {
+    text = `${name}: ${text}`;
+  }
   active_state.counter += dt;
   let { buttons_vis, counter } = active_state;
   if (transient && !active_state.fade_time) {
