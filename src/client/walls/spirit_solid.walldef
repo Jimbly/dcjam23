@@ -10,3 +10,4 @@ visuals:
     spritesheet: spirit
     tile: [wall1, wall4, wall2, wall4, wall3, wall4]
     times: [800, 200, 800, 200, 800, 200]
+    do_blend: 200

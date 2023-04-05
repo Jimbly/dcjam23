@@ -128,8 +128,6 @@ function title(dt: number): void {
       yy += ui.font_height;
     }
 
-    y += 2;
-
     x += ui.button_width + 4;
   }
   x = 10;

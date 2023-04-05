@@ -1512,7 +1512,7 @@ const SAFE_DIST = 4.5;
 const DANGER_DIST = 2.5;
 export function tickMusic(force_none: boolean, force_danger: boolean): void {
   let desired;
-  if (force_none || buildModeActive()) {
+  if (force_none || buildModeActive() || !settings.volume_music) {
     desired = 0;
   } else {
     let level = crawlerGameState().level;

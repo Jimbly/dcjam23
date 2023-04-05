@@ -3854,12 +3854,12 @@
         "path_chasm_double"
       ],
       "props": {
-        "key_cell": ""
+        "key_cell": "b2"
       },
       "events": [
         {
           "id": "bridge",
-          "param": ""
+          "param": "2"
         }
       ]
     },

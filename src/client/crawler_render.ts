@@ -13,6 +13,7 @@ export const ShaderType = {
   ModelFragment: 'fmodel',
   SpriteVertex: 'vsprite',
   SpriteFragment: 'fsprite',
+  SpriteBlendFragment: 'fsprite_blend',
   SpriteHybridFragment: 'fsprite_hybrid',
   TintedSpriteFragment: 'fspritetinted',
   TintedModelFragment: 'fmodeltinted',
@@ -97,7 +98,7 @@ import {
 
 import type { CrawlerScriptAPIClient } from './crawler_script_api_client';
 import type { Box } from 'glov/client/geom_types';
-import type { BucketType, Sprite } from 'glov/client/sprites';
+import type { BucketType, Sprite, SpriteUIData } from 'glov/client/sprites';
 
 type Geom = ReturnType<typeof geomCreateQuads>;
 type Shader = ReturnType<typeof shaderCreate>;
@@ -293,6 +294,7 @@ export function crawlerRenderStartup(): void {
 
   render_shaders = {
     fsprite: shaderCreate('shaders/crawler_sprite3d.fp'),
+    fsprite_blend: shaderCreate('shaders/crawler_sprite3d_blend.fp'),
     fsprite_hybrid: shaderCreate('shaders/crawler_sprite3d_hybrid.fp'),
     fspritetinted: shaderCreate('shaders/crawler_sprite3d_tinted.fp'),
     vsprite: shaderCreate('shaders/crawler_sprite3d.vp'),
@@ -318,6 +320,7 @@ type SimpleVisualOpts = {
   total_time?: number; // set at runtime
   color?: ROVec4;
   do_split?: boolean;
+  do_blend?: number;
 };
 
 function frameFromAnim(frames: string[], times: number[], total_time: number): string {
@@ -328,6 +331,33 @@ function frameFromAnim(frames: string[], times: number[], total_time: number): s
     t -= times[idx++];
   }
   return frames[idx];
+}
+
+function frameFromAnim2(
+  out: Vec4,
+  uidata: SpriteUIData, base_frame: number,
+  spritesheet: SpriteSheet,
+  frames: string[], times: number[], total_time: number, blend_time: number
+): void {
+  assert.equal(frames.length, times.length);
+  let t = engine.frame_timestamp % total_time;
+  let idx = 0;
+  while (t > times[idx]) {
+    t -= times[idx++];
+  }
+  if (t < blend_time) {
+    idx = (idx + frames.length - 1) % frames.length;
+    let baseuv = uidata.rects[base_frame];
+    let frame = spritesheet.tiles[frames[idx]];
+    if (frame === undefined) {
+      return;
+    }
+    let ouruv = uidata.rects[frame];
+    v2sub(out, ouruv, baseuv);
+    out[2] = 1 - t / blend_time;
+  } else {
+    v4set(out, 0, 0, 0, 0);
+  }
 }
 
 let temp_color = vec4();
@@ -352,6 +382,7 @@ function simpleGetSpriteParam(
   let sprite;
   let frame;
   let color = opts.debug_visible ? color_hidden : unit_vec;
+  let shader;
   if (!visual) {
     if (!passesSplitCheck(opts.split_set, false, opts.draw_dist_sq)) {
       return null_null;
@@ -365,7 +396,7 @@ function simpleGetSpriteParam(
     let spritesheet_name = visual_opts.spritesheet || 'default';
     let spritesheet = spritesheets[spritesheet_name];
     assert(spritesheet, spritesheet_name);
-    let { tile } = visual_opts;
+    let { tile, do_blend } = visual_opts;
     assert(tile);
     if (Array.isArray(tile)) {
       let times = visual_opts.times || 250;
@@ -398,12 +429,32 @@ function simpleGetSpriteParam(
     if (visual_opts.color) {
       color = v4mul(temp_color, color, visual_opts.color);
     }
+    if (do_blend) {
+      let times = visual_opts.times || 250;
+      if (!Array.isArray(times)) {
+        let arr: number[] = [];
+        for (let ii = 0; ii < tile.length; ++ii) {
+          arr.push(times);
+        }
+        times = visual_opts.times = arr;
+      }
+      assert(Array.isArray(visual_opts.tile));
+      v4copy(temp_color, color);
+      color = temp_color;
+      frameFromAnim2(
+        temp_color,
+        sprite.uidata!, frame,
+        spritesheet,
+        visual_opts.tile as string[], visual_opts.times as number[], visual_opts.total_time as number,
+        do_blend);
+      shader = crawlerRenderGetShader(ShaderType.SpriteBlendFragment);
+    }
   }
 
   return [sprite, {
     frame,
     bucket: BUCKET_OPAQUE, // todo: custom op for bucket / opaque / soft alpha
-    shader: crawlerRenderGetShader(ShaderType.SpriteFragment),
+    shader: shader || crawlerRenderGetShader(ShaderType.SpriteFragment),
     vshader: crawlerRenderGetShader(ShaderType.SpriteVertex),
     facing: FACE_CUSTOM,
     color,
