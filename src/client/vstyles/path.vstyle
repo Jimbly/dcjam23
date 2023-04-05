@@ -3,6 +3,8 @@ cell_swaps:
   open: path_open
 wall_swaps:
   door: path_door
+  door_locked: path_door_locked
+  door_locked_unlocked: path_door_unlocked
   solid: path_solid
   secret_door: path_secret_door
   secret_door_unvisited: path_secret_door

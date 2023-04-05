@@ -16,7 +16,8 @@ visuals:
 - type: simple_billboard
   opts:
     spritesheet: path
-    tile: pedastal_full
+    tile: [pedastal_full1, pedastal_full2, pedastal_full3, pedastal_full4, pedastal_full5, pedastal_full6, pedastal_full7, pedastal_full8]
+    times: 120
     width: 0.5
     height: 0.5 # 0..1
     offs: [0, 0, 0]

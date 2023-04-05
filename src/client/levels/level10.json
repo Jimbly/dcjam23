@@ -1193,7 +1193,7 @@
     {
       "id": "open",
       "walls": [
-        "door",
+        "door_locked",
         "open",
         "solid",
         "open"
@@ -1210,9 +1210,12 @@
       "walls": [
         "open",
         "solid",
-        "door",
+        "door_locked",
         "solid"
-      ]
+      ],
+      "props": {
+        "key_west": "final"
+      }
     },
     {
       "id": "open",

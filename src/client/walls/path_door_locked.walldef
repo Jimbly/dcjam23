@@ -1,0 +1,21 @@
+---
+open_move: false
+open_vis: false
+advertise_other_side: true
+map_view_wall_frame_north: 35
+map_view_wall_frame_east: 34
+visuals:
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: exit_locked
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: [exit_locked1, exit_locked2, exit_locked3]
+    times: 1000
+    do_blend: 1000
+    detail_layer: 1
+replace:
+  - func: KEY
+    name: path_door_unlocked
