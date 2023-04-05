@@ -64,7 +64,7 @@ module.exports = function (config) {
         ...spritesheet({
           name: name,
           pad: 8,
-          tile_horiz_regex: /wall/,
+          tile_horiz_regex: /wall|door|exit/,
         }),
       });
       config.client_js_files.push(`client_sprites_${name}:**/*.js`);

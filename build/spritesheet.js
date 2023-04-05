@@ -200,6 +200,7 @@ module.exports = function (opts) {
       postamble,
       cmpFileKeys,
       pad,
+      tile_horiz_regex,
     ],
   };
 };

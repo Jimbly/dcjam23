@@ -1,6 +1,6 @@
 ---
-background_color: '#fff'
-fog_color: '#fff'
+background_color: '#0000'
+fog_color: '#000'
 cell_swaps:
   open: spirit_open
 wall_swaps:
