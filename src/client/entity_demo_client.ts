@@ -52,6 +52,7 @@ export type Good = {
 
 export type Merc = StatsData & {
   portrait: number;
+  realm: 'phys' | 'spirit';
   cost: number;
 };
 

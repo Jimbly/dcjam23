@@ -786,7 +786,7 @@ function inventoryMenu(): boolean {
       if (show_buy_button && ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
         w: button_w, z,
-        text: '->',
+        text: '→',
         sound: 'buy',
         tooltip: `Buy ${num_to_buy}`,
         disabled: trader_good.count === 0 || trader_good.cost > data.money ||
@@ -844,7 +844,7 @@ function inventoryMenu(): boolean {
         if (ui.buttonText({
           x: button_sell_x, y: y - button_y_offs,
           w: button_w, z,
-          text: '<-',
+          text: '←',
           sound: 'sell',
           tooltip: `Sell ${num_to_sell}`,
         })) {
@@ -949,10 +949,11 @@ function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: 
         frame: spritesheet_ui.FRAME_ICON_HP,
       });
       tiny_font.draw({
+        style: merc.hp ? undefined : style_not_allowed,
         align: ALIGN.HLEFT,
         x: x2 + 9, y: y1, z, w: 12, h: 8,
         size: 8,
-        text: is_player ? `${merc.hp}/${merc.hp_max}` : `${merc.hp_max}`,
+        text: merc.hp ? is_player ? `${merc.hp}/${merc.hp_max}` : `${merc.hp_max}` : '0',
       });
       if (!is_player) {
         spritesheet_ui.sprite.draw({
@@ -1054,7 +1055,8 @@ function recruitMenu(): void {
 
   let y_save = y;
 
-  let shop = MERC_LIST;
+  let realm = crawlerGameState().level!.props.realm;
+  let shop = MERC_LIST.filter((a) => a.realm === realm);
   for (let ii = 0; ii < shop.length; ++ii) {
     let merc = shop[ii];
     drawMerc(merc, x, y, z, true, false);
