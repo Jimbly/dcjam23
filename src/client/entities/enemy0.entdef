@@ -1,12 +1,9 @@
 ---
-# Patrolling
-properties:
-  danger_dist: 2
+# Stationary
 traits:
-- id: patrol
 - id: enemy
 - id: stats_default
-  hp: 8
+  hp: 7
   attack: 2
   defense: 2
 - id: drawable
@@ -16,7 +13,7 @@ traits:
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [1]
+      frames: [40]
       times: 10000
   sprite_data:
     name: sprites/utumno
@@ -25,4 +22,4 @@ traits:
     filter_min: LINEAR_MIPMAP_LINEAR
     filter_mag: LINEAR
     origin: [0.5, 0.9]
-  scale: 0.62
+  scale: 0.75

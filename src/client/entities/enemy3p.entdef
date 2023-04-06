@@ -1,19 +1,21 @@
 ---
-# Stationary; medium; compare party of 2 for 3 battles
+# Patrolling
+properties:
+  danger_dist: 2
 traits:
 - id: enemy
 - id: stats_default
-  hp: 10
-  attack: 3
-  defense: 3
+  hp: 14
+  attack: 5
+  defense: 7
 - id: drawable
   biasL: [-0.25, 0.3]
   biasF: [0, -0.25]
-  biasR: [-0.25, 0.5]
+  biasR: [-0.35, 0.5]
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [15]
+      frames: [43]
       times: 10000
   sprite_data:
     name: sprites/utumno
@@ -22,4 +24,4 @@ traits:
     filter_min: LINEAR_MIPMAP_LINEAR
     filter_mag: LINEAR
     origin: [0.5, 0.9]
-  scale: 0.87
+  scale: 0.8

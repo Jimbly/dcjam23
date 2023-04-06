@@ -3,6 +3,7 @@ import {
   KEYS,
   PAD,
   eatAllInput,
+  inputPadMode,
   keyDown,
   mouseDownAnywhere,
   padButtonDown,
@@ -63,9 +64,10 @@ export function dialogTextStyle(): FontStyle {
 
 function ff(): boolean {
   return keyDown(KEYS.SPACE) || keyDown(KEYS.ENTER) ||
-    padButtonDown(PAD.LEFT_TRIGGER) || padButtonDown(PAD.RIGHT_TRIGGER) ||
-    padButtonDown(PAD.A) || padButtonDown(PAD.B) ||
-    mouseDownAnywhere();
+    inputPadMode() && (
+      padButtonDown(PAD.LEFT_TRIGGER) || padButtonDown(PAD.RIGHT_TRIGGER) ||
+      padButtonDown(PAD.A) || padButtonDown(PAD.B)
+    ) || mouseDownAnywhere();
 }
 
 
