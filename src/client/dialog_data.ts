@@ -198,8 +198,8 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
     dialogPush({
       name: 'Greeter',
       text: 'Sadly, the bridge will probably crumble again by the time you get back to it.  Time passes oddly' +
-        ' inside towns, for those such as us.  The most difficult paths may require up to 15 Supplies to reach the' +
-        ' town at the other end, but from here 3 Supplies is enough to get to all of the neighboring towns.',
+        ' inside towns, for those such as us.  The most difficult journeys may require up to 12 Supplies between' +
+        ' towns, but from here 3 Supplies is enough to get to all of the neighboring towns.',
       buttons: [{
         label: 'Thanks for the information!',
       }],
