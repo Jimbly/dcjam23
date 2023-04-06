@@ -4,6 +4,7 @@ open_vis: false
 advertise_other_side: true
 map_view_wall_frame_north: 35
 map_view_wall_frame_east: 34
+sound_id: door_path
 visuals:
 - type: simple_wall
   opts:

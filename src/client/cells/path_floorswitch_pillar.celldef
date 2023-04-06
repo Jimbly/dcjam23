@@ -1,0 +1,50 @@
+---
+open_vis: true
+map_view_detail_frame: 28
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: floor
+- pass: default
+  type: simple_floor
+  opts:
+    spritesheet: demo
+    tile: dngn_mirrored_wall
+    scale: 0.5
+    color: '#FFFF'
+    detail_layer: 1
+replace:
+  - func: KEY
+    name: path_floorswitch_pillar_on
+
+corners: # pillars and floor/ceiling details
+  # one:
+  # - pass: details
+  #   type: simple_pillar
+  #   opts:
+  #     quadrants: 1
+  #     spritesheet: path
+  #     tile: wall
+  two:
+  - pass: details
+    type: simple_pillar
+    opts:
+      quadrants: 2
+      spritesheet: path
+      tile: wall
+  three:
+  - pass: details
+    type: simple_pillar
+    opts:
+      quadrants: 3
+      spritesheet: path
+      tile: wall
+  four:
+  - pass: details
+    type: simple_pillar
+    opts:
+      quadrants: 4
+      spritesheet: path
+      tile: wall
