@@ -160,6 +160,8 @@ export function main(): void {
       footstep: ['footstep/footstep1', 'footstep/footstep2', 'footstep/footstep3', 'footstep/footstep4'],
       hit_enemy: ['hit_enemy/1', 'hit_enemy/2', 'hit_enemy/3'],
       hit_player: ['hit_player/1', 'hit_player/2', 'hit_player/3'],
+      bells_phys: 'bells_phys',
+      bells_spir: 'bells_spir',
     },
   })) {
     return;

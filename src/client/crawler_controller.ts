@@ -364,8 +364,8 @@ export class CrawlerController {
 
     if (param.show_debug && !this.getTransitioningFloor()) {
       const { game_state, entity_manager } = this;
-      let x = 1;
-      let y = 0;
+      let x = 3; // JAM
+      let y = 4; // JAM
       let z = Z.DEBUG;
       let my_ent = entity_manager.hasMyEnt() ? entity_manager.getMyEnt() : null;
       ui.print(null, x, y, z, `Pos: ${game_state.pos[0]},${game_state.pos[1]}` +

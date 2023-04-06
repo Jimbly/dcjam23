@@ -27,7 +27,7 @@ import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
 import { SimpleMenu, simpleMenuCreate } from 'glov/client/simple_menu';
-import { FADE, soundPlayMusic } from 'glov/client/sound';
+import { FADE, GlovSoundSetUp, soundPlay, soundPlayMusic, soundResumed } from 'glov/client/sound';
 import {
   spotSuppressPad,
 } from 'glov/client/spot';
@@ -63,6 +63,7 @@ import {
 import {
   Vec2,
   v2dist,
+  v2distSq,
   v2set,
   v2sub,
   vec2,
@@ -74,6 +75,7 @@ import {
   CrawlerLevel,
   DIR_CELL,
   DirType,
+  JSVec2,
   crawlerLoadData,
   dirFromDelta,
   dirMod,
@@ -1740,6 +1742,59 @@ export function tickMusic(is_title: boolean, force_danger: boolean): void {
   }
 }
 
+
+const BELLS = [
+  [3,17, 9, 'bells_phys'],
+  [3,2, 9, 'bells_spir'],
+];
+const BELL_DIST = 5.5;
+let bell_last_play: GlovSoundSetUp | null = null;
+function tickBells(is_danger: boolean): void {
+  if (is_danger || !soundResumed()) {
+    return;
+  }
+  if (bell_last_play && !bell_last_play.playing()) {
+    bell_last_play = null;
+  }
+
+  let game_state = crawlerGameState();
+  let { floor_id } = game_state;
+  let nearest = -1;
+  let nearest_dist = Infinity;
+  for (let ii = 0; ii < BELLS.length; ++ii) {
+    let bell = BELLS[ii];
+    if (bell[2] === floor_id) {
+      let dsq = v2distSq(bell as JSVec2, game_state.pos);
+      if (dsq < nearest_dist) {
+        nearest = ii;
+        nearest_dist = dsq;
+      }
+    }
+  }
+
+  let volume = 0;
+  let name = '';
+  if (nearest !== -1) {
+    volume = clamp(1 - sqrt(nearest_dist) / BELL_DIST, 0, 1) * 2;
+    name = BELLS[nearest][3] as string;
+  }
+  if (bell_last_play && !volume) {
+    bell_last_play.fade(0, 250);
+    bell_last_play = null;
+  }
+  if (bell_last_play && name && bell_last_play.name !== name) {
+    bell_last_play.fade(0, 250);
+    bell_last_play = null;
+  }
+  if (volume) {
+    if (bell_last_play) {
+      bell_last_play.volume(volume);
+    } else {
+      bell_last_play = soundPlay(name, volume);
+    }
+  }
+}
+
 let temp_delta = vec2();
 function playCrawl(): void {
   profilerStartFunc();
@@ -1781,6 +1836,7 @@ function playCrawl(): void {
   }
 
   tickMusic(false, Boolean(frame_combat));
+  tickBells(Boolean(frame_combat));
 
   let button_x0: number;
   let button_y0: number;
