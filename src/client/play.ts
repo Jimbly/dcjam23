@@ -1928,7 +1928,10 @@ function playCrawl(): void {
   button_y0 = MOVE_BUTTONS_Y0;
 
   if (frame_combat) {
-    button(1, 1, 8, 'flee', [KEYS.S, KEYS.NUMPAD2, KEYS.NUMPAD5], [PAD.B, PAD.DOWN]);
+    let is_boss = frame_combat.data.stats.hp_max > 30; // boss
+    if (!is_boss) {
+      button(1, 1, 8, 'flee', [KEYS.S, KEYS.NUMPAD2, KEYS.NUMPAD5], [PAD.B, PAD.DOWN]);
+    }
 
     doCombat(frame_combat, dt * (shift() ? 3 : 1), menu_up || isMenuUp(), Boolean(up_edge.flee));
   } else {

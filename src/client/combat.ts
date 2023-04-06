@@ -324,13 +324,15 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
     }
   }
 
+  let is_boss = target.data.stats.hp_max > 30; // boss;
+
   if (stats.hp <= 0 && !combat_state.did_victory) {
     // victory!
     combat_state.did_victory = true;
     //cleanDeadMercs();
     playUISound('victory');
     entityManager().deleteEntity(target.id, 'killed');
-    if (target.data.stats.hp_max > 30) { // boss
+    if (is_boss) {
       playerAddMoney(19999);
     } else {
       playerAddSupply(1);
@@ -338,7 +340,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   }
 
 
-  if (flee_edge) {
+  if (flee_edge && !is_boss) {
     modalDialog({
       title: 'Flee?',
       text: 'Do you really wish to run away?  Your mercenaries will all stay, fight,' +
