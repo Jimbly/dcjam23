@@ -604,6 +604,17 @@ function inventoryMenu(): boolean {
     buy_mode_max = !buy_mode_max;
   }
 
+  if (!data.upgrade && data.money) {
+    font.draw({
+      align: ALIGN.HCENTER|ALIGN.HWRAP,
+      x: OVERLAY_X0 + 10, y: 140, z,
+      w: OVERLAY_W - 20,
+      text: 'Kalded: What a lovely painting!  I\'ll hold on to that in case you want to buy it back later.' +
+        '  I can\'t sell any Trade Goods to you until you sign a Covenant.  Talk to Frodrurth' +
+        ' at the Ministry of Trade and then come see me again!',
+    });
+  }
+
   const y1 = OVERLAY_Y0 + OVERLAY_H;
   // half width
   const w = OVERLAY_SUB_W - OVERLAY_PAD * 2;
@@ -2077,7 +2088,6 @@ function playInitEarly(room: ClientChannelWorker): void {
 }
 
 export function autosave(): void {
-  myEnt().data.autosave_journey = myEnt().data.journeys;
   crawlerSaveGame('auto');
   statusPush('Auto-saved.');
 }

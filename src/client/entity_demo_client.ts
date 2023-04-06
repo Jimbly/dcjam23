@@ -71,7 +71,6 @@ export type EntityDataClient = {
   upgrade: number;
 
   journeys: number;
-  autosave_journey: number;
   last_journey_town: number;
   town_visits: number;
   floor_town_init: Record<number, number>;
@@ -125,7 +124,6 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
       data.goods = data.goods || [];
       data.mercs = data.mercs || [];
       data.journeys = data.journeys || 0;
-      data.autosave_journey = data.autosave_journey === undefined ? -1 : data.autosave_journey;
       data.town_visits = data.town_visits || 0;
       data.floor_town_init = data.floor_town_init || {};
       data.upgrade = data.upgrade || 0;

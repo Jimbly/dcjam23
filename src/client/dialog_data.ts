@@ -303,17 +303,12 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
           text: 'Good luck out there!  Follow the road Spiritward to get to Spiriton.',
           transient: true,
         });
-        autosave();
       } else if (data.journeys === 0) {
         dialogPush({
           name,
           text: 'Remember, head Spiritward to get to Spiriton.',
           transient: true,
         });
-      }
-      if (data.autosave_journey !== data.journeys) {
-        data.autosave_journey = data.journeys;
-        autosave();
       }
       return;
     }
