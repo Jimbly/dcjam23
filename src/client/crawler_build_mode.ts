@@ -788,6 +788,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
       base_name: palette_config_tab === tab ? 'buttonselected' : 'button',
       text: tab,
       font,
+      hotkey: keyDown(KEYS.ALT) ? KEYS['1'] + idx : undefined,
     })) {
       palette_config_tab = tab;
       localStorageSet('pal_tab', tab);
@@ -870,7 +871,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
     let [type, desc] = pair;
     let id = desc.id;
     let key = `${type},${id}`;
-    let label = `[${type}]\n${id}${build_favorites[key] ? '*' : ''}`;
+    let label = `${show_all ? `[${type}]\n` : ''}${id}${build_favorites[key] ? '*' : ''}`;
     drawPaletteThumbnail({
       pair,
       x: x + THUMBNAIL_PAD, y: y + THUMBNAIL_PAD, z,
@@ -1365,7 +1366,8 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
       disabled: build_tab === tab,
       base_name: build_tab === tab ? 'buttonselected' : 'button',
       text: tab,
-      hotkey: keyDown(KEYS.ALT) ? KEYS['1'] + idx : undefined,
+      hotkey: show_palette_config && build_tab === BuildTab.Paint ? undefined :
+        keyDown(KEYS.ALT) ? KEYS['1'] + idx : undefined,
       font,
     })) {
       localStorageSet('build_tab', tab);

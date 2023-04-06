@@ -259,6 +259,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
           cb: function () {
             playerConsumeGood(quest.need);
             let me = myEnt();
+            me.data.town_counter++;
             me.data.money += quest.need.cost;
             statusPush(`+${quest.need.cost} Coins`);
             statusPush(`-${quest.need.count} ${good_name}`);

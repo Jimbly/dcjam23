@@ -69,11 +69,16 @@ export type EntityDataClient = {
   mercs: Merc[];
   merc_capacity: number;
   upgrade: number;
+
   journeys: number;
   autosave_journey: number;
   last_journey_town: number;
   town_visits: number;
   floor_town_init: Record<number, number>;
+  town_counter: number;
+  last_crumble_town_counter: number;
+  crumble_counter: number;
+
   // Traders
   last_init: number;
 } & EntityCrawlerDataCommon;
@@ -97,6 +102,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   declare do_split: boolean;
   declare is_player: boolean;
   declare is_enemy: boolean;
+  declare respawns: boolean;
   declare is_trader: boolean;
   declare danger_dist: number;
 
@@ -123,6 +129,12 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
       data.town_visits = data.town_visits || 0;
       data.floor_town_init = data.floor_town_init || {};
       data.upgrade = data.upgrade || 0;
+
+      if (data.town_counter === undefined) {
+        data.town_counter = 0;
+        data.last_crumble_town_counter = -1;
+        data.crumble_counter = 0;
+      }
     }
     this.floaters = [];
     this.aiResetMoveTime(true);
@@ -166,4 +178,5 @@ EntityDemoClient.prototype.draw2D = crawlerEntClientDefaultDraw2D;
 EntityDemoClient.prototype.onDelete = crawlerEntClientDefaultOnDelete;
 EntityDemoClient.prototype.do_split = true;
 EntityDemoClient.prototype.is_trader = false;
+EntityDemoClient.prototype.respawns = false;
 EntityDemoClient.prototype.danger_dist = 0;

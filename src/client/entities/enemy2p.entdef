@@ -1,9 +1,8 @@
 ---
 # Patrolling
-properties:
-  danger_dist: 2
 traits:
 - id: enemy
+- id: patrol
 - id: stats_default
   hp: 10
   attack: 6

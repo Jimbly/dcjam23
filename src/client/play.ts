@@ -267,7 +267,18 @@ function pauseMenu(): void {
     value_inc: 0.05,
     value_min: 0,
     value_max: 1,
-  }, {
+  }];
+  if (isLocal()) {
+    items.push({
+      name: 'Save game',
+      cb: function () {
+        crawlerSaveGame('manual');
+        statusPush('Game saved.');
+        pause_menu_up = false;
+      },
+    });
+  }
+  items.push({
     name: isOnline() ? 'Return to Title' : 'Save and Exit',
     cb: function () {
       if (!isOnline()) {
@@ -275,7 +286,7 @@ function pauseMenu(): void {
       }
       urlhash.go('');
     },
-  }];
+  });
   if (isLocal()) {
     // let slot = urlhash.get('slot') || '1';
     // let manual_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
@@ -806,6 +817,7 @@ function inventoryMenu(): boolean {
         trader_good.count-= num_to_buy;
         player_good.count+= num_to_buy;
         data.money -= trader_good.cost * num_to_buy;
+        data.town_counter++;
       }
     } else if (trader && !good_def.key) {
       font.draw({
@@ -853,6 +865,7 @@ function inventoryMenu(): boolean {
           let dmoney = trader_good.cost * num_to_sell;
           inventory_profit += dmoney - player_good.cost * num_to_sell;
           data.money += dmoney;
+          data.town_counter++;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
@@ -1069,6 +1082,7 @@ function recruitMenu(): void {
     })) {
       data.money -= merc.cost;
       data.mercs.push(clone(merc));
+      data.town_counter++;
     }
 
     uiPanel({
@@ -1094,6 +1108,7 @@ function recruitMenu(): void {
     auto_focus: true,
   })) {
     data.money -= missing_hp;
+    data.town_counter++;
     for (let ii = 0; ii < mercs.length; ++ii) {
       let merc = mercs[ii];
       if (merc && merc.hp > 0) {
@@ -1287,6 +1302,7 @@ function upgradeMenu(): void {
         upgrade.good_capacity <= data.good_capacity && upgrade.merc_capacity <= data.merc_capacity,
       sound: 'buy',
     })) {
+      data.town_counter++;
       data.money -= upgrade.cost;
       data.upgrade = idx;
       data.merc_capacity = upgrade.merc_capacity;
@@ -2068,7 +2084,7 @@ function resetFloorOnJourney(entity_manager: ClientEntityManagerInterface,
   for (let ent_id_str in entities) {
     let ent_id = Number(ent_id_str);
     let ent = entities[ent_id]!;
-    if (ent.is_enemy && ent.data.floor === floor_id) {
+    if (ent.respawns && ent.data.floor === floor_id) {
       entity_manager.deleteEntity(ent_id, 'respawn');
     }
   }
@@ -2078,7 +2094,7 @@ function resetFloorOnJourney(entity_manager: ClientEntityManagerInterface,
     for (let ii = 0; ii < initial_entities.length; ++ii) {
       initial_entities[ii].floor = floor_id;
       let ent = entity_manager.addEntityFromSerialized(initial_entities[ii]);
-      if (!ent.is_enemy) {
+      if (!ent.respawns) {
         entity_manager.deleteEntity(ent.id, 'respawn');
       }
     }
@@ -2104,22 +2120,30 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
 ) : void {
   let me = entity_manager.getMyEnt();
   assert(me);
-  if (level.props.is_town && floor_id !== me.data.last_journey_town) {
-    me.data.last_journey_town = floor_id;
-    me.data.journeys++;
+  let { data } = me;
+  if (level.props.is_town && floor_id !== data.last_journey_town) {
+    data.last_journey_town = floor_id;
+    data.journeys++;
     autosave();
   }
   if (last_level && !last_level.props.is_town && level.props.is_town) {
     // Save our state as of when we left town last
-    me.data.town_visits++;
-    statusPush('Safe at last...\n' +
-      'Threats respawn.\n' +
-      'Bridges collapse.');
+    data.town_visits++;
+  }
+  if (!level.props.is_town && data.town_counter !== data.last_crumble_town_counter) {
+    data.last_crumble_town_counter = data.town_counter;
+    data.crumble_counter++;
+    autosave();
+    if (data.town_visits > 0) {
+      statusPush('Time has passed...\n' +
+        'Some threats return.\n' +
+        'Bridges collapse.');
+    }
   }
   last_level = level;
-  if (me.data.floor_town_init[floor_id] !== me.data.town_visits) {
+  if (data.floor_town_init[floor_id] !== data.crumble_counter) {
     resetFloorOnJourney(entity_manager, floor_id, level);
-    me.data.floor_town_init[floor_id] = me.data.town_visits;
+    data.floor_town_init[floor_id] = data.crumble_counter;
   }
 }
 

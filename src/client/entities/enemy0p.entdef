@@ -1,10 +1,8 @@
 ---
 # Patrolling
-properties:
-  danger_dist: 2
 traits:
-- id: patrol
 - id: enemy
+- id: patrol
 - id: stats_default
   hp: 6
   attack: 3
@@ -16,7 +14,7 @@ traits:
 - id: drawable_sprite
   anim_data:
     idle:
-      frames: [35]
+      frames: [15]
       times: 10000
   sprite_data:
     name: sprites/utumno

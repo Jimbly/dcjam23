@@ -129,7 +129,18 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
     }
   });
 
+  ent_factory.registerTrait('enemy', {
+    properties: {
+      is_enemy: true,
+      respawns: true, // JAM: Need way to register this *after*!
+    },
+  });
+
   ent_factory.registerTrait<PatrolOpts, PatrolState>('patrol', {
+    properties: {
+      danger_dist: 2,
+      respawns: false,
+    },
     methods: {
       aiPatrol: function (this: EntityPatrol, game_state: CrawlerState, script_api: CrawlerScriptAPI) {
         let pos = this.getData<JSVec3>('pos')!;

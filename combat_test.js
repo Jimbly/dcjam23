@@ -1,5 +1,32 @@
 const { abs, floor, max, pow, random } = Math;
 
+/**
+               2/2/7
+  1 2/2/10      ~1
+  2 2/2/10      ~4
+  1 2/4/14      ~2
+  2 2/4/14      ~8
+  1 6/1/10      ~5
+  2 6/1/10      Infinite
+
+  T1x2   = 1/1/9; 2/2/7; 3 is impossible
+
+  T2x2bal  = 1/1/29; 2/2/22; 3/3/11; 4/4/7; 5/4/6
+  T2-defx2 = 1/1/15; 2/2/11; 3/3/11; 4/4/7;
+  T2-atkx2 = 1/1/46; 2/2/26; 3/3/12; 4/4/7; 5/3/6
+  2.5b above, 4below
+
+  T3x3@3.5 1/1/43; 2/2/34; 3/3/27; 4/4/16;; 5/5/12; 6/6/7; 7/7/6
+
+  T3x4 = 1/1/49; 2/2/49; 3/3/42; 4/4/28; 5/5/20; 6/6/14; 7/7/10; 8/8/8
+
+  Weak enemies: 2/2/7 (expected 2 battles)
+  Medium (still party of 2; expected 3 battles) 3/3/10
+  Med+ (party of 3; 3 battles) 5/5/12
+  Strong (party of 4; expected 4 battles) 6/6/14
+
+*/
+
 // return 0...1 weighted around 0.5
 function bellish(xin, exp) {
   // also reasonable: return easeInOut(xin, 1/exp);
