@@ -1,4 +1,6 @@
 ---
+fog_color: '#191c0e'
+background_color: '#191c0e'
 cell_swaps:
   open: path_open
 wall_swaps:
