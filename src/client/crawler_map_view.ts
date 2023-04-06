@@ -209,13 +209,13 @@ export function crawlerMapViewDraw(
     uoffs = round(uoffs * 256) / 256;
     // overlays
     compass_sprite.draw({
-      x: compass_x, y: compass_y, z: z+3,
-      w: 6, h: compass_h,
+      x: compass_x - 2, y: compass_y, z: z+3,
+      w: 8, h: compass_h,
       frame: 1,
     });
     compass_sprite.draw({
       x: compass_x + 54-6, y: compass_y, z: z+3,
-      w: 6, h: compass_h,
+      w: 8, h: compass_h,
       frame: 2,
     });
     // background
@@ -249,9 +249,9 @@ export function crawlerMapViewDraw(
   z += 0.1;
   if (fullscreen) {
     // full screen, center map
-    let xoffs = (w - (level.w + 2) * MAP_STEP_SIZE) / 2;
+    let xoffs = floor((w - (level.w + 2) * MAP_STEP_SIZE) / 2);
     x += xoffs;
-    y += (h - (level.h + 2) * MAP_STEP_SIZE) / 2;
+    y += floor((h - (level.h + 2) * MAP_STEP_SIZE) / 2);
     if (level_gen_test && xoffs > 0) {
       // offset to right
       x += round(xoffs * 0.75);
@@ -260,8 +260,8 @@ export function crawlerMapViewDraw(
     // mini
 
     // center on self
-    x -= round(game_state.pos[0] * MAP_STEP_SIZE - w/2 + MAP_STEP_SIZE * 1.5);
-    y -= round((level.h - game_state.pos[1])*MAP_STEP_SIZE - h/2 + MAP_STEP_SIZE * 0.5);
+    x -= round(game_state.pos[0] * MAP_STEP_SIZE - floor(w/2) + MAP_STEP_SIZE * 1.5);
+    y -= round((level.h - game_state.pos[1])*MAP_STEP_SIZE - floor(h/2) + MAP_STEP_SIZE * 0.5);
   }
   let x0 = x + MAP_STEP_SIZE;
   let y1 = y + level.h * MAP_STEP_SIZE;
@@ -598,7 +598,7 @@ export function crawlerMapViewStartup(allow_pathfind_in: boolean, color_rollover
   });
   compass_sprite = spriteCreate({
     name: 'compass',
-    ws: [160,6,6,256-6-6-160],
+    ws: [160,8,8,256-8-8-160],
     hs: [11,11,10],
     filter_min: gl.NEAREST,
     filter_mag: gl.NEAREST,

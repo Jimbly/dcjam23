@@ -83,7 +83,7 @@ export function dialogRun(dt: number): number {
     active_dialog = null;
   }
   let x = 11;
-  let y = 143;
+  let y = 141;
   let w = 240;
   let h = 61;
   let z = Z.DIALOG;

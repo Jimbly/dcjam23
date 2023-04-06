@@ -189,13 +189,13 @@ declare module 'glov/client/ui' {
 }
 
 const MINIMAP_RADIUS = 3;
-const MINIMAP_X = 261;
+const MINIMAP_X = 262;
 const MINIMAP_Y = 3;
 const MINIMAP_W = 5+7*(MINIMAP_RADIUS*2 + 1);
 const COMPASS_X = 104;
 const COMPASS_Y = 2;
 const VIEWPORT_X0 = 3;
-const VIEWPORT_Y0 = 3;
+const VIEWPORT_Y0 = 6;
 
 const BUTTON_W = 26;
 
@@ -216,6 +216,7 @@ let upgrade_up = false;
 
 let last_level: CrawlerLevel | null = null;
 
+let bg_sprite: Sprite;
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
 type BarSprite = {
@@ -245,8 +246,8 @@ let pause_menu: SimpleMenu;
 function pauseMenu(): void {
   if (!pause_menu) {
     pause_menu = simpleMenuCreate({
-      x: (game_width - PAUSE_MENU_W)/2,
-      y: 80,
+      x: floor((game_width - PAUSE_MENU_W)/2),
+      y: 50,
       z: Z.MODAL + 2,
       width: PAUSE_MENU_W,
     });
@@ -598,8 +599,8 @@ const OVERLAY_X0 = 1;
 const OVERLAY_Y0 = 1;
 const OVERLAY_W = game_width - 2;
 const OVERLAY_H = game_height - 2;
-const OVERLAY_PLAYER_X0 = game_width / 2;
-const OVERLAY_SUB_W = OVERLAY_W / 2;
+const OVERLAY_PLAYER_X0 = floor(game_width / 2);
+const OVERLAY_SUB_W = floor(OVERLAY_W / 2);
 
 
 let inventory_last_frame: number = -1;
@@ -644,7 +645,7 @@ function inventoryMenu(): boolean {
 
   let local_buy_max = Boolean((buy_mode_max ? 1 : 0) ^ (shift() ? 1 : 0));
   if (trader && ui.buttonText({
-    x: OVERLAY_X0 + (OVERLAY_W - ui.button_width) / 2,
+    x: floor(OVERLAY_X0 + (OVERLAY_W - ui.button_width) / 2),
     y: OVERLAY_Y0 + OVERLAY_H - ui.button_height - OVERLAY_PAD,
     z,
     text: local_buy_max ? 'Buy/Sell: MAX' : 'Buy/Sell: 1',
@@ -691,13 +692,13 @@ function inventoryMenu(): boolean {
     });
     y += ui.font_height + 1;
     spritesheet_ui.sprite.draw({
-      x: x + w/2 + 4, y: y + 2, z, w: 8, h: 8,
+      x: x + floor(w/2) + 4, y: y + 2, z, w: 8, h: 8,
       frame: spritesheet_ui.FRAME_ICON_COIN,
     });
     font.draw({
       style: style_money,
       align: ALIGN.HLEFT,
-      x: x + w/2 + 4 + 9, y, z,
+      x: x + floor(w/2) + 4 + 9, y, z,
       text: `${data.money}`,
     });
 
@@ -712,7 +713,7 @@ function inventoryMenu(): boolean {
     font.draw({
       style: overloaded ? style_not_allowed : undefined,
       align: ALIGN.HCENTER,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `${num_goods} / ${data.good_capacity}`,
     });
   }
@@ -754,7 +755,7 @@ function inventoryMenu(): boolean {
   let y = 36;
   if (trader) {
     spritesheet_ui.sprite.draw({
-      x: OVERLAY_X0 + OVERLAY_W/2 - 2, y: y - 10, z, w: 8, h: 8,
+      x: OVERLAY_X0 + floor(OVERLAY_W/2) - 2, y: y - 10, z, w: 8, h: 8,
       frame: spritesheet_ui.FRAME_ICON_COIN,
     });
     // font.draw({
@@ -776,7 +777,8 @@ function inventoryMenu(): boolean {
   inventory_scroll.keyboardScroll();
 
   inventory_scroll.begin({
-    x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6, h: y1 - OVERLAY_PAD - y + 2 - ui.button_height,
+    x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6,
+    h: y1 - OVERLAY_PAD - y + 2 + (trader ? -ui.button_height : 0),
   });
   y = 2;
 
@@ -989,7 +991,7 @@ let style_dead = fontStyleColored(null, dawnbringer.font_colors[25]);
 let color_black = vec4(0, 0, 0, 1);
 
 const MERC_H = 26;
-const MERC_W = 41;
+const MERC_W = 42;
 function drawMerc(merc: Merc | null, x: number, y: number, z: number, expanded: boolean, is_player: boolean): void {
   let x1 = x + 19 + (expanded ? 2 : 0);
   let x2 = x1 + 24;
@@ -1096,13 +1098,13 @@ function recruitMenu(): void {
     });
     y += ui.font_height + 1;
     spritesheet_ui.sprite.draw({
-      x: x + w/2 + 4, y: y + 2, z, w: 8, h: 8,
+      x: x + floor(w/2) + 4, y: y + 2, z, w: 8, h: 8,
       frame: spritesheet_ui.FRAME_ICON_COIN,
     });
     font.draw({
       style: style_money,
       align: ALIGN.HLEFT,
-      x: x + w/2 + 4 + 9, y, z,
+      x: x + floor(w/2) + 4 + 9, y, z,
       text: `${data.money}`,
     });
 
@@ -1119,7 +1121,7 @@ function recruitMenu(): void {
     font.draw({
       style: overloaded ? style_not_allowed : undefined,
       align: ALIGN.HCENTER,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `${num_mercs} / ${data.merc_capacity}`,
     });
   }
@@ -1162,7 +1164,7 @@ function recruitMenu(): void {
       x, y, z, w: 72 + 56 + 3, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
-    y += MERC_H;
+    y += MERC_H - 2;
   }
 
   y = y_save;
@@ -1230,7 +1232,7 @@ function recruitMenu(): void {
       x, y, z, w: 90 + 56 + 3, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
-    y += MERC_H;
+    y += MERC_H - 2;
   }
 
 
@@ -1306,24 +1308,24 @@ function upgradeMenu(): void {
     y += ui.font_height + 9;
 
     font.draw({
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: 'Current Covenant:',
     });
     y += ui.font_height + 1;
     font.draw({
       style: covenant_style,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `${UPGRADES[data.upgrade].name}`,
     });
     y += ui.font_height + 1;
     if (data.upgrade) {
       font.draw({
-        x, y, z, w: w/2,
+        x, y, z, w: floor(w/2),
         text: `Trade Goods: ${num_goods} / ${data.good_capacity}`,
       });
       y += ui.font_height + 1;
       font.draw({
-        x, y, z, w: w/2,
+        x, y, z, w: floor(w/2),
         text: `Mercenaries: ${num_mercs} / ${data.merc_capacity}`,
       });
       y += ui.font_height + 1;
@@ -1351,7 +1353,7 @@ function upgradeMenu(): void {
 
     font.draw({
       style: covenant_style,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `${upgrade.name}`,
     });
     let text_w = font.draw({
@@ -1367,7 +1369,7 @@ function upgradeMenu(): void {
     y += ui.font_height + 1;
     font.draw({
       style: num_goods > upgrade.good_capacity ? style_not_allowed : undefined,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `Trade Goods: ${upgrade.good_capacity}`,
     });
     let idx = UPGRADES.indexOf(upgrade);
@@ -1388,12 +1390,12 @@ function upgradeMenu(): void {
     y += ui.font_height + 1;
     font.draw({
       style: num_mercs > upgrade.merc_capacity ? style_not_allowed : undefined,
-      x, y, z, w: w/2,
+      x, y, z, w: floor(w/2),
       text: `Mercenaries: ${upgrade.merc_capacity}`,
     });
     y += ui.font_height + 1;
 
-    y += 8;
+    y += 5;
 
     // uiPanel({
     //   x, y, z, w: 72 + 56 + 3, h: MERC_H,
@@ -1479,12 +1481,12 @@ function moveBlockDead(): boolean {
   let z = Z.UI;
 
   font.drawSizedAligned(null,
-    x + w/2, y + h/2 - 16, z,
+    x + floor(w/2), y + floor(h/2) - 16, z,
     ui.font_height, ALIGN.HCENTER|ALIGN.VBOTTOM,
     0, 0, 'You have died.');
 
   if (ui.buttonText({
-    x: x + w/2 - ui.button_width/2, y: y + h/2, z,
+    x: x + floor(w/2 - ui.button_width/2), y: y + floor(h/2), z,
     text: 'Respawn',
   })) {
     controller.goToFloor(0, 'stairs_in', 'respawn');
@@ -1493,8 +1495,8 @@ function moveBlockDead(): boolean {
   return true;
 }
 
-const MOVE_BUTTONS_X0 = 261;
-const MOVE_BUTTONS_Y0 = 179;
+const MOVE_BUTTONS_X0 = MINIMAP_X;
+const MOVE_BUTTONS_Y0 = 146;
 
 const MERC_BOTTOM_Y = MOVE_BUTTONS_Y0 - 2;
 const MERC_X0 = MOVE_BUTTONS_X0;
@@ -1525,7 +1527,7 @@ export function victoryProgress(): number {
   return count;
 }
 
-const CURRENCY_X0 = 261;
+const CURRENCY_X0 = MINIMAP_X;
 const CURRENCY_Y0 = 60;
 const CURRENCY_W = 82;
 function drawCurrency(): void {
@@ -1613,10 +1615,10 @@ function drawMercs(): void {
     v2set(last_merc_pos[ii], xx, yy);
     drawMerc(merc, xx, yy, z, false, true);
     if (x === MERC_X0) {
-      x += MERC_W;
+      x += MERC_W - 2;
     } else {
       x = MERC_X0;
-      y -= MERC_H;
+      y -= MERC_H - 2;
     }
   }
 }
@@ -1876,9 +1878,9 @@ function playCrawl(): void {
   controller.doPlayerMotion({
     dt,
     button_x0: MOVE_BUTTONS_X0,
-    button_y0: MOVE_BUTTONS_Y0,
+    button_y0: build_mode ? game_height - 16 : MOVE_BUTTONS_Y0,
     no_visible_ui: frame_map_view,
-    button_w: BUTTON_W,
+    button_w: build_mode ? 6 : BUTTON_W,
     button_sprites,
     disable_move: moveBlocked() || overlay_menu_up,
     disable_player_impulse: Boolean(frame_combat || locked_dialog),
@@ -1946,7 +1948,7 @@ function playCrawl(): void {
     }
     crawlerMapViewDraw(game_state, 0, 0, game_width, game_height, 0, Z.MAP,
       engine.defines.LEVEL_GEN, script_api, overlay_menu_up,
-      (game_width - MINIMAP_W)/2, COMPASS_Y);
+      floor((game_width - MINIMAP_W)/2), COMPASS_Y);
   } else {
     crawlerMapViewDraw(game_state, MINIMAP_X, MINIMAP_Y, MINIMAP_W, minimap_display_h, compass_h, Z.MAP,
       false, script_api, overlay_menu_up,
@@ -1955,6 +1957,9 @@ function playCrawl(): void {
       drawCurrency();
     }
   }
+  bg_sprite.draw({
+    x: 0, y: 0, w: game_width, h: game_height, z: 1,
+  });
 
 
   if (!menu_up) {
@@ -1966,12 +1971,12 @@ function playCrawl(): void {
   }
 
   if (is_fullscreen_ui || frame_map_view) {
-    statusTick(0, 0, Z.STATUS, game_width, game_height - 4);
+    statusTick(0, 0, Z.STATUS, game_width, game_height - 1);
   } else {
     if (dialog_y) {
-      statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, dialog_y - VIEWPORT_Y0);
+      statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 2, Z.STATUS, render_width, dialog_y - VIEWPORT_Y0);
     } else {
-      statusTick(VIEWPORT_X0, VIEWPORT_Y0, Z.STATUS, render_width, render_height);
+      statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 6, Z.STATUS, render_width, render_height);
     }
   }
 
@@ -2041,12 +2046,12 @@ export function play(dt: number): void {
 
   profilerStopStart('chat');
   getChatUI().run({
-    hide: map_view || overlay_menu_up || !isOnline() || buildModeOverlayActive(),
+    hide: map_view || overlay_menu_up || !isOnline() || buildModeOverlayActive() || true, // JAM: true
     x: 3,
-    y: 196,
+    y: game_height - getChatUI().h,
     border: 2,
     scroll_grow: 2,
-    always_scroll: !map_view && !overlay_menu_up && !buildModeOverlayActive(),
+    always_scroll: false, // !map_view && !overlay_menu_up && !buildModeOverlayActive(), // JAM
     cuddly_scroll: true,
   });
   profilerStopStart('mid');
@@ -2342,6 +2347,12 @@ export function playStartup(tiny_font_in: Font): void {
     filter_mag: gl.NEAREST,
     ws: [16, 16, 16, 16, 16, 16, 16, 16],
     hs: [16, 16, 16, 16, 16, 16, 16, 16],
+  });
+
+  bg_sprite = spriteCreate({
+    name: 'ui/bg',
+    filter_min: gl.NEAREST,
+    filter_mag: gl.NEAREST,
   });
 
   renderAppStartup();
