@@ -1677,11 +1677,15 @@ let music = [
 ];
 let active_music = 0;
 let music_danger = 0;
+let force_no_music = false;
+export function forceNoMusic(force: boolean): void {
+  force_no_music = force;
+}
 const SAFE_DIST = 4.5;
 const DANGER_DIST = 2.5;
 export function tickMusic(is_title: boolean, force_danger: boolean): void {
   let desired;
-  if (buildModeActive() || !settings.volume_music) {
+  if (buildModeActive() || !settings.volume_music || force_no_music) {
     desired = 0;
   } else if (is_title) {
     desired = active_music ? 1 : 0;

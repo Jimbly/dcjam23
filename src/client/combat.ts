@@ -28,6 +28,7 @@ import {
 } from './entity_demo_client';
 import {
   drawHealthBar,
+  forceNoMusic,
   mercPos,
   myEnt,
   playerAddMoney,
@@ -263,13 +264,17 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   if (combat_state.enemy_attack_counter <= 0 && !combat_state.did_death) {
     if (!alive_mercs.length) {
       combat_state.did_death = true;
-      playUISound('defeat');
+      setTimeout(function () {
+        playUISound('defeat');
+      }, 500);
+      forceNoMusic(true);
       modalDialog({
         title: 'Defeat',
         text: 'With no mercenaries to defend you, the being quickly finishes you off.',
         button_width: 160,
         buttons: {
           'Restart from last save': () => {
+            forceNoMusic(false);
             restartFromLastSave();
           },
         }
