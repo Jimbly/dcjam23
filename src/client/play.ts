@@ -157,7 +157,7 @@ import {
 import {
   GOODS,
 } from './goods';
-import { jamTraitsStartup } from './jam_events';
+import { jamTraitsStartup, statusShort } from './jam_events';
 import { levelGenTest } from './level_gen_test';
 import { MERC_LIST } from './mercs';
 import { renderAppStartup } from './render_app';
@@ -409,7 +409,7 @@ export function playerAddSupply(count: number): void {
     });
   }
 
-  statusPush(`+${count} Supply`);
+  statusShort(`+${count} Supply`);
 }
 
 export function playerAddMoney(count: number): void {
@@ -2089,7 +2089,7 @@ function playInitEarly(room: ClientChannelWorker): void {
 
 export function autosave(): void {
   crawlerSaveGame('auto');
-  statusPush('Auto-saved.');
+  statusShort('Auto-saved.');
 }
 
 export function restartFromLastSave(): void {

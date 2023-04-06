@@ -37,6 +37,10 @@ import { statusPush } from './status';
 import type { TraitFactory } from 'glov/common/trait_factory';
 import type { DataObject } from 'glov/common/types';
 
+export function statusShort(text: string): void {
+  statusPush(text).counter = 3000;
+}
+
 type Entity = EntityDemoClient;
 
 const NAMES: Record<string, Record<number, string>> = {
@@ -222,8 +226,8 @@ crawlerScriptRegisterEvent({
       cost: 0,
     });
     playUISound('bridge_repair');
-    statusPush('Bridge fixed');
-    statusPush(`-${count} Supplies`);
+    statusShort('Bridge fixed');
+    statusShort(`-${count} Supplies`);
     api.keySet(key_name);
   },
 });
