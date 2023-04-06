@@ -23,7 +23,7 @@ export type CrawlerScriptAPI = {
   status(key: string, message: string): void;
   getRand(): RandProvider;
   getFloor(): number;
-  floorDelta(delta: number, pos_key: string): void;
+  floorDelta(delta: number, pos_key: string, keep_rot: boolean): void;
   floorAbsolute(floor_id: number, x: number, y: number, rot?: DirType): void;
   startPit(floor_id: number, pos_key?: string, pos_pair?: [number, number, DirType]): void;
   forceMove(dir: DirType): void;

@@ -94,8 +94,8 @@ class CrawlerScriptAPIClientBase {
     }
     return this.rand;
   }
-  floorDelta(delta: number, pos_key: string): void {
-    this.controller.floorDelta(delta, pos_key);
+  floorDelta(delta: number, pos_key: string, keep_rot: boolean): void {
+    this.controller.floorDelta(delta, pos_key, keep_rot);
   }
 
   floorAbsolute(floor_id: number, x: number, y: number, rot?: DirType): void {

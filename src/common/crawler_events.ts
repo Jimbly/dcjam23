@@ -90,7 +90,7 @@ crawlerScriptRegisterEvent({
 });
 
 crawlerScriptRegisterEvent({
-  key: 'floor_delta', // 1/-1 [special_pos_key]
+  key: 'floor_delta', // 1/-1 [keeprot] [special_pos_key]
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.NONE,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
@@ -100,12 +100,18 @@ crawlerScriptRegisterEvent({
       api.status('stairs', 'This is where you came in, try to find the stairs down instead.');
       return;
     }
-    let special_pos = params[1] || (delta < 0 ? 'stairs_out' : 'stairs_in');
-    if (!delta || !isInteger(delta) || params.length > 2) {
-      api.status('floor_delta', '"floor_delta" event requires a parameter in the form: +/-N [special_key]');
+    let idx = 1;
+    let keep_rot = false;
+    if (params[idx] === 'keeprot') {
+      keep_rot = true;
+      idx++;
+    }
+    let special_pos = params[idx++] || (delta < 0 ? 'stairs_out' : 'stairs_in');
+    if (!delta || !isInteger(delta) || params.length > idx) {
+      api.status('floor_delta', '"floor_delta" event requires a parameter in the form: +/-N [keeprot] [special_key]');
       return;
     }
-    api.floorDelta(delta, special_pos);
+    api.floorDelta(delta, special_pos, keep_rot);
   },
 });
 
@@ -144,9 +150,7 @@ crawlerScriptRegisterEvent({
       return;
     }
     if (rot === null) {
-      api.status('floor_abs', '"floor_abs" event requires a parameter in the form: floor#|same x y [rot]' +
-        ' (invalid rot)');
-      return;
+      rot = undefined;
     }
     api.floorAbsolute(floor_id, x, y, rot);
   },

@@ -87,7 +87,7 @@ export class CrawlerScriptAPIServerImpl implements CrawlerScriptAPI {
     return this.worker.getChannelData(key_str, false);
   }
 
-  floorDelta(delta: number, pos_key: string): void {
+  floorDelta(delta: number, pos_key: string, keep_rot: boolean): void {
     // Nothing: client handles this currently
   }
 

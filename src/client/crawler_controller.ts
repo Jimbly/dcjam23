@@ -698,7 +698,8 @@ export class CrawlerController {
     new_floor_id: number,
     special_pos_key?: string,
     reason?: string,
-    specific_pos?: JSVec3
+    specific_pos?: JSVec3,
+    keep_rot?: boolean,
   ): void {
     assert(!this.transitioning_floor);
     this.transitioning_floor = true;
@@ -710,6 +711,10 @@ export class CrawlerController {
     this.game_state.getLevelForFloorAsync(new_floor_id, (level: CrawlerLevel) => {
       let new_pos: JSVec3 = specific_pos ?
         specific_pos : level.special_pos[special_pos_key || 'stairs_in'] || level.special_pos.stairs_in;
+      if (keep_rot) {
+        let cur_rot = this.myEnt().data.pos[2];
+        new_pos = [new_pos[0], new_pos[1], cur_rot];
+      }
 
       let cell = level.getCell(new_pos[0], new_pos[1]); // may be -1 => null cell
       if (!cell || !cell.desc.open_vis) {
@@ -730,11 +735,11 @@ export class CrawlerController {
     });
   }
 
-  floorDelta(delta: number, special_pos_key: string): void {
+  floorDelta(delta: number, special_pos_key: string, keep_rot: boolean): void {
     let floor_id = this.myEnt().data.floor;
     assert.equal(typeof floor_id, 'number');
     assert(floor_id + delta >= 0);
-    this.goToFloor(floor_id + delta, special_pos_key);
+    this.goToFloor(floor_id + delta, special_pos_key, undefined, undefined, keep_rot);
   }
 
   floorAbsolute(floor_id: number, x: number, y: number, rot?: DirType): void {
