@@ -757,7 +757,12 @@ function inventoryMenu(): boolean {
       continue;
     }
     let style = style_by_realm[good_def.key ? `key_${good_def.realm}` : good_def.realm];
+    let trader_cost = 0;
     if (trader_good) {
+      trader_cost = trader_good.cost;
+      if (trader_good.type === 'mcguff1' && trader_good.count === 0 && !crawlerScriptAPI().keyGet('sold_mcguff1')) {
+        trader_cost = 200;
+      }
       let show_buy_button = Boolean(!trader_only_buys || trader_good.count);
       let show_value = true;
       if (!trader_good.count && good_def.key) {
@@ -788,16 +793,16 @@ function inventoryMenu(): boolean {
       }
       if (show_value) {
         font.draw({
-          style: trader_good.count && trader_good.cost > data.money ? style_not_allowed : style_money,
+          style: trader_good.count && trader_cost > data.money ? style_not_allowed : style_money,
           align: ALIGN.HCENTERFIT,
           x: value_x, y, z,
           w: value_w,
-          text: `${trader_good.cost}`,
+          text: `${trader_cost}`,
         });
       }
       let num_to_buy = 1;
       if (local_buy_max) {
-        num_to_buy = min(trader_good.count, floor(data.money / trader_good.cost), data.good_capacity - num_goods);
+        num_to_buy = min(trader_good.count, floor(data.money / trader_cost), data.good_capacity - num_goods);
       }
       if (show_buy_button && ui.buttonText({
         x: button_buy_x, y: y - button_y_offs,
@@ -805,7 +810,7 @@ function inventoryMenu(): boolean {
         text: '→',
         sound: 'buy',
         tooltip: `Buy ${num_to_buy}`,
-        disabled: trader_good.count === 0 || trader_good.cost > data.money ||
+        disabled: trader_good.count === 0 || trader_cost > data.money ||
           overloaded && !good_def.key,
         auto_focus: good_id === 'supply' && reset,
       })) {
@@ -817,11 +822,11 @@ function inventoryMenu(): boolean {
           };
           data.goods.push(player_good);
         }
-        player_good.cost = (player_good.cost * player_good.count + trader_good.cost * num_to_buy) /
+        player_good.cost = (player_good.cost * player_good.count + trader_cost * num_to_buy) /
           (player_good.count + num_to_buy);
         trader_good.count-= num_to_buy;
         player_good.count+= num_to_buy;
-        data.money -= trader_good.cost * num_to_buy;
+        data.money -= trader_cost * num_to_buy;
         data.town_counter++;
       }
     } else if (trader && !good_def.key) {
@@ -867,13 +872,14 @@ function inventoryMenu(): boolean {
         })) {
           player_good.count -= num_to_sell;
           trader_good.count += num_to_sell;
-          let dmoney = trader_good.cost * num_to_sell;
+          let dmoney = trader_cost * num_to_sell;
           inventory_profit += dmoney - player_good.cost * num_to_sell;
           data.money += dmoney;
           data.town_counter++;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
+          crawlerScriptAPI().keySet(`sold_${good_id}`);
         }
       } else if (!trader && (!good_def.key || engine.DEBUG && shift()) && player_good) {
         if (ui.buttonText({

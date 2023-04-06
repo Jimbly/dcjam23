@@ -192,8 +192,8 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
     name: 'Painting of Belov\'d',
     realm: 'phys',
     avail: {
-      0: [1, 200],
-      1: [1, 200],
+      0: [1, 5000],
+      1: [1, 5000],
     },
     key: 'mcguff1',
   },
