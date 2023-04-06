@@ -74,6 +74,26 @@ function floorID(): number {
   return myEnt().data.floor;
 }
 
+crawlerScriptRegisterEvent({
+  key: 'key_set_snd',
+  when: CrawlerScriptWhen.PRE, // Must be PRE so that the if happens before the server applies it
+  // map_icon: CrawlerScriptEventMapIcon.EXCLAIMATION,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (!param && cell.props?.key_cell) {
+      param = cell.props?.key_cell;
+    }
+    if (!param) {
+      api.status('key_pickup', '"key_set" event requires a string parameter');
+    } else {
+      if (!api.keyGet(param)) {
+        api.keySet(param);
+        playUISound('unlock');
+        //api.status('key_pickup', `Acquired key "${param}"`);
+      }
+    }
+  },
+});
+
 
 crawlerScriptRegisterEvent({
   key: 'shop',
@@ -138,7 +158,7 @@ crawlerScriptRegisterEvent({
           if (good_def && good_def.key === param) {
             api.keySet(param);
             playUISound('pedastal');
-            api.status('key', `You reverently place your ${good_def.name} on the altar`);
+            api.status('key', `You reverently place your ${good_def.name} on the altar.`);
             let has_all = true;
             for (let good_id in GOODS) {
               let key = GOODS[good_id]!.key;
@@ -150,7 +170,7 @@ crawlerScriptRegisterEvent({
             }
             if (has_all) {
               api.keySet('final');
-              api.status('final', 'The gateway is now open');
+              api.status('final', 'The gateway is now open!');
             }
             goods.splice(ii, 1);
             return;
@@ -159,7 +179,7 @@ crawlerScriptRegisterEvent({
         let good_def = GOODS[param];
         if (good_def) {
           api.status('key', 'You long to place your ' +
-            `${good_def.name} on the altar`);
+            `${good_def.name} on the altar.`);
         } else {
           api.status('key', `Unknown good def ${param}`);
         }

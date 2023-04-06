@@ -1,7 +1,7 @@
 ---
 open_vis: true
 advertised_wall: spirit_door
-map_view_detail_frame: 7
+map_view_detail_frame: 40
 auto_evict: true
 default_events:
 - floor_delta -1

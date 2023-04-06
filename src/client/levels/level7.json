@@ -2148,7 +2148,7 @@
       "id": "open",
       "walls": [
         "open",
-        "door_locked",
+        "path_exit_locked",
         "open",
         "open"
       ],
@@ -2303,7 +2303,7 @@
         "solid",
         "solid",
         "solid",
-        "door_locked"
+        "path_exit_locked"
       ],
       "events": [
         {

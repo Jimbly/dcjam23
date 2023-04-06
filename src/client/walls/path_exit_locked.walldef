@@ -8,8 +8,8 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: path
-    tile: door
-- type: simple_wall # TODO: remove this
+    tile: exit_locked
+- type: simple_wall
   opts:
     spritesheet: path
     tile: [exit_locked1, exit_locked2, exit_locked3]
@@ -18,4 +18,4 @@ visuals:
     detail_layer: 1
 replace:
   - func: KEY
-    name: path_door_unlocked
+    name: path_exit_unlocked

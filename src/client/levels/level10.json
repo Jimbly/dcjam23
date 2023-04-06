@@ -1193,7 +1193,7 @@
     {
       "id": "open",
       "walls": [
-        "door_locked",
+        "path_exit_locked",
         "open",
         "solid",
         "open"
@@ -1210,7 +1210,7 @@
       "walls": [
         "open",
         "solid",
-        "door_locked",
+        "path_exit_locked",
         "solid"
       ],
       "props": {

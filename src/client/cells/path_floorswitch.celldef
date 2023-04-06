@@ -1,0 +1,20 @@
+---
+open_vis: true
+map_view_detail_frame: 28
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: floor
+- pass: default
+  type: simple_floor
+  opts:
+    spritesheet: demo
+    tile: dngn_mirrored_wall
+    scale: 0.5
+    color: '#FFFF'
+    detail_layer: 1
+replace:
+  - func: KEY
+    name: floorswitch_on

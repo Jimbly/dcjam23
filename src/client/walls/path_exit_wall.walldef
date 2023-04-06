@@ -1,0 +1,11 @@
+---
+open_move: false
+open_vis: false
+map_view_wall_frame_north: 3
+map_view_wall_frame_east: 2
+map_view_wall_frame_priority: -1
+visuals:
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: exit_wall

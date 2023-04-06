@@ -3,6 +3,8 @@ fog_color: '#191c0e'
 background_color: '#191c0e'
 cell_swaps:
   open: path_open
+  floorswitch: path_floorswitch
+  floorswitch_on: path_floorswitch_on
 wall_swaps:
   door: path_door
   door_locked: path_door_locked

@@ -1416,9 +1416,10 @@ function engagedEnemy(): Entity | null {
   if (buildModeActive() || engine.defines.PEACE) {
     return null;
   }
+  let game_state = crawlerGameState();
   let me = crawlerMyEnt();
   // search, needs game_state, returns list of foes
-  let ents: Entity[] = entitiesAdjacentTo(crawlerGameState(),
+  let ents: Entity[] = entitiesAdjacentTo(game_state,
     entityManager(),
     me.data.floor, me.data.pos, crawlerScriptAPI());
   ents = ents.filter((ent: Entity) => {

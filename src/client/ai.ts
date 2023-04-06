@@ -54,6 +54,7 @@ export function entitiesAdjacentTo<T extends Entity>(
 ): T[] {
   let ret: T[] = [];
   let level = game_state.levels[floor_id];
+  script_api.setLevel(level);
   script_api.setPos(pos);
   for (let dir = 0 as DirType; dir < 4; ++dir) {
     if (level.wallsBlock(pos, dir, script_api) !== BLOCK_OPEN) {

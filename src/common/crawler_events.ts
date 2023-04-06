@@ -26,6 +26,12 @@ crawlerScriptRegisterFunc('KEY', function (
     if (neighbor) {
       key_name = neighbor.getKeyNameForWall(dirMod(dir + 2));
     }
+    if (!key_name) {
+      key_name = cell.getKeyNameForWall(DIR_CELL);
+    }
+    if (!key_name && neighbor) {
+      key_name = neighbor.getKeyNameForWall(DIR_CELL);
+    }
   }
   return script_api.keyGet(key_name || 'missingkey');
 });

@@ -148,6 +148,7 @@ export function main(): void {
       heal: 'heal',
       sell: 'sell',
       drop: 'drop',
+      unlock: 'unlock',
       victory: 'victory',
       defeat: 'defeat',
       bridge_repair: 'bridge_repair',
