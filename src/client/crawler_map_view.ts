@@ -51,6 +51,7 @@ const { floor, max, min, round, PI } = Math;
 let map_sprite: Sprite;
 let compass_sprite: Sprite;
 let sprite_mult: Shader;
+let allow_pathfind: boolean = true;
 
 const MAP_TILE_SIZE = 7;
 const MAP_STEP_SIZE = 6;
@@ -530,7 +531,7 @@ export function crawlerMapViewDraw(
           } else {
             mouse_frame = 24; // error
           }
-        } else {
+        } else if (allow_pathfind) {
           // pathfind
           let path = pathFind(level, self_x, self_y, self_dir, mx, my, full_vis);
           if (path) {
@@ -583,7 +584,8 @@ export function crawlerMapViewDraw(
   spriteClipPop();
 }
 
-export function crawlerMapViewStartup(color_rollover?: ROVec4): void {
+export function crawlerMapViewStartup(allow_pathfind_in: boolean, color_rollover?: ROVec4): void {
+  allow_pathfind = allow_pathfind_in;
   if (color_rollover) {
     color_map_rollover = color_rollover;
   }

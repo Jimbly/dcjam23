@@ -54,6 +54,7 @@ export type Merc = StatsData & {
   portrait: number;
   realm: 'phys' | 'spirit';
   cost: number;
+  bought_crumble_counter?: number;
 };
 
 export type EntityDataClient = {
@@ -74,9 +75,9 @@ export type EntityDataClient = {
   last_journey_town: number;
   town_visits: number;
   floor_town_init: Record<number, number>;
-  town_counter: number;
+  town_counter: number; // upon doing any commerce
   last_crumble_town_counter: number;
-  crumble_counter: number;
+  crumble_counter: number; // upon leaving town after doing any commerce
 
   // Traders
   last_init: number;

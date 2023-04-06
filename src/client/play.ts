@@ -1103,7 +1103,9 @@ function recruitMenu(): void {
       sound: 'buy',
     })) {
       data.money -= merc.cost;
-      data.mercs.push(clone(merc));
+      merc = clone(merc);
+      merc.bought_crumble_counter = data.crumble_counter;
+      data.mercs.push(merc);
       data.town_counter++;
     }
 
@@ -1162,12 +1164,16 @@ function recruitMenu(): void {
         text: 'Empty Slot',
       });
     }
+    let undo = merc && merc.bought_crumble_counter === data.crumble_counter;
     if (merc && ui.button({
       x: x + 90, y: y + 3, w: 56, z,
-      text: merc.hp > 0 ? 'Retire' : '"Retire"',
+      text: undo ? 'Undo' : merc.hp > 0 ? 'Retire' : '"Retire"',
       sound: 'drop',
       // disabled: ii === 0 && mercs.length === 1,
     })) {
+      if (undo) {
+        data.money += merc.cost;
+      }
       mercs.splice(ii, 1);
     }
 
@@ -2288,5 +2294,5 @@ export function playStartup(tiny_font_in: Font): void {
   combatStartup();
   dialogStartup(font);
   crawlerLoadData(webFSAPI());
-  crawlerMapViewStartup(dawnbringer.colors[8]);
+  crawlerMapViewStartup(false, dawnbringer.colors[8]);
 }
