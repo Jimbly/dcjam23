@@ -3687,7 +3687,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "path_chasm_double",
         "open",
         "solid"
       ]
@@ -3696,7 +3696,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -3705,7 +3705,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -3956,45 +3956,48 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "open",
         "open",
         "solid"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double"
+      ]
+    },
+    {
+      "id": "open",
       "walls": [
         "open",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "pedastal",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "solid"
+      ],
+      "props": {
+        "key_cell": "bossped"
+      }
+    },
+    {
+      "id": "solid",
+      "walls": [
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -4262,46 +4265,58 @@
     {
       "id": "open",
       "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "key_clear",
+          "param": "bossped"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "key_set",
+          "param": "bossped"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
         "solid",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -4541,11 +4556,41 @@
     {
       "id": "open",
       "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "pedastal",
+      "walls": [
         "solid",
         "solid",
         "open",
         "open"
-      ]
+      ],
+      "props": {
+        "key_cell": "bossped"
+      }
     },
     {
       "id": "solid",
@@ -4553,34 +4598,7 @@
         "open",
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -4841,7 +4859,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "path_chasm_double"
       ]
     },
     {
@@ -4850,7 +4868,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -4859,7 +4877,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -7000,6 +7018,14 @@
       "pos": [
         5,
         11,
+        2
+      ]
+    },
+    {
+      "type": "enemy4",
+      "pos": [
+        30,
+        14,
         2
       ]
     }

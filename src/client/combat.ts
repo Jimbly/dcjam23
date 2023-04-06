@@ -30,6 +30,7 @@ import {
   drawHealthBar,
   mercPos,
   myEnt,
+  playerAddMoney,
   playerAddSupply,
   restartFromLastSave,
 } from './play';
@@ -290,7 +291,11 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
     //cleanDeadMercs();
     playUISound('victory');
     entityManager().deleteEntity(target.id, 'killed');
-    playerAddSupply(1);
+    if (target.data.stats.hp_max > 30) { // boss
+      playerAddMoney(19999);
+    } else {
+      playerAddSupply(1);
+    }
   }
 
 

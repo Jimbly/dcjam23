@@ -44,7 +44,7 @@ crawlerScriptRegisterEvent({
     } else {
       if (!api.keyGet(param)) {
         api.keySet(param);
-        api.status('key_pickup', `Acquired key "${param}"`);
+        //api.status('key_pickup', `Acquired key "${param}"`);
       }
     }
   },
@@ -62,7 +62,7 @@ crawlerScriptRegisterEvent({
     } else {
       if (api.keyGet(param)) {
         api.keyClear(param);
-        api.status('key_pickup', `Cleared key "${param}"`);
+        //api.status('key_pickup', `Cleared key "${param}"`);
       }
     }
   },
@@ -80,10 +80,10 @@ crawlerScriptRegisterEvent({
     } else {
       if (api.keyGet(param)) {
         api.keyClear(param);
-        api.status('key_pickup', `Cleared key "${param}"`);
+        //api.status('key_pickup', `Cleared key "${param}"`);
       } else {
         api.keySet(param);
-        api.status('key_pickup', `Acquired key "${param}"`);
+        //api.status('key_pickup', `Acquired key "${param}"`);
       }
     }
   },

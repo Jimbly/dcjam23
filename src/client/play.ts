@@ -412,6 +412,11 @@ export function playerAddSupply(count: number): void {
   statusPush(`+${count} Supply`);
 }
 
+export function playerAddMoney(count: number): void {
+  myEnt().data.money += count;
+  statusPush(`+${count} Money`);
+}
+
 function initGoods(trader: Entity): void {
   let data = trader.data;
   let floor_id = data.floor;
