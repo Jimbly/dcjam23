@@ -12,7 +12,4 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: path
-    tile: [exit1, exit2, exit3]
-    times: 1000
-    do_blend: 1000
-    detail_layer: 1
+    tile: door
