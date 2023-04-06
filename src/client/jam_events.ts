@@ -80,6 +80,9 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP1,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (param === 'false') {
+      return;
+    }
     let name = NAMES.shop[floorID()] || 'Merchant';
     dialog('greet', `${name}: Welcome to my shop!`);
     startShopping();
@@ -90,6 +93,9 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP2,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (param === 'false') {
+      return;
+    }
     let name = NAMES.recruit[floorID()] || 'Innkeeper';
     if (!myEnt().data.merc_capacity) {
       return dialog('sign', `${name}: Come back after you've signed a Covenant.`);
@@ -103,6 +109,9 @@ crawlerScriptRegisterEvent({
   when: CrawlerScriptWhen.POST,
   map_icon: CrawlerScriptEventMapIcon.SHOP3,
   func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (param === 'false') {
+      return;
+    }
     let name = NAMES.upgrade[floorID()] || 'Govtman';
     dialog('greet', `${name}: No refunds!`);
     startUpgrade();

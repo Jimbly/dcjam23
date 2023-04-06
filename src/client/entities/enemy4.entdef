@@ -7,7 +7,7 @@ traits:
 - id: stats_default
   hp: 56 #referenced in combat.ts as > 30
   attack: 14
-  defense: 32
+  defense: 9
 - id: drawable
   biasL: [-0.25, 0.3]
   biasF: [0, -0.25]

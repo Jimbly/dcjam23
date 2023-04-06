@@ -1215,7 +1215,13 @@
       ],
       "props": {
         "key_west": "final"
-      }
+      },
+      "events": [
+        {
+          "id": "key_set",
+          "param": "final"
+        }
+      ]
     },
     {
       "id": "open",

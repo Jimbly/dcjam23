@@ -191,7 +191,7 @@ const MINIMAP_RADIUS = 3;
 const MINIMAP_X = 261;
 const MINIMAP_Y = 3;
 const MINIMAP_W = 5+7*(MINIMAP_RADIUS*2 + 1);
-const COMPASS_X = 116;
+const COMPASS_X = 104;
 const COMPASS_Y = 2;
 const VIEWPORT_X0 = 3;
 const VIEWPORT_Y0 = 3;
@@ -538,9 +538,9 @@ export function drawHealthBar(
 ): void {
   drawBar(bar_sprites.healthbar, x, y, z, w, h, hp / hp_max);
   if (show_text) {
-    font.drawSizedAligned(style_text, x, y + (settings.pixely > 1 ? 0.5 : 0), z+2,
-      ui.font_height, ALIGN.HVCENTERFIT,
-      w, h, `${hp} / ${hp_max}`);
+    tiny_font.drawSizedAligned(style_text, x, y + (settings.pixely > 1 ? 0.5 : 0), z+2,
+      8, ALIGN.HVCENTERFIT,
+      w, h, `${hp}`);
   }
 }
 
@@ -2291,7 +2291,7 @@ export function playStartup(tiny_font_in: Font): void {
   });
 
   renderAppStartup();
-  combatStartup();
+  combatStartup(tiny_font);
   dialogStartup(font);
   crawlerLoadData(webFSAPI());
   crawlerMapViewStartup(false, dawnbringer.colors[8]);

@@ -1095,6 +1095,12 @@
         "open",
         "door",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": "false"
+        }
       ]
     },
     {
@@ -1108,7 +1114,7 @@
       "events": [
         {
           "id": "recruit",
-          "param": ""
+          "param": "false"
         }
       ]
     },

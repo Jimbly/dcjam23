@@ -5,7 +5,7 @@ import {
   getFrameIndex,
   getFrameTimestamp,
 } from 'glov/client/engine';
-import { ALIGN } from 'glov/client/font';
+import { ALIGN, Font } from 'glov/client/font';
 import { Sprite, spriteCreate } from 'glov/client/sprites';
 import * as ui from 'glov/client/ui';
 import {
@@ -35,9 +35,13 @@ import {
   restartFromLastSave,
 } from './play';
 
+const spritesheet_ui = require('./img/ui');
+
 const { abs, floor, max, pow, random } = Math;
 
 type Entity = EntityDemoClient;
+
+let tiny_font: Font;
 
 const ENEMY_ATTACK_TIME = 1000;
 const ENEMY_ATTACK_TIME_R = 200;
@@ -147,7 +151,7 @@ export function cleanupCombat(dt: number): void {
 }
 
 const HEALTH_W = 100;
-const HEALTH_H = 8;
+const HEALTH_H = 11;
 let last_combat_frame = -1;
 let last_combat_ent: Entity | null = null;
 export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge: boolean): void {
@@ -168,7 +172,37 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   let z = Z.UI;
   let stats = target.data.stats;
   let vp = crawlerRenderViewportGet();
-  drawHealthBar(vp.x + (vp.w - HEALTH_W) / 2, vp.y + 20, z, HEALTH_W, HEALTH_H, stats.hp, stats.hp_max, false);
+  let bar_x = vp.x + (vp.w - HEALTH_W) / 2;
+  let bar_y = vp.y + 20;
+  drawHealthBar(bar_x, bar_y, z, HEALTH_W, HEALTH_H, stats.hp, stats.hp_max, true);
+  bar_y += HEALTH_H + 1;
+
+  let x_mid = bar_x + HEALTH_W/2;
+  const stat_w = 12;
+  let xx = x_mid - 1 - stat_w - 1 - 8;
+  spritesheet_ui.sprite.draw({
+    x: xx, y: bar_y, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_ATTACK,
+  });
+  xx += 9;
+  tiny_font.draw({
+    align: ALIGN.HCENTER,
+    x: xx, y: bar_y, z, w: stat_w,
+    size: 8,
+    text: `${stats.attack}`,
+  });
+  xx += stat_w + 2;
+  spritesheet_ui.sprite.draw({
+    x: xx, y: bar_y, z, w: 8, h: 8,
+    frame: spritesheet_ui.FRAME_ICON_DEFENSE,
+  });
+  xx += 9;
+  tiny_font.draw({
+    align: ALIGN.HCENTER,
+    x: xx, y: bar_y, z, w: stat_w,
+    size: 8,
+    text: `${stats.defense}`,
+  });
 
   if (paused) {
     dt = 0;
@@ -317,7 +351,8 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   }
 }
 
-export function combatStartup(): void {
+export function combatStartup(tiny_font_in: Font): void {
+  tiny_font = tiny_font_in;
   damage_sprite = spriteCreate({
     name: 'particles/damage',
   });
