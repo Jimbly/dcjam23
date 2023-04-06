@@ -657,7 +657,7 @@ function inventoryMenu(): boolean {
   if (!data.upgrade && data.money) {
     font.draw({
       align: ALIGN.HCENTER|ALIGN.HWRAP,
-      x: OVERLAY_X0 + 10, y: 140, z,
+      x: OVERLAY_X0 + 10, y: 128, z,
       w: OVERLAY_W - 20,
       text: 'Kalded: What a lovely painting!  I\'ll hold on to that in case you want to buy it back later.' +
         '  I can\'t sell any Trade Goods to you until you sign a Covenant.  Talk to Frodrurth' +
