@@ -1745,8 +1745,12 @@ export function tickMusic(is_title: boolean, force_danger: boolean): void {
 
 
 const BELLS = [
-  [3,17, 9, 'bells_phys'],
-  [3,2, 9, 'bells_spir'],
+  [36,31, 9, 'bells_phys'],
+  [22,23, 9, 'bells_phys'],
+  [10,21, 9, 'bells_phys'],
+  [10,7, 9, 'bells_spir'],
+  [22,6, 9, 'bells_spir'],
+  [37,8, 9, 'bells_spir'],
 ];
 const BELL_DIST = 5.5;
 let bell_last_play: GlovSoundSetUp | null = null;
