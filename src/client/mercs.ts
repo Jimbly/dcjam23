@@ -17,26 +17,26 @@ export const MERC_LIST: Merc[] = [{
   portrait: 2,
   attack: 2, defense: 5,
   hp: 15, hp_max: 15,
-  cost: 30,
+  cost: 60,
   realm: 'phys',
 }, {
   portrait: 10,
   attack: 5, defense: 1,
   hp: 10, hp_max: 10,
-  cost: 40,
+  cost: 70,
   realm: 'spirit',
 
 }, {
   portrait: 3,
   attack: 6, defense: 1,
   hp: 10, hp_max: 10,
-  cost: 80,
+  cost: 400,
   realm: 'phys',
 }, {
   portrait: 11,
   attack: 3, defense: 15,
   hp: 12, hp_max: 12,
-  cost: 90,
+  cost: 500,
   realm: 'spirit',
 
 }, {
