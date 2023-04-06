@@ -178,6 +178,7 @@ declare module 'glov/client/settings' {
   export let show_fps: 0 | 1;
   export let volume_sound: number;
   export let volume_music: number;
+  export let turn_toggle: 0 | 1;
 }
 
 declare module 'glov/client/ui' {
@@ -267,6 +268,54 @@ function pauseMenu(): void {
     value_inc: 0.05,
     value_min: 0,
     value_max: 1,
+  }, {
+    name: `Turn: ${settings.turn_toggle ? 'A/S/4/6/←/→': 'Q/E/7/9/LB/RB'}`,
+    cb: () => {
+      settings.set('turn_toggle', 1 - settings.turn_toggle);
+    },
+  }, {
+    name: 'Cheat',
+    cb: () => {
+      pause_menu_up = false;
+      ui.modalDialog({
+        title: 'Enter Cheat Mode?',
+        text: 'Too hard?  Tired of the grind?  This will give you lots of money, the best upgrades,' +
+          ' and all key items.\n\n' +
+          'This should let you experience the end-game content, however it will disable high scores.  Really cheat?',
+        buttons: {
+          yes: () => {
+            let script_api = crawlerScriptAPI();
+            let { data } = myEnt();
+            data.cheat = true;
+            data.money = 99999;
+            data.upgrade = 6;
+            data.merc_capacity = UPGRADES[data.upgrade].merc_capacity;
+            data.good_capacity = UPGRADES[data.upgrade].good_capacity;
+            data.mercs = [];
+            for (let ii = 0; ii < data.merc_capacity; ++ii) {
+              let merc = clone(MERC_LIST[4 + (ii % 2)]);
+              data.mercs.push(merc);
+            }
+            data.goods = [{
+              type: 'supply',
+              count: data.good_capacity,
+              cost: 5,
+            }];
+            for (let ii = 1; ii <= 4; ++ii) {
+              if (!script_api.keyGet(`mcguff${ii}`)) {
+                data.goods.push({
+                  type: `mcguff${ii}`,
+                  count: 1,
+                  cost: 5000,
+                });
+              }
+            }
+
+          },
+          no: null,
+        },
+      });
+    },
   }];
   if (isLocal()) {
     items.push({
@@ -1489,7 +1538,7 @@ function drawCurrency(): void {
   let w = CURRENCY_W;
   let z = Z.UI;
   let money = me.data.money;
-  let bigmoney = money > 99999;
+  let bigmoney = money > 9999;
   spritesheet_ui.sprite.draw({
     x, y, z, w: 8, h: 8,
     frame: spritesheet_ui.FRAME_ICON_KEY,
@@ -2176,6 +2225,11 @@ function initLevel(entity_manager: ClientEntityManagerInterface,
 
 settings.register({
   ai_pause: {
+    default_value: 0,
+    type: cmd_parse.TYPE_INT,
+    range: [0, 1],
+  },
+  turn_toggle: {
     default_value: 0,
     type: cmd_parse.TYPE_INT,
     range: [0, 1],

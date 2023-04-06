@@ -70,6 +70,7 @@ export type EntityDataClient = {
   mercs: Merc[];
   merc_capacity: number;
   upgrade: number;
+  cheat: boolean;
 
   journeys: number;
   last_journey_town: number;

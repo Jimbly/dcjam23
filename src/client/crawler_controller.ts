@@ -11,6 +11,7 @@ import {
   keyDownEdge,
   padButtonDown,
 } from 'glov/client/input';
+import * as settings from 'glov/client/settings';
 import { Sprite } from 'glov/client/sprites';
 import * as ui from 'glov/client/ui';
 import {
@@ -1011,6 +1012,8 @@ export class CrawlerController {
       if (uiHandlingNav()) {
         // hotkeys, but no nav keys
       } else {
+        keys_turn_right.push(KEYS.RIGHT);
+        keys_back.push(KEYS.DOWN);
         keys_turn_left.push(KEYS.LEFT);
         keys_forward.push(KEYS.UP);
         keys_turn_right.push(KEYS.RIGHT);
@@ -1021,6 +1024,25 @@ export class CrawlerController {
         pad_left.push(PAD.LEFT_BUMPER);
         pad_back.push(PAD.DOWN);
         pad_right.push(PAD.RIGHT_BUMPER);
+      }
+      if (settings.turn_toggle) {
+        let t = keys_turn_left;
+        keys_turn_left = keys_left;
+        keys_left = t;
+        t = keys_turn_right;
+        keys_turn_right = keys_right;
+        keys_right = t;
+        t = pad_turn_left;
+        pad_turn_left = pad_left;
+        pad_left = t;
+        t = pad_turn_right;
+        pad_turn_right = pad_right;
+        pad_right = t;
+      }
+      if (!uiHandlingNav()) {
+        // not affected by turn_toggle
+        keys_turn_left.push(KEYS.LEFT);
+        keys_forward.push(KEYS.UP);
       }
       button(0, 0, 0, 'turn_left', keys_turn_left, pad_turn_left);
       button(1, 0, forward_frame, 'forward', keys_forward, pad_forward);
