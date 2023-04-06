@@ -3665,12 +3665,12 @@
         "path_chasm_passable"
       ],
       "props": {
-        "key_cell": "b8"
+        "key_cell": "b6"
       },
       "events": [
         {
           "id": "bridge",
-          "param": "7"
+          "param": "12"
         }
       ]
     },
@@ -4163,12 +4163,12 @@
         "path_chasm_double"
       ],
       "props": {
-        "key_cell": "b7"
+        "key_cell": "b6"
       },
       "events": [
         {
           "id": "bridge",
-          "param": "4"
+          "param": "10"
         }
       ]
     },
@@ -4840,7 +4840,7 @@
       "events": [
         {
           "id": "bridge",
-          "param": "5"
+          "param": "12"
         }
       ]
     },
