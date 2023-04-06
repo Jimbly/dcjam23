@@ -1948,7 +1948,7 @@ export function play(dt: number): void {
 
   profilerStopStart('chat');
   getChatUI().run({
-    hide: map_view || overlay_menu_up || !isOnline(),
+    hide: map_view || overlay_menu_up || !isOnline() || buildModeOverlayActive(),
     x: 3,
     y: 196,
     border: 2,

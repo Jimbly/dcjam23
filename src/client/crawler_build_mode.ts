@@ -21,6 +21,7 @@ import {
   localStorageSet,
   localStorageSetJSON,
 } from 'glov/client/local_storage';
+import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import {
   MenuItem,
   dropDown,
@@ -47,6 +48,7 @@ import { BuildModeOp } from '../common/crawler_entity_common';
 import { crawlerScriptListEvents } from '../common/crawler_script';
 import {
   CellDesc,
+  CellDescs,
   CrawlerCell,
   CrawlerLevel,
   CrawlerLevelSerialized,
@@ -55,6 +57,7 @@ import {
   DirType,
   JSVec3,
   WallDesc,
+  WallDescs,
   crawlerGetCellDesc,
   crawlerGetWallDesc,
   crawlerHasCellDesc,
@@ -67,6 +70,7 @@ import {
 import { getChatUI } from './crawler_comm';
 import {
   SpawnDesc,
+  SpawnDescs,
   crawlerEntityManager,
   crawlerGetSpawnDescs,
   crawlerMyEnt,
@@ -78,9 +82,10 @@ import {
   crawlerSetLevelGenMode,
 } from './crawler_play';
 import { crawlerRenderGetThumbnail } from './crawler_render';
+import { game_height } from './globals';
 import { statusPush } from './status';
 
-const { floor } = Math;
+const { floor, min } = Math;
 
 declare module 'glov/client/settings' {
   export let build_mode_help: 0 | 1;
@@ -750,15 +755,58 @@ function drawPaletteThumbnail(param: {
 const PALETTE_FONT_SCALE = 0.5;
 const THUMBNAIL_PAD = 1;
 
+let palette_config_scroll: ScrollArea;
+
+type PaletteConfigTab = 'all' | 'wall' | 'cell' | 'spawn';
+let palette_config_tab: PaletteConfigTab = (localStorageGet('pal_tab') as PaletteConfigTab) || 'all';
+
 function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
   const x0 = 2;
   const y0 = 2;
+  const w = x1 - x0;
+  const y1 = game_height - 2;
   let x = x0;
-  let y = x0;
+  let y = y0;
   let z = Z.UI + 100;
-  let wall_descs = getWallDescs();
-  let cell_descs = getCellDescs();
-  let spawn_descs = crawlerGetSpawnDescs();
+
+  if (!palette_config_scroll) {
+    palette_config_scroll = scrollAreaCreate({
+      z,
+      background_color: null,
+      auto_hide: true,
+    });
+  }
+
+
+  const TAB_W = 60;
+  ['all', 'wall', 'cell', 'spawn'].forEach(function (tab_str, idx) {
+    let tab = tab_str as PaletteConfigTab;
+    if (button({
+      x: x + TAB_W * idx, y, z,
+      w: TAB_W,
+      disabled: palette_config_tab === tab,
+      base_name: palette_config_tab === tab ? 'buttonselected' : 'button',
+      text: tab,
+      font,
+    })) {
+      palette_config_tab = tab;
+      localStorageSet('pal_tab', tab);
+    }
+  });
+  y += ui.button_height;
+
+  let scroll_y_start = y;
+  palette_config_scroll.begin({
+    x: x0, y, w, h: y1 - y, z,
+  });
+  x = 1;
+  y = 1;
+
+
+  let show_all = palette_config_tab === 'all';
+  let wall_descs: WallDescs = palette_config_tab === 'wall' || show_all ? getWallDescs() : {} as WallDescs;
+  let cell_descs: CellDescs = palette_config_tab === 'cell' || show_all ? getCellDescs() : {} as CellDescs;
+  let spawn_descs: SpawnDescs = palette_config_tab === 'spawn' || show_all ? crawlerGetSpawnDescs() : {};
   let all_descs: DescPair[] = [];
   let hide_walls: Partial<Record<string, true>> = {};
   let hide_cells: Partial<Record<string, true>> = {};
@@ -855,14 +903,20 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
 
     x += col_width + 1;
     if (x + col_width > x1) {
-      x = x0;
+      x = 1;
       y += col_width + 1;
     }
   }
-  y += col_width + 1;
-  const PANEL_PAD = 4;
+  if (x !== 1) {
+    y += col_width + 1;
+  }
+
+  palette_config_scroll.end(y);
+  y = min(scroll_y_start + y, y1);
+
+  const PANEL_PAD = 3;
   ui.panel({
-    x: x0 - PANEL_PAD, y: y0 - PANEL_PAD,
+    x: x0 - PANEL_PAD, y: y0 - PANEL_PAD, z: z - 1,
     w: x1 - x0 + PANEL_PAD * 2,
     h: y - y0 + PANEL_PAD * 2,
   });

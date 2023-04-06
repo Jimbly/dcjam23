@@ -20,5 +20,6 @@ Credits for assets used (may not make it into final version)
 
 * Most NPCs/Monsters from Project Utumno - https://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental
 * Many textures from Dungeon Crawl Stone Soup - https://opengameart.org/content/dungeon-crawl-32x32-tiles-supplemental
+* Some art by Rayane Félix / Megatiles
 * Some icons derived from work by Aleksandr Makarov @IknowKingRabbit
 * Fonts from https://nimblebeastscollective.itch.io/nb-pixel-font-bundle
