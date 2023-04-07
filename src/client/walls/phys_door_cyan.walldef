@@ -1,0 +1,17 @@
+---
+open_move: true
+open_vis: false
+advertise_other_side: false
+sound_id: door_phys
+map_view_wall_frame_north: 5
+map_view_wall_frame_east: 4
+visuals:
+- type: simple_wall
+  opts:
+    spritesheet: phys
+    tile: door_cyan
+- type: simple_wall
+  opts:
+    spritesheet: phys
+    tile: wall_bldg_trim
+    offs: [0,-1]

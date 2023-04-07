@@ -13,4 +13,5 @@ visuals:
   opts:
     spritesheet: phys
     tile: wall_bldg_trim
-    offs: [0,-1]
+    offs: [0,-0.90625]
+    detail_layer: 1

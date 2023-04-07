@@ -50,6 +50,7 @@ import {
   CellDesc,
   CellDescs,
   CrawlerCell,
+  CrawlerCellEvent,
   CrawlerLevel,
   CrawlerLevelSerialized,
   DX,
@@ -1022,6 +1023,15 @@ function showPaintPalette({
   return { x, y };
 }
 
+let last_event: CrawlerCellEvent | null = null;
+function setLastEvent(e: CrawlerCellEvent): void {
+  last_event = e;
+}
+let last_prop: { key: string; text: string };
+function setLastProp(prop: { key: string; text: string }): void {
+  last_prop = prop;
+}
+
 let event_items: MenuItem[];
 let default_event_name: string;
 let prop_key_items: MenuItem[] = [
@@ -1085,7 +1095,11 @@ function showCurrentCell(param: {
       colors: colors_event,
     })) {
       crawlerBuildModeBegin();
-      target_cell.addEvent(default_event_name, '');
+      if (last_event) {
+        target_cell.addEvent(last_event.id, last_event.param);
+      } else {
+        target_cell.addEvent(default_event_name, '');
+      }
       crawlerBuildModeCommit();
     }
     if (buttonText({
@@ -1100,7 +1114,11 @@ function showCurrentCell(param: {
       colors: colors_prop,
     })) {
       crawlerBuildModeBegin();
-      target_cell.setProp('new', '');
+      if (last_prop && !target_cell.getProp(last_prop.key)) {
+        target_cell.setProp(last_prop.key, last_prop.text);
+      } else {
+        target_cell.setProp('new', '');
+      }
       crawlerBuildModeCommit();
     }
     y += font_height + 1;
@@ -1145,6 +1163,7 @@ function showCurrentCell(param: {
                 crawlerBuildModeBegin();
                 event.param = text;
                 crawlerBuildModeCommit();
+                setLastEvent(event);
               },
               cancel: null,
             },
@@ -1212,6 +1231,7 @@ function showCurrentCell(param: {
                 crawlerBuildModeBegin();
                 target_cell!.setProp(prop_key, text);
                 crawlerBuildModeCommit();
+                setLastProp({ key: prop_key, text });
               },
               cancel: null,
             },

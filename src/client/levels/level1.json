@@ -1,12 +1,12 @@
 {
   "special_pos": {
     "stairs_in": [
+      14,
       8,
-      7,
       2
     ],
     "stairs_out": [
-      3,
+      7,
       4,
       1
     ]
@@ -14,6 +14,42 @@
   "w": 16,
   "h": 16,
   "cells": [
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
     {
       "id": "solid",
       "walls": [
@@ -636,7 +672,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "solid",
         "open"
       ]
@@ -753,7 +789,7 @@
       "id": "solid",
       "walls": [
         "solid",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -776,7 +812,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "open",
         "open",
         "stairs_out"
@@ -789,145 +825,118 @@
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
       "id": "open",
       "walls": [
+        "solid",
         "open",
         "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
         "solid",
         "open"
       ]
     },
     {
-      "id": "open",
+      "id": "solid",
       "walls": [
         "open",
         "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "phys_indoor",
         "open",
         "open"
       ]
@@ -937,7 +946,7 @@
       "walls": [
         "open",
         "phys_bldg",
-        "open",
+        "solid",
         "solid"
       ]
     },
@@ -945,146 +954,140 @@
       "id": "open",
       "walls": [
         "open",
-        "door",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "phys_bldg",
         "open",
         "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "phys_indoor",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "open",
+        "phys_indoor",
+        "phys_indoor"
       ],
       "events": [
         {
-          "id": "sign",
-          "param": "Sign: Mercenary's Guild"
-        }
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "solid",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "door",
-        "open",
-        "open",
-        "open"
-      ],
-      "events": [
-        {
-          "id": "sign",
-          "param": "Sign: General Store"
+          "id": "recruit",
+          "param": "false"
         }
       ]
     },
@@ -1093,23 +1096,8 @@
       "walls": [
         "phys_indoor",
         "open",
-        "phys_door_indoor",
-        "phys_indoor"
-      ],
-      "events": [
-        {
-          "id": "shop",
-          "param": "false"
-        }
-      ]
-    },
-    {
-      "id": "phys_indoor",
-      "walls": [
-        "solid",
         "open",
-        "solid",
-        "door"
+        "phys_indoor"
       ],
       "events": [
         {
@@ -1131,7 +1119,253 @@
       "id": "open",
       "walls": [
         "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "phys_door_cyan",
+        "open",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Sign: Ministry of Trade"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "open",
+        "door",
+        "solid"
+      ],
+      "events": [
+        {
+          "id": "upgrade",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
         "solid",
+        "open",
+        "open",
+        "solid"
+      ],
+      "events": [
+        {
+          "id": "upgrade",
+          "param": ""
+        }
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "phys_indoor",
+        "phys_indoor",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "recruit",
+          "param": ""
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "phys_door_indoor",
+        "phys_indoor",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "recruit",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "phys_door_red",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Sign: Mercenary's Guild"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "phys_bldg",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "solid",
+        "solid",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "upgrade",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "solid",
+        "solid",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "upgrade",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "phys_bldg",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_bldg",
         "open",
         "solid"
       ],
@@ -1146,7 +1380,7 @@
       "id": "open",
       "walls": [
         "solid",
-        "solid",
+        "phys_bldg",
         "open",
         "solid"
       ]
@@ -1199,35 +1433,50 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
         "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "phys_bldg"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_bldg",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_door_blue",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Sign: General Store"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_bldg",
         "open",
         "open"
       ]
@@ -1237,7 +1486,25 @@
       "walls": [
         "open",
         "open",
-        "solid",
+        "open",
+        "phys_bldg"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_bldg",
+        "open",
+        "phys_bldg"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "phys_bldg",
+        "open",
         "open"
       ]
     },
@@ -1251,11 +1518,281 @@
       ]
     },
     {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "solid",
+        "solid",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "dialog",
+          "param": "quest 2"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "open",
+        "phys_indoor",
+        "phys_indoor"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "phys_door_indoor"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": "false"
+        }
+      ]
+    },
+    {
       "id": "phys_indoor",
       "walls": [
         "phys_indoor",
+        "open",
+        "open",
+        "phys_indoor"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "phys_bldg",
+        "solid",
+        "phys_bldg",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "phys_bldg",
+        "solid",
+        "phys_bldg",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "dialog",
+          "param": "quest 1"
+        }
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
         "phys_indoor",
         "phys_indoor",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "shop",
+          "param": "false"
+        }
+      ]
+    },
+    {
+      "id": "phys_indoor",
+      "walls": [
+        "open",
+        "phys_indoor",
+        "open",
         "open"
       ],
       "events": [
@@ -1268,327 +1805,21 @@
     {
       "id": "phys_indoor",
       "walls": [
-        "solid",
-        "solid",
-        "solid",
-        "open"
-      ],
-      "events": [
-        {
-          "id": "recruit",
-          "param": ""
-        }
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "open",
-        "phys_bldg",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "open"
-      ],
-      "events": [
-        {
-          "id": "dialog",
-          "param": "quest 1"
-        }
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "door",
+        "phys_indoor",
+        "phys_indoor",
         "open",
         "open"
       ],
       "events": [
         {
-          "id": "sign",
-          "param": "Sign: Ministry of Trade"
-        }
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "phys_bldg",
-        "open",
-        "phys_bldg"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "phys_bldg"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "solid",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "phys_bldg",
-        "solid",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "phys_indoor",
-      "walls": [
-        "solid",
-        "solid",
-        "solid",
-        "door"
-      ],
-      "events": [
-        {
-          "id": "upgrade",
-          "param": ""
+          "id": "shop",
+          "param": "false"
         }
       ]
     },
     {
       "id": "solid",
       "walls": [
-        "solid",
-        "open",
-        "solid",
-        "solid"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "solid",
-        "phys_bldg",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "open",
         "open",
         "solid",
@@ -1602,114 +1833,6 @@
         "open",
         "open",
         "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
       ]
     },
     {
@@ -1817,7 +1940,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -1826,7 +1949,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -1835,70 +1958,7 @@
         "open",
         "open",
         "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -2399,33 +2459,33 @@
   ],
   "initial_entities": [
     {
-      "type": "phys_trade1",
+      "type": "phys_cat1",
       "pos": [
-        4,
-        8,
-        3
+        6,
+        7,
+        0
       ]
     },
     {
-      "type": "villager",
+      "type": "phys_recr1",
       "pos": [
-        2,
-        9,
-        3
+        4,
+        8,
+        0
       ]
     },
     {
       "type": "phys_tut",
       "pos": [
-        7,
-        7,
+        13,
+        8,
         2
       ]
     },
     {
       "type": "phys_welc1",
       "pos": [
-        2,
+        6,
         5,
         1
       ]
@@ -2433,25 +2493,33 @@
     {
       "type": "phys_upg1",
       "pos": [
-        3,
+        10,
+        7,
+        2
+      ]
+    },
+    {
+      "type": "phys_trade1",
+      "pos": [
+        7,
+        11,
+        3
+      ]
+    },
+    {
+      "type": "villager",
+      "pos": [
+        12,
         10,
         3
       ]
     },
     {
-      "type": "phys_recr1",
+      "type": "villager",
       "pos": [
         5,
-        8,
+        10,
         3
-      ]
-    },
-    {
-      "type": "phys_cat1",
-      "pos": [
-        2,
-        7,
-        0
       ]
     }
   ],

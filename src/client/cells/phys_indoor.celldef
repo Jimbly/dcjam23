@@ -1,6 +1,6 @@
 ---
 open_vis: true
-default_wall: solid
+default_wall: phys_indoor
 
 visuals:
 - pass: bg

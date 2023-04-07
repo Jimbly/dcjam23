@@ -221,18 +221,57 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
     type Quest = {
       text_have?: string;
       text_need?: string;
+      text_thanks?: string;
       need: Good;
       name: string;
     };
     const QUEST: Record<string, Quest> = {
       1: {
         need: {
+          type: 'phys1',
+          count: 1,
+          cost: 40,
+        },
+        text_need: 'I\'ll pay you 40 if you bring me some Spoons.',
+        name: 'Jered',
+      },
+      2: {
+        need: {
+          type: 'spirit3',
+          count: 3,
+          cost: 700,
+        },
+        name: 'Drugo',
+      },
+      3: {
+        need: {
+          type: 'spirit7',
+          count: 1,
+          cost: 1200,
+        },
+        text_need: 'Oh, by the Fates!  I\'m completely out...  I\'ll give you 2000 for just one more hit of Bliss.',
+        text_have: 'I\'m sorry, I\'ve only got 1200 left.  But, please, I really need that Bliss...',
+        text_thanks: '...',
+        name: 'Guillemaque',
+      },
+      4: {
+        need: {
+          type: 'spirit1',
+          count: 10,
+          cost: 1200,
+        },
+        name: 'Ylva',
+      },
+      5: {
+        need: {
           type: 'phys2',
           count: 1,
-          cost: 50,
+          cost: 26,
         },
-        text_need: 'I\'ll pay you 50 if you bring me a box of Table Legs.',
-        name: 'Jenned',
+        text_need: 'I\'m bored, will you please bring me a Table Leg?',
+        text_have: 'That Table Leg seems just right...  Here\'s 26 for it, help a gal out?',
+        text_thanks: 'Ahhh... thanks.',
+        name: 'Molly',
       },
     };
     let quest = QUEST[quest_key];
@@ -242,7 +281,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
     if (keyGet(key)) {
       return dialogPush({
         name: quest.name,
-        text: 'Thanks for helping me out earlier!',
+        text: quest.text_thanks || 'Thanks for helping me out earlier!',
         transient: true,
       });
     }
