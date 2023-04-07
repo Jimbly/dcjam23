@@ -79,6 +79,7 @@ export type EntityDataClient = {
   town_counter: number; // upon doing any commerce
   last_crumble_town_counter: number;
   crumble_counter: number; // upon leaving town after doing any commerce
+  chest_count: number;
 
   // Traders
   last_init: number;
@@ -129,6 +130,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
       data.town_visits = data.town_visits || 0;
       data.floor_town_init = data.floor_town_init || {};
       data.upgrade = data.upgrade || 0;
+      data.chest_count = data.chest_count || 0;
 
       if (data.town_counter === undefined) {
         data.town_counter = 0;

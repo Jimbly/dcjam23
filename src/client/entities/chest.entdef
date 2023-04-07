@@ -1,0 +1,26 @@
+---
+properties:
+  respawns: false
+traits:
+- id: enemy
+- id: stats_default
+  hp: 1
+  attack: 0
+  defense: 0
+- id: drawable
+  biasL: [-0.1, 0.25]
+  biasF: [0, -0.25]
+  biasR: [-0.1, 0.25]
+- id: drawable_sprite
+  anim_data:
+    idle:
+      frames: [62]
+      times: 10000
+  sprite_data:
+    name: sprites/utumno
+    ws: [40, 40, 40, 40, 40, 40]
+    hs: [40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
+    filter_min: LINEAR_MIPMAP_LINEAR
+    filter_mag: LINEAR
+    origin: [0.5, 0.9]
+  scale: 0.75

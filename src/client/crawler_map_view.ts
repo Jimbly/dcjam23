@@ -147,7 +147,7 @@ export function crawlerMapViewDraw(
     return;
   }
   let entity_manager = crawlerEntityManager();
-  if (input.keyDownEdge(input.KEYS.F4)) {
+  if (engine.DEBUG && input.keyDownEdge(input.KEYS.F4)) {
     engine.defines.FULL_VIS = !engine.defines.FULL_VIS;
   }
   let full_vis = engine.defines.FULL_VIS || build_mode;

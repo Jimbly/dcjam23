@@ -1,4 +1,5 @@
 import assert from 'assert';
+import * as engine from 'glov/client/engine';
 import {
   getFrameDt,
   getFrameIndex,
@@ -337,7 +338,7 @@ export class CrawlerController {
       return;
     }
 
-    if (keyDownEdge(KEYS.F2)) {
+    if ((engine.DEBUG || buildModeActive()) && keyDownEdge(KEYS.F2)) {
       this.mode = this.mode === 'modeFreecam' ? 'modeCrawl' : 'modeFreecam';
       if (this.mode === 'modeCrawl') {
         v2floor(this.game_state.pos, this.freecam_pos);

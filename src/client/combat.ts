@@ -151,6 +151,27 @@ export function cleanupCombat(dt: number): void {
   }
 }
 
+const LOOT_TABLE = [
+  // Lbeta
+  [2, 0],
+  [0, 20],
+  // Lgamma
+  [2, 0],
+  [0, 30],
+  // Ldelta
+  [1, 0],
+  [0, 50],
+  // Lomega
+  [3, 0],
+  [0, 100],
+  // Lepsilon
+  [4, 0],
+  [0, 200],
+  // LS3
+  [0, 400],
+  // Then +100
+];
+
 const HEALTH_W = 100;
 const HEALTH_H = 11;
 let last_combat_frame = -1;
@@ -332,7 +353,21 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
     //cleanDeadMercs();
     playUISound('victory');
     entityManager().deleteEntity(target.id, 'killed');
-    if (is_boss) {
+    if (target.type_id === 'chest') {
+      let cc = me.data.chest_count++;
+      let loot;
+      if (cc >= LOOT_TABLE.length) {
+        loot = [0, (cc - 6) * 100];
+      } else {
+        loot = LOOT_TABLE[cc];
+      }
+      if (loot[0]) {
+        playerAddSupply(loot[0]);
+      }
+      if (loot[1]) {
+        playerAddMoney(loot[1]);
+      }
+    } else if (is_boss) {
       playerAddMoney(19999);
     } else {
       playerAddSupply(1);
