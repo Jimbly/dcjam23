@@ -5088,16 +5088,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -5106,16 +5097,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -5124,7 +5106,25 @@
       "id": "solid",
       "walls": [
         "open",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -5513,63 +5513,63 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "solid",
         "open",
         "solid",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "path_solid2"
+      ]
+    },
+    {
+      "id": "open",
       "walls": [
         "open",
         "open",
         "open",
-        "open"
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid2"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "path_solid1",
+        "open",
+        "open",
+        "solid"
       ]
     },
     {
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "path_chasm_double",
+        "solid",
         "open"
       ]
     },
@@ -5945,14 +5945,50 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
+        "solid",
+        "path_chasm_double",
         "solid",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "path_solid1",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "open",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -5961,11 +5997,20 @@
       ]
     },
     {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double"
+      ]
+    },
+    {
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
+        "solid",
+        "path_chasm_double",
         "open"
       ]
     },
@@ -5973,52 +6018,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -6375,92 +6375,92 @@
       ]
     },
     {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double",
+        "path_chasm_double"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "open",
+        "path_chasm",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid2"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "path_solid3",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
       "id": "solid",
       "walls": [
         "open",
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "open"
       ]
     },
@@ -6807,92 +6807,92 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
+        "open",
+        "path_solid1",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid1",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm_double",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm_double",
+        "open",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "open",
+        "open",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -7248,25 +7248,61 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "open",
-        "open",
+        "door",
+        "door",
         "solid",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open_alive",
+      "walls": [
+        "open",
+        "solid",
+        "door",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open_alive",
       "walls": [
         "open",
         "solid",
         "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open_alive",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
+        "solid",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -7275,7 +7311,7 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -7284,7 +7320,7 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -7293,48 +7329,12 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
+        "path_solid1",
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -7680,35 +7680,62 @@
       ]
     },
     {
+      "id": "path_open4",
+      "walls": [
+        "solid",
+        "open",
+        "solid",
+        "door"
+      ]
+    },
+    {
       "id": "solid",
       "walls": [
         "solid",
+        "path_chasm_double",
         "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
         "solid",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
         "open"
       ]
     },
     {
       "id": "open",
       "walls": [
-        "solid",
-        "open",
-        "solid",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "open",
         "open",
         "open",
@@ -7716,55 +7743,28 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
+        "path_chasm",
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
+        "path_chasm",
+        "path_chasm_double",
         "open",
-        "open",
-        "open",
-        "open"
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "path_solid3",
+        "secret_door",
         "open",
         "open"
       ]
@@ -8121,93 +8121,93 @@
       ]
     },
     {
+      "id": "path_open2",
+      "walls": [
+        "solid",
+        "solid",
+        "door",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double",
+        "path_chasm_double"
+      ]
+    },
+    {
       "id": "open",
       "walls": [
         "open",
-        "solid",
-        "door",
-        "solid"
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "open",
+        "path_chasm"
       ]
     },
     {
       "id": "open",
       "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "open",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm_double",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
         "solid",
-        "door",
         "open",
-        "open"
+        "path_chasm_double",
+        "path_chasm_double"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open3",
       "walls": [
-        "open",
+        "solid",
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "secret_door"
       ]
     },
     {
@@ -8556,7 +8556,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid1",
         "door",
         "solid"
       ]
@@ -8564,18 +8564,54 @@
     {
       "id": "open",
       "walls": [
-        "solid",
-        "solid",
-        "open",
-        "door"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
         "open",
         "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid1",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid2",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid1",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "path_chasm",
+        "path_solid1",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm_double",
+        "path_chasm",
         "open"
       ]
     },
@@ -8584,61 +8620,25 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
+        "path_chasm_double",
+        "path_chasm_double"
       ]
     },
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open3",
       "walls": [
+        "solid",
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -9017,7 +9017,7 @@
         "open",
         "solid",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -9026,7 +9026,7 @@
         "open",
         "solid",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -9035,7 +9035,25 @@
         "open",
         "solid",
         "open",
-        "open"
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_chasm_double"
       ]
     },
     {
@@ -9050,36 +9068,18 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open1",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
+        "solid",
+        "solid",
         "open"
       ]
     },
@@ -9506,7 +9506,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -14499,18 +14499,18 @@
       ]
     },
     {
-      "type": "chest",
+      "type": "enemy2p",
       "pos": [
-        38,
-        19,
-        2
+        30,
+        28,
+        1
       ]
     },
     {
       "type": "chest",
       "pos": [
-        38,
-        17,
+        29,
+        27,
         1
       ]
     },
@@ -14603,19 +14603,43 @@
       ]
     },
     {
-      "type": "enemy2p",
+      "type": "enemy3p",
       "pos": [
-        30,
-        28,
+        42,
+        18,
         1
       ]
     },
     {
       "type": "chest",
       "pos": [
-        29,
-        27,
-        1
+        41,
+        16,
+        2
+      ]
+    },
+    {
+      "type": "enemy3p",
+      "pos": [
+        38,
+        14,
+        3
+      ]
+    },
+    {
+      "type": "enemy3p",
+      "pos": [
+        43,
+        14,
+        2
+      ]
+    },
+    {
+      "type": "chest",
+      "pos": [
+        46,
+        20,
+        3
       ]
     }
   ],
@@ -14829,6 +14853,75 @@
       1
     ],
     "30,28": [
+      1
+    ],
+    "38,14": [
+      0
+    ],
+    "39,14": [
+      0
+    ],
+    "40,14": [
+      0
+    ],
+    "41,14": [
+      0
+    ],
+    "42,13": [],
+    "42,12": [],
+    "41,12": [],
+    "40,12": [],
+    "39,12": [],
+    "38,12": [],
+    "38,13": [],
+    "43,14": [
+      0,
+      1
+    ],
+    "44,14": [
+      0
+    ],
+    "45,14": [
+      1
+    ],
+    "45,15": [
+      1
+    ],
+    "44,16": [
+      0
+    ],
+    "43,16": [
+      0
+    ],
+    "43,15": [
+      1
+    ],
+    "41,17": [
+      0
+    ],
+    "40,17": [
+      0
+    ],
+    "39,17": [
+      0,
+      1
+    ],
+    "39,18": [
+      1
+    ],
+    "39,19": [
+      0
+    ],
+    "40,19": [
+      0
+    ],
+    "41,19": [
+      0
+    ],
+    "42,18": [
+      1
+    ],
+    "42,17": [
       1
     ]
   }
