@@ -1,7 +1,7 @@
 DCJam2023 - Duality
 ============================
 
-Dungeon Crawler Jam 2023 Entry by Jimbly and Team - "Title TBD"
+Dungeon Crawler Jam 2023 Entry by Jimbly and Team - "Uncharted Wanders"
 
 * Play here: [dashingstrike.com/LudumDare/DCJ2023/](http://www.dashingstrike.com/LudumDare/DCJ2023/)
 * Using [Javascript libGlov/GLOV.js framework + crawler toolkit](https://github.com/Jimbly/glovjs/tree/crawler)
