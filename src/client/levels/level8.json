@@ -13074,7 +13074,7 @@
       ]
     },
     {
-      "id": "path_pillars",
+      "id": "path_pillars_outdoor",
       "walls": [
         "path_oneway",
         "door_locked",
@@ -13533,7 +13533,7 @@
       ]
     },
     {
-      "id": "path_pillars",
+      "id": "path_pillars_outdoor",
       "walls": [
         "open",
         "open",
@@ -13554,7 +13554,7 @@
       },
       "events": [
         {
-          "id": "key_set",
+          "id": "key_set_snd",
           "param": ""
         }
       ]

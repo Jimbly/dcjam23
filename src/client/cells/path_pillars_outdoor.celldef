@@ -8,11 +8,6 @@ visuals:
   opts:
     spritesheet: path
     tile: floor
-- pass: bg
-  type: simple_ceiling
-  opts:
-    spritesheet: path
-    tile: ceiling4
 
 corners: # pillars and floor/ceiling details
   # one:
@@ -44,4 +39,4 @@ corners: # pillars and floor/ceiling details
       segments: 8
       roundness: 0
       spritesheet: path
-      tile: floor1
+      tile: floor

@@ -46,5 +46,7 @@ corners: # pillars and floor/ceiling details
     type: simple_pillar
     opts:
       quadrants: 4
+      segments: 8
+      roundness: 0
       spritesheet: path
-      tile: wall
+      tile: floor
