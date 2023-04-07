@@ -9,14 +9,14 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: path
-    tile: door
-- type: simple_wall # TODO: remove this
-  opts:
-    spritesheet: path
-    tile: [exit_locked1, exit_locked2, exit_locked3]
-    times: 1000
-    do_blend: 1000
-    detail_layer: 1
+    tile: door_locked
+# - type: simple_wall # TODO: remove this
+#   opts:
+#     spritesheet: path
+#     tile: [exit_locked1, exit_locked2, exit_locked3]
+#     times: 1000
+#     do_blend: 1000
+#     detail_layer: 1
 replace:
   - func: KEY
     name: path_door_unlocked

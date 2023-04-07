@@ -1,6 +1,6 @@
 ---
 open_move: false
-open_vis: false
+open_vis: true
 advertise_other_side: true
 map_view_wall_frame_north: 35
 map_view_wall_frame_east: 34
@@ -9,8 +9,4 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: path
-    tile: exit_locked
-- type: simple_wall
-  opts:
-    spritesheet: path
-    tile: door
+    tile: door_open
