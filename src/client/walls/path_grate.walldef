@@ -4,6 +4,7 @@ open_vis: true
 map_view_wall_frame_north: 3
 map_view_wall_frame_east: 2
 map_view_wall_frame_priority: -1
+advertise_other_side: true
 visuals:
 - type: simple_wall
   opts:
