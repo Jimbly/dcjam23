@@ -836,10 +836,19 @@ function inventoryMenu(): boolean {
           show_value = false;
         }
       } else {
+        let xx = trader_x;
+        if (good_def.icon) {
+          spritesheet_ui.sprite.draw({
+            x: xx, y: y + 2, z,
+            w: 8, h: 8,
+            frame: good_def.icon,
+          });
+          xx += 9 + (good_def.key ? 1 : 0);
+        }
         font.draw({
           style,
           align: ALIGN.HLEFT,
-          x: trader_x, y, z,
+          x: xx, y, z,
           w,
           text: good_def.name,
         });
@@ -914,6 +923,14 @@ function inventoryMenu(): boolean {
           text: `${player_good?.count || 0}`,
         });
         good_name_x += count_w;
+      }
+      if (good_def.icon) {
+        spritesheet_ui.sprite.draw({
+          x: good_name_x, y: y + 2, z,
+          w: 8, h: 8,
+          frame: good_def.icon,
+        });
+        good_name_x += 9 + (good_def.key ? 1 : 0);
       }
       font.draw({
         style,
@@ -1611,7 +1628,7 @@ function drawMercs(): void {
     }
     let dead = merc && merc.hp <= 0;
     uiPanel({
-      x: xx, y: yy, z, w: MERC_W, h: MERC_H,
+      x: xx, y: yy, z: dead ? z-0.1 : z-0.2, w: MERC_W, h: MERC_H,
       sprite: dead ? ui.sprites.panel_mini_red : ui.sprites.panel_mini,
     });
     last_merc_pos[ii] = last_merc_pos[ii] || vec2();

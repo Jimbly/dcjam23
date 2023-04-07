@@ -1,9 +1,12 @@
+const spritesheet_ui = require('./img/ui');
+
 export type GoodAvail = Record<number, [number, number]>;  // floor -> [count, cost]
 export type GoodDef = {
   name: string;
   realm: 'phys' | 'spirit' | 'both';
   avail: GoodAvail;
   key?: string;
+  icon?: number;
 };
 function spiritWants(s1: number, s2: number, s3: number): GoodAvail {
   let ret: GoodAvail = {};
@@ -73,6 +76,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       5: [99, 5],
       6: [99, 5],
     },
+    icon: spritesheet_ui.FRAME_ICON_SUPPLY,
   },
 
   phys1: {
@@ -196,6 +200,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       1: [1, 5000],
     },
     key: 'mcguff1',
+    icon: spritesheet_ui.FRAME_ICON_KEY,
   },
   mcguff2: {
     name: 'Dad\'s Pocketwatch',
@@ -205,6 +210,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       3: [1, 5000],
     },
     key: 'mcguff2',
+    icon: spritesheet_ui.FRAME_ICON_KEY,
   },
   mcguff3: {
     name: 'Childhood Mem\'ry',
@@ -214,6 +220,7 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       5: [1, 5000],
     },
     key: 'mcguff3',
+    icon: spritesheet_ui.FRAME_ICON_KEY,
   },
   mcguff4: {
     name: 'Hope',
@@ -223,5 +230,6 @@ export const GOODS: Partial<Record<string, GoodDef>> = {
       6: [1, 5000],
     },
     key: 'mcguff4',
+    icon: spritesheet_ui.FRAME_ICON_KEY,
   },
 };
