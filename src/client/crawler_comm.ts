@@ -159,9 +159,16 @@ function crawlerCommReconnect(): void {
 }
 
 function crawlerCommHandshake(): void {
-
-  if (netSubs().loggedIn() && netClient().connected) {
-    if (state === STATE_NONE && netSubs().loggedIn() && netClient().connected) {
+  if (state === STATE_NONE) {
+    let eff_desired_channel = effectiveDesiredChannel();
+    if (!eff_desired_channel) {
+      engine.setState(lobby_state);
+      return;
+    }
+  }
+  let eff_connected = current_channel === 'local' || netSubs().loggedIn() && netClient().connected;
+  if (eff_connected) {
+    if (state === STATE_NONE && eff_connected) {
       let eff_desired_channel = effectiveDesiredChannel();
       if (!eff_desired_channel) {
         engine.setState(lobby_state);

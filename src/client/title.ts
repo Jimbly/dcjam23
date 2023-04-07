@@ -251,20 +251,24 @@ function title(dt: number): void {
   }
 }
 
+let first_time = true;
 export function titleInit(dt: number): void {
-  title_anim = animationSequencerCreate();
-  let t = title_anim.add(0, 300, (progress) => {
-    title_alpha.title = progress;
-  });
-  // t = title_anim.add(t + 200, 1000, (progress) => {
-  //   title_alpha.desc = progress;
-  // });
-  t = title_anim.add(t + 300, 300, (progress) => {
-    title_alpha.sub = progress;
-  });
-  title_anim.add(t + 500, 300, (progress) => {
-    title_alpha.button = progress;
-  });
+  if (first_time) {
+    title_anim = animationSequencerCreate();
+    let t = title_anim.add(0, 300, (progress) => {
+      title_alpha.title = progress;
+    });
+    // t = title_anim.add(t + 200, 1000, (progress) => {
+    //   title_alpha.desc = progress;
+    // });
+    t = title_anim.add(t + 300, 300, (progress) => {
+      title_alpha.sub = progress;
+    });
+    title_anim.add(t + 500, 300, (progress) => {
+      title_alpha.button = progress;
+    });
+  }
+  first_time = false;
 
   account_ui = account_ui || createAccountUI();
   engine.setState(title);

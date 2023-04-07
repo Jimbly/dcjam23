@@ -17,6 +17,7 @@ import {
   playerConsumeGood,
   playerHasGood,
   playerHasKeyGood,
+  setScore,
 } from './play';
 import { statusPush, statusSet } from './status';
 
@@ -264,6 +265,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
             statusPush(`+${quest.need.cost} Coins`);
             statusPush(`-${quest.need.count} ${good_name}`);
             keySet(key);
+            setScore();
           },
         }],
       });
