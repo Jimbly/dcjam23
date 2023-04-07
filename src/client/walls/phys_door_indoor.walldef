@@ -1,0 +1,9 @@
+---
+open_move: true
+open_vis: false
+sound_id: door_phys
+visuals:
+  type: simple_wall
+  opts:
+    spritesheet: phys
+    tile: door_indoor

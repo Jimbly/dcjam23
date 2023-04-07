@@ -9,3 +9,8 @@ visuals:
   opts:
     spritesheet: phys
     tile: wall_bldg
+- type: simple_wall
+  opts:
+    spritesheet: phys
+    tile: wall_bldg_trim
+    offs: [0,-1]

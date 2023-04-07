@@ -4,7 +4,12 @@ open_vis: false
 advertise_other_side: true
 sound_id: door_phys
 visuals:
-  type: simple_wall
+- type: simple_wall
   opts:
     spritesheet: phys
     tile: door
+- type: simple_wall
+  opts:
+    spritesheet: phys
+    tile: wall_bldg_trim
+    offs: [0,-1]

@@ -8,9 +8,4 @@ visuals:
 - type: simple_wall
   opts:
     spritesheet: phys
-    tile: wall
-- type: simple_wall
-  opts:
-    spritesheet: phys
-    tile: wall_trim
-    offs: [0,-1]
+    tile: wall_indoor

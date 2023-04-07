@@ -1091,10 +1091,10 @@
     {
       "id": "phys_indoor",
       "walls": [
-        "solid",
+        "phys_indoor",
         "open",
-        "door",
-        "solid"
+        "phys_door_indoor",
+        "phys_indoor"
       ],
       "events": [
         {
@@ -1253,9 +1253,9 @@
     {
       "id": "phys_indoor",
       "walls": [
-        "solid",
-        "solid",
-        "solid",
+        "phys_indoor",
+        "phys_indoor",
+        "phys_indoor",
         "open"
       ],
       "events": [
