@@ -36,7 +36,7 @@ function cmpFileKeys(a, b) {
 }
 
 module.exports = function (opts) {
-  const { name, tile_horiz_regex } = opts;
+  const { name, tile_horiz_regex, clamp_regex } = opts;
   let pad = opts.pad || 0;
   function imgproc(job, done) {
     let files = job.getFiles();
@@ -158,16 +158,23 @@ module.exports = function (opts) {
         if (imgw !== imgh) {
           all_square = false;
         }
-        let tile_horiz = tile_horiz_regex && tile_horiz_regex.test(img_name);
+        let clamp = clamp_regex && clamp_regex.test(img_name);
+        let clamp_vert = clamp || tile_horiz_regex && tile_horiz_regex.test(img_name);
+        let clamp_horiz = clamp;
         for (let yy = -pad; yy < imgh + pad; ++yy) {
           let yyy;
-          if (tile_horiz) {
-            yyy = yy < 0 ? 0 : yy >= imgh ? imgh - 1: yy;
+          if (clamp_vert) {
+            yyy = yy < 0 ? 0 : yy >= imgh ? imgh - 1 : yy;
           } else {
             yyy = (yy + imgh) % imgh;
           }
           for (let xx = -pad; xx < imgw + pad; ++xx) {
-            let xxx = (xx + imgw) % imgw;
+            let xxx;
+            if (clamp_horiz) {
+              xxx = xx < 0 ? 0 : xx >= imgw ? imgh - 1 : xx;
+            } else {
+              xxx = (xx + imgw) % imgw;
+            }
             for (let jj = 0; jj < 4; ++jj) {
               outdata[(x + xx + (y + yy) * width) * 4 + jj] = indata[(xxx + yyy * imgw) * 4 + jj];
             }
@@ -201,6 +208,7 @@ module.exports = function (opts) {
       cmpFileKeys,
       pad,
       tile_horiz_regex,
+      clamp_regex,
     ],
   };
 };

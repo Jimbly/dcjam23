@@ -9006,7 +9006,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "solid"
       ]
@@ -9015,16 +9015,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -9033,7 +9024,16 @@
       "id": "solid",
       "walls": [
         "open",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -9419,54 +9419,57 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "open",
         "open",
         "solid"
       ]
     },
     {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "pedastal",
+      "walls": [
+        "path_solid2",
+        "open",
+        "open",
+        "solid"
+      ],
+      "props": {
+        "key_cell": "bossped"
+      }
+    },
+    {
       "id": "solid",
       "walls": [
         "open",
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "open"
       ]
     },
@@ -9884,6 +9887,58 @@
     {
       "id": "open",
       "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "key_clear",
+          "param": "bossped"
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ],
+      "events": [
+        {
+          "id": "key_set",
+          "param": "bossped"
+        },
+        {
+          "id": "sign",
+          "param": "Only the absolute strongest will survive."
+        }
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
         "solid",
         "open",
         "open",
@@ -9894,44 +9949,8 @@
       "id": "solid",
       "walls": [
         "open",
-        "path_chasm_double",
+        "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "open"
       ]
     },
@@ -10316,23 +10335,14 @@
     {
       "id": "path_chasm",
       "walls": [
-        "path_chasm_double",
+        "path_chasm",
         "open",
         "path_chasm",
-        "path_chasm_double"
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "path_chasm_double",
-        "path_chasm_double",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -10341,20 +10351,32 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
-        "open",
+        "path_solid1",
         "open",
         "open"
       ]
+    },
+    {
+      "id": "pedastal",
+      "walls": [
+        "solid",
+        "solid",
+        "open",
+        "open"
+      ],
+      "props": {
+        "key_cell": "bossped"
+      }
     },
     {
       "id": "solid",
       "walls": [
         "open",
         "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -10766,7 +10788,7 @@
         "path_chasm_double",
         "open",
         "open",
-        "path_chasm_double"
+        "path_chasm"
       ]
     },
     {
@@ -10775,7 +10797,7 @@
         "open",
         "path_chasm_double",
         "path_chasm_double",
-        "open"
+        "solid"
       ]
     },
     {
@@ -10784,7 +10806,7 @@
         "open",
         "path_chasm_double",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -14498,6 +14520,14 @@
         34,
         14,
         0
+      ]
+    },
+    {
+      "type": "enemy4",
+      "pos": [
+        41,
+        22,
+        2
       ]
     }
   ],
