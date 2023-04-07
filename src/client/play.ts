@@ -252,7 +252,9 @@ function calcNetWorth(): number {
     if (good.type === 'supply') {
       cost = 5;
     }
-    ret += cost * good.count;
+    if (cost && isFinite(cost)) {
+      ret += cost * good.count;
+    }
   }
   for (let ii = 0; ii < mercs.length; ++ii) {
     ret += mercs[ii].cost;
@@ -994,11 +996,11 @@ function inventoryMenu(): boolean {
           let dmoney = trader_cost * num_to_sell;
           inventory_profit += dmoney - player_good.cost * num_to_sell;
           data.money += dmoney;
-          setScore(); // eslint-disable-line @typescript-eslint/no-use-before-define
           data.town_counter++;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
           }
+          setScore(); // eslint-disable-line @typescript-eslint/no-use-before-define
           crawlerScriptAPI().keySet(`sold_${good_id}`);
         }
       } else if (!trader && (!good_def.key || engine.DEBUG && shift()) && player_good) {
@@ -1586,11 +1588,22 @@ export function victoryProgress(): number {
   return count;
 }
 
-type Score = {
+export type Score = {
   victory: number;
   money: number;
   seconds: number;
 };
+export type LevelDef = {
+  name: string;
+};
+const level_def: LevelDef = {
+  name: 'the',
+};
+const level_list: LevelDef[] = [level_def];
+export function getLevelList(): LevelDef[] {
+  return level_list;
+}
+
 export function setScore(): void {
   if (myEnt().data.cheat) {
     return;
@@ -2045,7 +2058,7 @@ function playCrawl(): void {
   //   inventory_up = !inventory_up;
   // }
 
-  if (keyUpEdge(KEYS.B)) {
+  if (engine.DEBUG && keyUpEdge(KEYS.B)) {
     crawlerBuildModeActivate(!build_mode);
     inventory_up = recruit_up = upgrade_up = false;
   }
@@ -2510,10 +2523,6 @@ export function playStartup(tiny_font_in: Font): void {
 
   const ENCODE_SEC = 100000;
   const ENCODE_MONEY = 100000;
-  const level_def = {
-    name: 'the',
-  };
-  const level_list = [level_def];
   function encodeScore(score: Score): number {
     let spart = max(0, ENCODE_SEC - 1 - score.seconds);
     let mpart = min(ENCODE_MONEY - 1, score.money) * ENCODE_SEC;

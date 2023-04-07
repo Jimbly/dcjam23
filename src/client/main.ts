@@ -203,7 +203,7 @@ export function main(): void {
   jamEventsStartup();
   crawlerBuildModeStartup(build_font);
   playStartup(tiny_font);
+  engine.setState(titleInit);
   titleStartup();
 
-  engine.setState(titleInit);
 }

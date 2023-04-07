@@ -1,13 +1,17 @@
 import { AnimationSequencer, animationSequencerCreate } from 'glov/client/animation.js';
+import * as camera2d from 'glov/client/camera2d.js';
 import * as engine from 'glov/client/engine.js';
-import { ALIGN } from 'glov/client/font.js';
+import { ALIGN, fontStyle, fontStyleColored } from 'glov/client/font.js';
 import {
   KEYS,
   eatAllInput,
   keyDown,
+  keyDownEdge,
   mouseDownAnywhere,
 } from 'glov/client/input.js';
 import { localStorageGetJSON } from 'glov/client/local_storage.js';
+// import * as score_system from 'glov/client/score.js';
+import { scoresDraw } from 'glov/client/score_ui.js';
 import { Sprite, spriteCreate } from 'glov/client/sprites.js';
 import * as ui from 'glov/client/ui.js';
 import * as urlhash from 'glov/client/urlhash.js';
@@ -22,7 +26,11 @@ import {
 import * as dawnbringer from './dawnbringer32';
 import { game_height, game_width } from './globals.js';
 import * as main from './main.js';
-import { tickMusic } from './play.js';
+import {
+  Score,
+  getLevelList,
+  tickMusic,
+} from './play.js';
 
 
 const { floor, max } = Math;
@@ -223,7 +231,8 @@ function title(dt: number): void {
       text: 'Hall of Fame',
       color,
     })) {
-      //
+      // eslint-disable-next-line @typescript-eslint/no-use-before-define
+      engine.setState(stateHighScores);
     }
   }
 
@@ -261,6 +270,105 @@ export function titleInit(dt: number): void {
   engine.setState(title);
   title(dt);
 }
+
+
+const SCORE_COLUMNS = [
+  // widths are just proportional, scaled relative to `width` passed in
+  { name: '', width: 12, align: ALIGN.HFIT | ALIGN.HRIGHT | ALIGN.VCENTER },
+  { name: 'Name', width: 60, align: ALIGN.HFIT | ALIGN.VCENTER },
+  { name: 'Victory?', width: 24 },
+  { name: 'Money', width: 32 },
+];
+const style_score = fontStyleColored(null, 0xFFFFFFaa);
+const style_me = fontStyleColored(null, dawnbringer.font_colors[8]);
+const style_header = fontStyleColored(null, 0xFFFFFFaa);
+function myScoreToRow(row: (string | number)[], score: Score): void {
+  row.push(score.victory === 5 ? 'WIN' : `${score.victory}/4`, score.money);
+}
+const style_title = fontStyle(null, {
+  color: dawnbringer.font_colors[21],
+  glow_color: dawnbringer.font_colors[8],
+  glow_inner: -2,
+  glow_outer: 4,
+  glow_xoffs: 0,
+  glow_yoffs: 0,
+});
+
+const level_idx = 0;
+function stateHighScores(): void {
+  let W = game_width;
+  let H = game_height;
+  camera2d.setAspectFixed(W, H);
+  let { font } = ui;
+
+  let ld = getLevelList()[level_idx];
+
+  let y = 8;
+  let pad = 16;
+  let button_h = ui.button_height;
+
+  font.draw({
+    x: 0, w: W, y, align: ALIGN.HCENTER,
+    size: ui.font_height * 2,
+    style: style_title,
+    text: 'Hall of Fame',
+  });
+
+  y += ui.font_height * 2 + 8;
+
+  // let has_score = score_system.getScore(level_idx);
+
+  let button_w = 120;
+
+  if (ui.buttonText({
+    x: (W - button_w)/2, y,
+    w: button_w, h: button_h,
+    text: 'Return to Title',
+  }) || keyDownEdge(KEYS.ESC)) {
+    engine.setState(title);
+  }
+  y += button_h + 2;
+
+  // pad = 8;
+  // let x = pad;
+  // let toggle_y = H - button_h - pad;
+  // if (ui.buttonImage({
+  //   img: sprite_space,
+  //   shrink: 16/button_h,
+  //   frame: settings.volume_sound ? FRAME_SOUND_ON : FRAME_SOUND_OFF,
+  //   x, y: toggle_y, h: button_h, w: button_h,
+  // })) {
+  //   settings.set('volume_sound', settings.volume_sound ? 0 : 1);
+  // }
+  // x += button_h + pad;
+  // if (ui.buttonImage({
+  //   img: sprite_space,
+  //   shrink: 16/button_h,
+  //   frame: settings.volume_music ? FRAME_MUSIC_ON : FRAME_MUSIC_OFF,
+  //   x, y: toggle_y, h: button_h, w: button_h,
+  // })) {
+  //   settings.set('volume_music', settings.volume_music ? 0 : 1);
+  // }
+
+  pad = 24;
+  scoresDraw({
+    x: pad, width: W - pad * 2,
+    y, height: H - y - 2,
+    z: Z.UI,
+    size: ui.font_height,
+    line_height: ui.font_height+2,
+    level_id: ld.name,
+    columns: SCORE_COLUMNS,
+    scoreToRow: myScoreToRow,
+    style_score,
+    style_me,
+    style_header,
+    color_line: [1,1,1,1],
+    color_me_background: [1,1,1,0.2],
+  });
+
+}
+
 
 export function titleStartup(): void {
   crawlerCommStartup({
