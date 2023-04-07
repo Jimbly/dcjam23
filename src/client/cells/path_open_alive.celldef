@@ -1,0 +1,20 @@
+---
+open_vis: true
+default_wall: solid
+
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: [floor1, floor2, floor3, floor4]
+    times: 1000
+    do_blend: 1000
+- pass: bg
+  type: simple_ceiling
+  opts:
+    spritesheet: path
+    tile: ceiling3
+    times: 1000
+
+corners: # pillars and floor/ceiling details
