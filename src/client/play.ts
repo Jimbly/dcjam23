@@ -223,6 +223,8 @@ let last_level: CrawlerLevel | null = null;
 let bg_sprite: Sprite;
 let button_sprites: Record<ButtonStateString, Sprite>;
 let button_sprites_down: Record<ButtonStateString, Sprite>;
+let button_sprites_notext: Record<ButtonStateString, Sprite>;
+let button_sprites_notext_down: Record<ButtonStateString, Sprite>;
 type BarSprite = {
   bg: Sprite;
   hp: Sprite;
@@ -1892,6 +1894,10 @@ function tickBells(is_danger: boolean): void {
   }
 }
 
+function useNoText(): boolean {
+  return input.inputTouchMode() || input.inputPadMode() || settings.turn_toggle;
+}
+
 let temp_delta = vec2();
 function playCrawl(): void {
   profilerStartFunc();
@@ -1978,7 +1984,9 @@ function playCrawl(): void {
       no_visible_ui,
       do_up_edge: true,
       disabled: my_disabled,
-      button_sprites: toggled_down ? button_sprites_down : button_sprites,
+      button_sprites: useNoText() ?
+        toggled_down ? button_sprites_notext_down : button_sprites_notext :
+        toggled_down ? button_sprites_down : button_sprites,
     });
     // down_edge[key] += ret.down_edge;
     down[key] += ret.down;
@@ -2041,7 +2049,7 @@ function playCrawl(): void {
     button_y0: build_mode ? game_height - 16 : MOVE_BUTTONS_Y0,
     no_visible_ui: frame_map_view,
     button_w: build_mode ? 6 : BUTTON_W,
-    button_sprites,
+    button_sprites: useNoText() ? button_sprites_notext : button_sprites,
     disable_move: moveBlocked() || overlay_menu_up,
     disable_player_impulse: Boolean(frame_combat || locked_dialog),
     show_buttons: !frame_combat && !locked_dialog,
@@ -2479,6 +2487,30 @@ export function playStartup(tiny_font_in: Font): void {
     down: button_sprites.regular,
     rollover: button_sprites.rollover,
     disabled: button_sprites.disabled,
+  };
+  button_sprites_notext = {
+    regular: spriteCreate({
+      name: 'buttons/buttons_notext',
+      ...button_param,
+    }),
+    down: spriteCreate({
+      name: 'buttons/buttons_notext_down',
+      ...button_param,
+    }),
+    rollover: spriteCreate({
+      name: 'buttons/buttons_notext_rollover',
+      ...button_param,
+    }),
+    disabled: spriteCreate({
+      name: 'buttons/buttons_notext_disabled',
+      ...button_param,
+    }),
+  };
+  button_sprites_notext_down = {
+    regular: button_sprites_notext.down,
+    down: button_sprites_notext.regular,
+    rollover: button_sprites_notext.rollover,
+    disabled: button_sprites_notext.disabled,
   };
 
   let bar_param = {
