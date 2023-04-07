@@ -205,5 +205,4 @@ export function main(): void {
   playStartup(tiny_font);
   engine.setState(titleInit);
   titleStartup();
-
 }

@@ -48,6 +48,8 @@ let title_alpha = {
   button: 0,
 };
 
+const FOR_LOGO = false;
+
 function title(dt: number): void {
   const { font } = ui;
   main.chat_ui.run({
@@ -101,14 +103,18 @@ function title(dt: number): void {
     y: 11,
     w: 192, h: 79,
   });
+  let scale = FOR_LOGO ? 2 : 1;
   splash_logo.draw({
     color: [1,1,1,title_alpha.title],
-    x: floor((game_width - 32)/2),
+    x: floor((game_width - 32 * scale)/2),
     y: 81,
-    w: 32, h: 32,
+    w: 32 * scale, h: 32 * scale,
   });
 
   y = game_height - ui.button_height * 2 - ui.font_height * 4 - 12;
+  if (FOR_LOGO) {
+    y += 500;
+  }
   font.draw({
     //style: label_style2,
     color: dawnbringer.font_colors[22],
