@@ -1751,6 +1751,12 @@ const BELLS = [
   [10,7, 9, 'bells_spir'],
   [22,6, 9, 'bells_spir'],
   [37,8, 9, 'bells_spir'],
+
+  [15,8, 10, 'bells_spir'],
+  [12,8, 10, 'bells_spir'],
+  [9,8, 10, 'bells_spir'],
+  [6,8, 10, 'bells_spir'],
+  [3,8, 10, 'bells_spir'],
 ];
 const BELL_DIST = 5.5;
 let bell_last_play: GlovSoundSetUp | null = null;

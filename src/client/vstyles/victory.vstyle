@@ -1,0 +1,14 @@
+---
+fog_color: '#ffffff'
+background_color: '#ffffff'
+cell_swaps:
+  open: path_open
+  floorswitch: path_floorswitch
+  floorswitch_on: path_floorswitch_on
+wall_swaps:
+  door: path_door
+  door_locked: path_door_locked
+  door_locked_unlocked: path_door_unlocked
+  solid: path_solid
+  secret_door: path_secret_door
+  secret_door_unvisited: path_secret_door
