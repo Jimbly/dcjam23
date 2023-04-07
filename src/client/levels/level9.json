@@ -2355,7 +2355,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "path_chasm_double",
+        "open",
         "open",
         "open"
       ]
@@ -2754,16 +2754,16 @@
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid_spirfade1",
         "spirit_solid"
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
         "open",
         "open",
@@ -2772,21 +2772,21 @@
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
-        "open",
+        "path_solid_spirfade2",
         "open",
         "open",
         "spirit_solid"
       ]
     },
     {
-      "id": "path_chasm",
+      "id": "solid",
       "walls": [
-        "path_chasm",
-        "open",
-        "open",
-        "path_chasm_double"
+        "solid",
+        "solid",
+        "solid",
+        "open"
       ]
     },
     {
@@ -2794,7 +2794,7 @@
       "walls": [
         "solid",
         "open",
-        "open",
+        "solid",
         "solid"
       ]
     },
@@ -3069,16 +3069,16 @@
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid_spirfade1",
         "spirit_solid"
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
         "open",
         "open",
@@ -3087,9 +3087,9 @@
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
-        "solid",
+        "path_solid_spirfade2",
         "open",
         "open",
         "spirit_solid"
@@ -3209,7 +3209,7 @@
         "path_chasm_passable",
         "open",
         "path_chasm_passable",
-        "open"
+        "path_chasm_double"
       ],
       "props": {
         "key_cell": "b5"
@@ -3777,18 +3777,18 @@
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid_spirfade1",
         "spirit_solid"
       ]
     },
     {
-      "id": "open",
+      "id": "payh_spir_fade",
       "walls": [
-        "solid",
+        "path_solid_spirfade2",
         "open",
         "open",
         "spirit_door"

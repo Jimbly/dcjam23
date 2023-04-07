@@ -1,0 +1,21 @@
+---
+open_move: false
+open_vis: false
+map_view_wall_frame_north: 3
+map_view_wall_frame_east: 2
+map_view_wall_frame_priority: -1
+visuals:
+- type: simple_wall
+  pass: bg
+  opts:
+    spritesheet: spirit
+    tile: [wall1, wall4, wall2, wall4, wall3, wall4]
+    times: [800, 200, 800, 200, 800, 200]
+    do_blend: 200
+- type: simple_wall
+  pass: default
+  opts:
+    spritesheet: path
+    tile: wall_fade1
+    detail_layer: 1
+    do_alpha: true

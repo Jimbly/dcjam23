@@ -7,7 +7,7 @@ visuals:
   type: simple_floor
   opts:
     spritesheet: spirit
-    tile: floor
+    tile: floor_indoor
 - pass: bg
   type: simple_ceiling
   opts:

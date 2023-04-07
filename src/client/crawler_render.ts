@@ -23,7 +23,9 @@ export type ShaderTypeEnum = typeof ShaderType[keyof typeof ShaderType];
 import assert from 'assert';
 import { virtualToCanvas } from 'glov/client/camera2d';
 import { cmd_parse } from 'glov/client/cmds';
+import { alphaDraw, opaqueDraw } from 'glov/client/draw_list';
 import {
+  BUCKET_ALPHA,
   BUCKET_OPAQUE,
   FACE_CAMERA,
   FACE_CUSTOM,
@@ -322,6 +324,7 @@ type SimpleVisualOpts = {
   color?: ROVec4;
   do_split?: boolean;
   do_blend?: number;
+  do_alpha?: boolean;
 };
 
 function frameFromAnim(frames: string[], times: number[], total_time: number): string {
@@ -384,6 +387,7 @@ function simpleGetSpriteParam(
   let frame;
   let color = opts.debug_visible ? color_hidden : unit_vec;
   let shader;
+  let bucket: typeof BUCKET_OPAQUE | typeof BUCKET_ALPHA = BUCKET_OPAQUE;
   if (!visual) {
     if (!passesSplitCheck(opts.split_set, false, opts.draw_dist_sq)) {
       return null_null;
@@ -393,6 +397,9 @@ function simpleGetSpriteParam(
     let visual_opts = visual as unknown as SimpleVisualOpts;
     if (!passesSplitCheck(opts.split_set, visual_opts.do_split || false, opts.draw_dist_sq)) {
       return null_null;
+    }
+    if (visual_opts.do_alpha) {
+      bucket = BUCKET_ALPHA;
     }
     let spritesheet_name = visual_opts.spritesheet || 'default';
     let spritesheet = spritesheets[spritesheet_name];
@@ -454,7 +461,7 @@ function simpleGetSpriteParam(
 
   return [sprite, {
     frame,
-    bucket: BUCKET_OPAQUE, // todo: custom op for bucket / opaque / soft alpha
+    bucket, // todo: custom op for bucket / opaque / soft alpha
     shader: shader || crawlerRenderGetShader(ShaderType.SpriteFragment),
     vshader: crawlerRenderGetShader(ShaderType.SpriteVertex),
     facing: FACE_CUSTOM,
@@ -1340,5 +1347,7 @@ export function render(
           cell_pos, pass_data, ignore_vis, vstyle, script_api, split_set);
       }
     }
+    opaqueDraw();
+    alphaDraw();
   }
 }

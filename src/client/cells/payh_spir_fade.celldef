@@ -1,0 +1,24 @@
+---
+open_vis: true
+default_wall: solid
+
+visuals:
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: path
+    tile: floor
+- pass: bg
+  type: simple_floor
+  opts:
+    spritesheet: spirit
+    tile: floor_fade
+    detail_layer: 1
+    do_alpha: true
+# - pass: bg
+#   type: simple_ceiling
+#   opts:
+#     spritesheet: path
+#     tile: ceiling
+
+corners: # pillars and floor/ceiling details
