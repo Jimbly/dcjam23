@@ -259,9 +259,11 @@ export function crawlerCommStartup(param: {
   join_func = param.join_func || defaultSendJoin;
   chat_ui = param.chat_ui || null;
   desired_channel = urlhash.get('c') || null;
-  netSubs().on('connect', crawlerCommReconnect);
-  crawlerEntityManagerOnline().on('ent_start', onEntStart);
-  crawlerEntityManagerOnline().on('ent_ready', onEntReady);
-  netSubs().onChannelMsg(param.channel_type, 'floorchange_ack', crawlerCommOnFloorchangeAck);
-  netSubs().onChannelMsg(param.channel_type, 'build_op', buildModeOnBuildOp);
+  if (netSubs()) {
+    netSubs().on('connect', crawlerCommReconnect);
+    crawlerEntityManagerOnline().on('ent_start', onEntStart);
+    crawlerEntityManagerOnline().on('ent_ready', onEntReady);
+    netSubs().onChannelMsg(param.channel_type, 'floorchange_ack', crawlerCommOnFloorchangeAck);
+    netSubs().onChannelMsg(param.channel_type, 'build_op', buildModeOnBuildOp);
+  }
 }

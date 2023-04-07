@@ -15,6 +15,7 @@ import {
   EntityPositionManager,
   entityPositionManagerCreate,
 } from 'glov/client/entity_position_manager';
+import { netSubs } from 'glov/client/net';
 import { spineCreate } from 'glov/client/spine';
 import { spriteAnimationCreate } from 'glov/client/sprite_animation';
 import { spriteCreate } from 'glov/client/sprites';
@@ -495,15 +496,17 @@ export function crawlerEntityTraitsClientStartup<TBaseClass extends EntityCrawle
     };
   });
 
-  entity_manager_online = clientEntityManagerCreate({
-    channel_type: param.channel_type || 'crawl',
-    create_func: entCreate,
-  });
-  entity_pos_manager_online = entityPositionManagerCreate({
-    entity_manager: entity_manager_online,
-    dim_pos: 2, dim_rot: 1,
-    // speed: 1/WALK_TIME,
-  });
+  if (netSubs()) {
+    entity_manager_online = clientEntityManagerCreate({
+      channel_type: param.channel_type || 'crawl',
+      create_func: entCreate,
+    });
+    entity_pos_manager_online = entityPositionManagerCreate({
+      entity_manager: entity_manager_online,
+      dim_pos: 2, dim_rot: 1,
+      // speed: 1/WALK_TIME,
+    });
+  }
   entity_manager_offline = offlineEntityManagerCreate({
     create_func: entCreate,
   });

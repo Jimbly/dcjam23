@@ -151,7 +151,7 @@ CmdHistory.prototype.next = function (cur_text) {
 
 function defaultGetRoles() {
   let user_public_data;
-  if (netUserId() && netClient().connected) {
+  if (netSubs() && netUserId() && netClient().connected) {
     let user_channel = netSubs().getMyUserChannel();
     user_public_data = user_channel.data && user_channel.data.public;
     if (user_public_data?.permissions?.sysadmin) {
@@ -250,7 +250,9 @@ function ChatUI(params) {
   this.styles.join_leave = this.styles.system;
   this.classifyRole = params.classifyRole;
 
-  netSubs().on('chat_broadcast', this.onChatBroadcast.bind(this));
+  if (netSubs()) {
+    netSubs().on('chat_broadcast', this.onChatBroadcast.bind(this));
+  }
 }
 
 ChatUI.prototype.setActiveSize = function (font_height, w) {
@@ -605,7 +607,7 @@ ChatUI.prototype.isFocused = function () {
 };
 
 ChatUI.prototype.sendChat = function (flags, text) {
-  if (!netClient().connected) {
+  if (!netClient() || !netClient().connected) {
     this.addChatError('Cannot chat: Disconnected');
   } else if (!this.channel) {
     this.addChatError('Cannot chat: Must be in a channel');
@@ -651,7 +653,7 @@ ChatUI.prototype.run = function (opts) {
   const border = opts.border || this.border || (8 * UI_SCALE);
   const SPACE_ABOVE_ENTRY = border;
   const scroll_grow = opts.scroll_grow || 0;
-  if (netClient().disconnected && !this.hide_disconnected_message) {
+  if (netClient() && netClient().disconnected && !this.hide_disconnected_message) {
     ui.font.drawSizedAligned(
       glov_font.style(null, {
         outline_width: 2,

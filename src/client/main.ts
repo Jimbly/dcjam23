@@ -47,7 +47,7 @@ crawlerOnPixelyChange(function (new_value: number): void {
 export let chat_ui: ReturnType<typeof chatUICreate>;
 
 export function main(): void {
-  if (engine.DEBUG || true) {
+  if (engine.DEBUG) {
     net.init({
       engine,
       cmd_parse,
