@@ -2205,15 +2205,17 @@ export function play(dt: number): void {
   }
 
   profilerStopStart('chat');
-  getChatUI().run({
-    hide: map_view || overlay_menu_up || !isOnline() || buildModeOverlayActive() || true, // JAM: true
-    x: 3,
-    y: game_height - getChatUI().h,
-    border: 2,
-    scroll_grow: 2,
-    always_scroll: false, // !map_view && !overlay_menu_up && !buildModeOverlayActive(), // JAM
-    cuddly_scroll: true,
-  });
+  if (engine.DEBUG) { // JAM
+    getChatUI().run({
+      hide: map_view || overlay_menu_up || !isOnline() || buildModeOverlayActive() || true, // JAM: true
+      x: 3,
+      y: game_height - getChatUI().h,
+      border: 2,
+      scroll_grow: 2,
+      always_scroll: false, // !map_view && !overlay_menu_up && !buildModeOverlayActive(), // JAM
+      cuddly_scroll: true,
+    });
+  }
   profilerStopStart('mid');
 
   if (keyDownEdge(KEYS.F3)) {
@@ -2251,7 +2253,9 @@ export function play(dt: number): void {
 
   crawlerEntityManager().actionListFlush();
 
-  getChatUI().runLate();
+  if (engine.DEBUG) {
+    getChatUI().runLate();
+  }
   profilerStop();
   profilerStopFunc();
 }
