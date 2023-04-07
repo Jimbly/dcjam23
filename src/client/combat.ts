@@ -378,7 +378,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   }
 
 
-  if (flee_edge && !is_boss) {
+  if (flee_edge && !is_boss && alive_mercs.length) {
     modalDialog({
       title: 'Flee?',
       text: 'Do you really wish to run away?  Your mercenaries will all stay, fight,' +
