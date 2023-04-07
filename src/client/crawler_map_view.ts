@@ -1,5 +1,6 @@
 import assert from 'assert';
 import * as engine from 'glov/client/engine';
+import { fontStyle } from 'glov/client/font';
 import * as input from 'glov/client/input';
 import { shaderCreate } from 'glov/client/shaders';
 import {
@@ -43,6 +44,7 @@ import { buildModeActive } from './crawler_build_mode';
 import { crawlerEntityManager } from './crawler_entity_client';
 import { crawlerController, crawlerSetLevelGenMode } from './crawler_play';
 import { CrawlerScriptAPIClient } from './crawler_script_api_client';
+import * as dawnbringer from './dawnbringer32';
 
 type Shader = ReturnType<typeof shaderCreate>;
 
@@ -125,6 +127,12 @@ let mouse_pos = vec2();
 let moved_since_fullscreen = false;
 let color_map_rollover = rovec4(1,1,1,1);
 let color_path = rovec4(1,0.5,0,1);
+
+let style_map_name = fontStyle(null, {
+  color: dawnbringer.font_colors[21],
+  outline_width: 3,
+  outline_color: dawnbringer.font_colors[0],
+});
 
 export function crawlerMapViewDraw(
   game_state: CrawlerState,
@@ -237,7 +245,7 @@ export function crawlerMapViewDraw(
   }
 
   if (!fullscreen) {
-    ui.font.drawSizedAligned(null, x, y + 1, z + 1, ui.font_height,
+    ui.font.drawSizedAligned(style_map_name, x, y + 1, z + 1, ui.font_height,
       ui.font.ALIGN.HCENTER, w, 0, floor_title);
   }
 
