@@ -107,6 +107,8 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   declare respawns: boolean;
   declare is_trader: boolean;
   declare danger_dist: number;
+  declare ai_move_min_time: number;
+  declare ai_move_rand_time: number;
 
   constructor(data_in: DataObject) {
     super(data_in);
@@ -158,7 +160,7 @@ export class EntityDemoClient extends EntityBaseClient implements EntityCrawlerC
   }
   ai_next_move_time!: number;
   aiResetMoveTime(initial: boolean): void {
-    this.ai_next_move_time = getFrameTimestamp() + 500 + random() * 500;
+    this.ai_next_move_time = getFrameTimestamp() + this.ai_move_min_time + random() * this.ai_move_rand_time;
   }
 
   isAlive(): boolean {
@@ -182,3 +184,5 @@ EntityDemoClient.prototype.do_split = true;
 EntityDemoClient.prototype.is_trader = false;
 EntityDemoClient.prototype.respawns = false;
 EntityDemoClient.prototype.danger_dist = 0;
+EntityDemoClient.prototype.ai_move_min_time = 500;
+EntityDemoClient.prototype.ai_move_rand_time = 500;

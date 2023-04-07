@@ -189,6 +189,9 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       combat_state.merc_timers[ii] = MERC_ATTACK_TIME * 0.5 + random() * (MERC_ATTACK_TIME * 0.5 + MERC_ATTACK_TIME_R);
       combat_state.merc_timers2[ii] = 0;
     }
+    if (target.type_id === 'chest' && !mercs.length) {
+      target.data.stats.hp = 0;
+    }
   }
 
   let z = Z.UI;

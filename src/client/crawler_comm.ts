@@ -69,7 +69,7 @@ export function crawlerCommWant(): boolean {
   if (effectiveDesiredChannel() === 'local') {
     return false;
   }
-  return Boolean(!netClient().connected && effectiveDesiredChannel());
+  return netSubs() && Boolean(!netClient().connected && effectiveDesiredChannel());
 }
 
 type JoinData = {

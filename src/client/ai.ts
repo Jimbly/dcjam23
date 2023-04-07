@@ -141,6 +141,8 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
     properties: {
       danger_dist: 2,
       respawns: false,
+      ai_move_min_time: 667,
+      ai_move_rand_time: 0,
     },
     methods: {
       aiPatrol: function (this: EntityPatrol, game_state: CrawlerState, script_api: CrawlerScriptAPI) {

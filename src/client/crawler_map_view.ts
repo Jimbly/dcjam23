@@ -471,7 +471,7 @@ export function crawlerMapViewDraw(
         z: z - 0.01,
         w: MAP_TILE_SIZE,
         h: MAP_TILE_SIZE,
-        frame: 19,
+        frame: 19 + (ent.type === 'chest' ? 4 : 0), // JAM
       });
     }
   }
