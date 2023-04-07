@@ -4887,34 +4887,25 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid1",
         "solid"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
         "open",
-        "solid"
+        "path_solid1"
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -4923,7 +4914,16 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
+        "path_solid2"
+      ]
+    },
+    {
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -4932,12 +4932,12 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "solid",
+        "path_solid1",
         "open",
         "open",
-        "solid"
+        "path_solid1"
       ]
     },
     {
@@ -5310,52 +5310,52 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid1",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "open",
+        "path_chasm",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
         "open",
-        "open"
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
         "open",
-        "open"
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
+        "path_chasm",
         "open",
         "open",
-        "open",
-        "open"
+        "path_chasm"
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "solid",
         "open",
@@ -5745,7 +5745,7 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -5754,7 +5754,16 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "open",
+        "path_chasm",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
@@ -5763,7 +5772,7 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
@@ -5772,27 +5781,18 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
-        "open",
+        "path_chasm",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
+        "path_solid1",
         "open",
         "open",
         "open"
@@ -6177,34 +6177,25 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid2",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
-        "open",
+        "path_chasm",
         "open"
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
         "open",
@@ -6213,19 +6204,28 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
-        "solid",
+        "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
-        "solid",
-        "solid",
+        "path_chasm",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "path_solid2",
+        "open",
         "open",
         "open"
       ]
@@ -6609,37 +6609,46 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
-        "solid",
+        "open",
         "solid",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
-        "solid",
+        "path_chasm",
+        "path_chasm",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
         "open",
-        "solid",
+        "path_chasm",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_chasm",
       "walls": [
-        "solid",
-        "open",
+        "path_chasm",
+        "path_chasm",
         "open",
         "open"
       ]
@@ -6647,19 +6656,10 @@
     {
       "id": "open",
       "walls": [
+        "solid",
         "door",
         "open",
-        "solid",
-        "solid"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "open",
-        "door",
-        "solid"
+        "open"
       ]
     },
     {
@@ -7026,52 +7026,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "solid",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "solid",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "open",
-        "solid",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "open",
         "open",
         "solid"
       ]
@@ -7081,8 +7036,8 @@
       "walls": [
         "solid",
         "solid",
-        "solid",
-        "open"
+        "open",
+        "solid"
       ]
     },
     {
@@ -7097,10 +7052,55 @@
     {
       "id": "open",
       "walls": [
+        "open",
+        "solid",
+        "path_solid1",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid2",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "path_solid1",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
         "solid",
         "open",
         "solid",
-        "open"
+        "door"
       ]
     },
     {
@@ -7448,32 +7448,14 @@
     {
       "id": "path_chasm",
       "walls": [
-        "path_chasm_double",
+        "path_chasm",
         "open",
         "path_chasm_double",
         "path_chasm_double"
       ]
     },
     {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "path_chasm_double",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
         "solid",
@@ -7482,18 +7464,9 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "open",
-        "solid",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
+        "secret_door",
         "solid",
         "open",
         "solid"
@@ -7504,8 +7477,35 @@
       "walls": [
         "open",
         "solid",
-        "solid",
+        "secret_door",
         "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
       ]
     },
     {
@@ -7521,8 +7521,8 @@
       "id": "open",
       "walls": [
         "solid",
-        "solid",
-        "solid",
+        "path_solid4",
+        "path_solid4",
         "open"
       ]
     },
@@ -7901,7 +7901,7 @@
         "open",
         "open",
         "path_chasm_double",
-        "open"
+        "solid"
       ]
     },
     {
@@ -7910,7 +7910,7 @@
         "solid",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -14469,9 +14469,9 @@
     {
       "type": "chest",
       "pos": [
-        20,
-        15,
-        1
+        10,
+        24,
+        0
       ]
     },
     {
@@ -14579,10 +14579,26 @@
       ]
     },
     {
+      "type": "enemy1p",
+      "pos": [
+        18,
+        16,
+        3
+      ]
+    },
+    {
+      "type": "enemy1p",
+      "pos": [
+        19,
+        11,
+        1
+      ]
+    },
+    {
       "type": "chest",
       "pos": [
-        10,
-        24,
+        13,
+        17,
         0
       ]
     }
@@ -14718,6 +14734,43 @@
     ],
     "10,28": [
       0
+    ],
+    "20,12": [],
+    "19,12": [
+      1
+    ],
+    "19,11": [
+      1
+    ],
+    "19,13": [
+      1
+    ],
+    "19,14": [
+      1
+    ],
+    "18,14": [
+      1
+    ],
+    "18,13": [
+      1
+    ],
+    "18,12": [
+      1
+    ],
+    "20,13": [],
+    "17,13": [],
+    "16,13": [],
+    "18,11": [
+      1
+    ],
+    "16,14": [],
+    "17,14": [],
+    "20,14": [],
+    "19,15": [
+      1
+    ],
+    "18,15": [
+      1
     ]
   }
 }
