@@ -3517,7 +3517,7 @@
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid2",
         "open"
       ]
     },
@@ -3554,7 +3554,7 @@
         "open",
         "solid",
         "open",
-        "solid"
+        "path_solid1"
       ]
     },
     {
@@ -3579,7 +3579,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid2",
         "open",
         "solid"
       ]
@@ -3606,7 +3606,7 @@
       "id": "open",
       "walls": [
         "door_locked",
-        "solid",
+        "path_solid3",
         "open",
         "door"
       ]
@@ -3960,7 +3960,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid1",
         "solid",
         "open"
       ]
@@ -3977,7 +3977,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "path_solid1",
         "solid",
         "open",
         "open"
@@ -4203,9 +4203,9 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid2",
         "secret_door",
-        "solid"
+        "path_solid3"
       ]
     },
     {
@@ -4837,7 +4837,7 @@
       "walls": [
         "secret_door",
         "open",
-        "solid",
+        "path_solid3",
         "open"
       ]
     },
@@ -5693,7 +5693,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "path_solid1",
         "open",
         "solid",
         "open"
@@ -6559,7 +6559,7 @@
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid3",
         "open"
       ]
     },
@@ -7422,7 +7422,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid2",
         "open",
         "solid"
       ]
@@ -8296,7 +8296,7 @@
       "walls": [
         "open",
         "open",
-        "solid",
+        "path_solid2",
         "solid"
       ]
     },
@@ -8315,7 +8315,7 @@
         "solid",
         "open",
         "open",
-        "solid"
+        "path_solid1"
       ]
     },
     {
@@ -8798,7 +8798,7 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "path_solid1",
         "open",
         "open",
         "secret_door"
@@ -9277,8 +9277,8 @@
       "walls": [
         "open",
         "open",
-        "solid",
-        "solid"
+        "path_solid1",
+        "path_solid1"
       ]
     },
     {
@@ -9651,7 +9651,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid3",
         "solid",
         "open"
       ]
@@ -9662,7 +9662,7 @@
         "open",
         "solid",
         "open",
-        "solid"
+        "path_solid2"
       ]
     },
     {
@@ -9680,14 +9680,14 @@
         "open",
         "solid",
         "open",
-        "solid"
+        "path_solid1"
       ]
     },
     {
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid1",
         "open",
         "secret_door"
       ]
@@ -9777,7 +9777,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid3",
         "open",
         "open"
       ]
@@ -9840,7 +9840,7 @@
       "id": "open",
       "walls": [
         "open",
-        "solid",
+        "path_solid3",
         "open",
         "secret_door"
       ]
