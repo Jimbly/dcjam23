@@ -131,8 +131,8 @@ function title(dt: number): void {
     //   text: `Slot ${slot}`,
     // });
     // yy += ui.button_height;
-    let manual_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
-    let auto_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, {});
+    let manual_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, { timestamp: 0 });
+    let auto_data = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, { timestamp: 0 });
 
     if (ui.buttonText({
       x: x - ui.button_width - 2, y: yy, text: 'New Game',

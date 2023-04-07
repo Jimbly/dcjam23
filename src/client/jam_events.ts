@@ -28,6 +28,7 @@ import {
   myEnt,
   playerConsumeGood,
   playerHasGood,
+  setScore,
   startRecruiting,
   startShopping,
   startUpgrade,
@@ -171,6 +172,7 @@ crawlerScriptRegisterEvent({
             if (has_all) {
               api.keySet('final');
               api.status('final', 'The gateway is now open!');
+              setScore();
             }
             goods.splice(ii, 1);
             return;

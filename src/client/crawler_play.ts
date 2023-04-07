@@ -227,9 +227,16 @@ export type SavedGameData = {
   floors_inited?: Partial<Record<number, true>>;
   vis_data?: Partial<Record<number, string>>;
   script_data?: DataObject;
-  timestamp?: number;
+  time_played?: number;
+  timestamp: number;
 };
-let local_game_data: SavedGameData = {};
+let local_game_data: SavedGameData = { timestamp: Date.now() };
+
+export function crawlerCurSavePlayTime(): number {
+  let now = Date.now();
+  let dt = now - local_game_data.timestamp;
+  return (local_game_data.time_played || 0) + dt;
+}
 
 let last_saved_vis_string: Partial<Record<number, string>>;
 let vis_string_save_in_progress = 0;
@@ -286,7 +293,11 @@ export function crawlerSaveGameGetData(): SavedGameData {
   }
   local_game_data.entities = ent_list;
   local_game_data.script_data = script_api.localDataGet();
-  local_game_data.timestamp = Date.now();
+  let now = Date.now();
+  if (local_game_data.timestamp) {
+    local_game_data.time_played = (local_game_data.time_played || 0) + (now - local_game_data.timestamp);
+  }
+  local_game_data.timestamp = now;
   return local_game_data;
 }
 
@@ -484,10 +495,11 @@ function crawlerLoadGame(data: SavedGameData): boolean {
   assert(offline_data);
   const { new_player_data } = offline_data;
   local_game_data = data;
+  local_game_data.timestamp = Date.now();
   let entity_manager = crawlerEntityManager();
   if (want_new_game) {
     want_new_game = false;
-    local_game_data = {};
+    local_game_data = { timestamp: Date.now() };
   }
   script_api.localDataSet(local_game_data.script_data || {});
 
@@ -678,8 +690,8 @@ export function crawlerLoadOfflineGame(data: SavedGameData): void {
 
 export function crawlerPlayInitOffline(): void {
   let slot = urlhash.get('slot') || '1';
-  let data_manual = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, {});
-  let data_auto = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, {});
+  let data_manual = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.manual`, { timestamp: 0 });
+  let data_auto = localStorageGetJSON<SavedGameData>(`savedgame_${slot}.auto`, { timestamp: 0 });
   let data;
   if (load_mode === 'manual') {
     data = data_manual;

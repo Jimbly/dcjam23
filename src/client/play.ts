@@ -23,6 +23,7 @@ import {
   padButtonDown,
   padButtonUpEdge,
 } from 'glov/client/input';
+import * as score_system from 'glov/client/score.js';
 import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
@@ -114,6 +115,7 @@ import {
 import {
   crawlerBuildModeActivate,
   crawlerController,
+  crawlerCurSavePlayTime,
   crawlerGameState,
   crawlerPlayInitOffline,
   crawlerPlayStartup,
@@ -237,6 +239,31 @@ export function myEnt(): Entity {
 
 function myEntOptional(): Entity | undefined {
   return crawlerMyEntOptional() as Entity | undefined;
+}
+
+function calcNetWorth(): number {
+  let { data } = myEnt();
+  let { goods, money, mercs, upgrade } = data;
+  let ret = money;
+  ret += UPGRADES[upgrade].cost;
+  for (let ii = 0; ii < goods.length; ++ii) {
+    let good = goods[ii];
+    let { cost } = good;
+    if (good.type === 'supply') {
+      cost = 5;
+    }
+    ret += cost * good.count;
+  }
+  for (let ii = 0; ii < mercs.length; ++ii) {
+    ret += mercs[ii].cost;
+  }
+  let script_api = crawlerScriptAPI();
+  for (let ii = 0; ii < 4; ++ii) {
+    if (script_api.keyGet(`mcguff1${ii}`)) {
+      ret += 5000;
+    }
+  }
+  return round(ret);
 }
 
 // function entityManager(): ClientEntityManagerInterface<Entity> {
@@ -467,6 +494,7 @@ export function playerAddSupply(count: number): void {
 export function playerAddMoney(count: number): void {
   myEnt().data.money += count;
   statusPush(`+${count} Money`);
+  setScore(); // eslint-disable-line @typescript-eslint/no-use-before-define
 }
 
 function initGoods(trader: Entity): void {
@@ -685,6 +713,13 @@ function inventoryMenu(): boolean {
         w,
         text: `Profit: ${round(inventory_profit)}`,
       });
+    } else if (!trader) {
+      font.draw({
+        align: ALIGN.HRIGHT,
+        x, y: y1 - ui.font_height - 3, z,
+        w,
+        text: `Net Worth: ${calcNetWorth()}`,
+      });
     }
     font.draw({
       align: ALIGN.HCENTER,
@@ -780,7 +815,7 @@ function inventoryMenu(): boolean {
 
   inventory_scroll.begin({
     x: OVERLAY_X0 + 3, y: y - 2, w: OVERLAY_W - 6,
-    h: y1 - OVERLAY_PAD - y + 2 + (trader ? -ui.button_height : 0),
+    h: y1 - OVERLAY_PAD - y + 2 + (trader ? -ui.button_height : -ui.font_height),
   });
   y = 2;
 
@@ -901,6 +936,9 @@ function inventoryMenu(): boolean {
         player_good.count+= num_to_buy;
         data.money -= trader_cost * num_to_buy;
         data.town_counter++;
+        if (good_def.key) {
+          setScore(); // eslint-disable-line @typescript-eslint/no-use-before-define
+        }
       }
     } else if (trader && !good_def.key) {
       font.draw({
@@ -956,6 +994,7 @@ function inventoryMenu(): boolean {
           let dmoney = trader_cost * num_to_sell;
           inventory_profit += dmoney - player_good.cost * num_to_sell;
           data.money += dmoney;
+          setScore(); // eslint-disable-line @typescript-eslint/no-use-before-define
           data.town_counter++;
           if (!player_good.count) {
             data.goods = data.goods.filter((elem) => elem.type !== good_id);
@@ -1545,6 +1584,23 @@ export function victoryProgress(): number {
     }
   }
   return count;
+}
+
+type Score = {
+  victory: number;
+  money: number;
+  seconds: number;
+};
+export function setScore(): void {
+  if (myEnt().data.cheat) {
+    return;
+  }
+  let score: Score = {
+    seconds: round(crawlerCurSavePlayTime() / 1000),
+    money: calcNetWorth(),
+    victory: victoryProgress(),
+  };
+  score_system.setScore(0, score);
 }
 
 const CURRENCY_X0 = MINIMAP_X;
@@ -2451,4 +2507,33 @@ export function playStartup(tiny_font_in: Font): void {
   dialogStartup(font);
   crawlerLoadData(webFSAPI());
   crawlerMapViewStartup(false, dawnbringer.colors[8]);
+
+  const ENCODE_SEC = 100000;
+  const ENCODE_MONEY = 100000;
+  const level_def = {
+    name: 'the',
+  };
+  const level_list = [level_def];
+  function encodeScore(score: Score): number {
+    let spart = max(0, ENCODE_SEC - 1 - score.seconds);
+    let mpart = min(ENCODE_MONEY - 1, score.money) * ENCODE_SEC;
+    let vpart = score.victory * ENCODE_MONEY * ENCODE_SEC;
+    return vpart + mpart + spart;
+  }
+
+  function parseScore(value: number): Score {
+    let seconds = value % ENCODE_SEC;
+    value = (value - seconds) / ENCODE_SEC;
+    seconds = ENCODE_SEC - 1 - seconds;
+    let money = value % ENCODE_MONEY;
+    let victory = (value - money) / ENCODE_MONEY;
+    return {
+      victory,
+      money,
+      seconds,
+    };
+  }
+
+  score_system.init(encodeScore, parseScore, level_list, 'DCJ23');
+  score_system.updateHighScores();
 }
