@@ -10216,16 +10216,16 @@
       ]
     },
     {
-      "id": "open",
+      "id": "path_open2",
       "walls": [
         "solid",
         "open",
-        "solid",
+        "path_solid1",
         "door"
       ]
     },
     {
-      "id": "open",
+      "id": "path_open1",
       "walls": [
         "solid",
         "open",
@@ -10648,28 +10648,28 @@
       ]
     },
     {
-      "id": "open",
+      "id": "path_open2",
       "walls": [
-        "door",
-        "solid",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
+        "path_solid1",
         "open",
         "solid",
-        "door",
         "open"
       ]
     },
     {
-      "id": "open",
+      "id": "path_open4",
       "walls": [
-        "solid",
-        "solid",
+        "open",
+        "path_solid2",
+        "path_solid1",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_solid1",
+        "open",
         "open",
         "solid"
       ]
@@ -10678,7 +10678,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "solid",
         "open"
       ]
@@ -10687,16 +10687,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -10705,7 +10696,16 @@
       "id": "solid",
       "walls": [
         "open",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -11073,16 +11073,70 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open2",
       "walls": [
         "open",
+        "open",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open2",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "path_open3",
+      "walls": [
+        "open",
+        "path_solid1",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "path_solid2"
+      ]
+    },
+    {
+      "id": "path_open3",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "secret_door",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "path_open3",
+      "walls": [
+        "path_solid1",
         "open",
         "open",
         "solid"
@@ -11093,61 +11147,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "solid"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -11496,9 +11496,72 @@
     {
       "id": "solid",
       "walls": [
+        "solid",
         "open",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
         "open",
+        "open",
+        "path_solid1",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "path_grate",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "path_grate",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "path_solid1"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "solid",
+        "open",
+        "secret_door"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "solid",
+        "open",
+        "path_solid1",
         "open"
       ]
     },
@@ -11507,70 +11570,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -11925,9 +11925,72 @@
     {
       "id": "solid",
       "walls": [
+        "solid",
         "open",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_grate",
         "open",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open_alive",
+      "walls": [
+        "open",
+        "open",
+        "path_grate",
+        "path_grate"
+      ]
+    },
+    {
+      "id": "path_open_alive",
+      "walls": [
+        "path_grate",
+        "open",
+        "open",
+        "path_grate"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_solid1",
+        "open",
+        "path_grate",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "solid",
+        "solid",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_solid1",
+        "open",
+        "path_solid1",
         "open"
       ]
     },
@@ -11936,70 +11999,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -12363,9 +12363,72 @@
     {
       "id": "solid",
       "walls": [
+        "solid",
         "open",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_grate",
         "open",
+        "path_solid2",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open_alive",
+      "walls": [
+        "open",
+        "path_grate",
+        "path_grate",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open_alive",
+      "walls": [
+        "door",
+        "path_grate",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "solid",
+        "open",
+        "door",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "open",
+        "path_chasm_double",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "path_open3",
+      "walls": [
+        "path_solid2",
+        "open",
+        "solid",
         "open"
       ]
     },
@@ -12374,70 +12437,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -12786,9 +12786,72 @@
     {
       "id": "solid",
       "walls": [
+        "solid",
         "open",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
         "open",
+        "path_solid1",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "path_grate"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "open",
+        "door",
+        "open",
+        "path_grate"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
+        "solid",
+        "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "open",
+        "path_chasm_double",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "solid",
+        "open",
+        "solid",
         "open"
       ]
     },
@@ -12797,70 +12860,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -13221,6 +13221,60 @@
         "open",
         "open",
         "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "door"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm",
+        "path_chasm",
+        "path_chasm_double"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm",
+        "path_chasm",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open4",
+      "walls": [
+        "path_solid2",
+        "open",
+        "path_solid1",
         "open"
       ]
     },
@@ -13229,61 +13283,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -13665,14 +13665,23 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "solid",
         "open",
         "open",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
       "walls": [
         "open",
         "open",
@@ -13681,11 +13690,29 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
         "open",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "door",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_open1",
+      "walls": [
+        "solid",
+        "solid",
+        "door",
         "open"
       ]
     },
@@ -13694,34 +13721,7 @@
       "walls": [
         "open",
         "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
+        "solid",
         "open"
       ]
     },
@@ -14088,10 +14088,37 @@
     {
       "id": "solid",
       "walls": [
-        "open",
+        "path_chasm_double",
         "open",
         "open",
         "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "path_chasm_double",
+        "path_chasm_double",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm_double",
+        "open",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "open",
+        "solid",
+        "solid"
       ]
     },
     {
@@ -14100,7 +14127,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -14109,34 +14136,7 @@
         "open",
         "open",
         "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -14485,17 +14485,17 @@
     {
       "type": "chest",
       "pos": [
-        25,
-        24,
-        3
+        13,
+        17,
+        0
       ]
     },
     {
-      "type": "chest",
+      "type": "enemy1p",
       "pos": [
-        27,
-        24,
-        2
+        19,
+        11,
+        1
       ]
     },
     {
@@ -14587,19 +14587,35 @@
       ]
     },
     {
-      "type": "enemy1p",
+      "type": "chest",
       "pos": [
-        19,
-        11,
+        26,
+        27,
+        1
+      ]
+    },
+    {
+      "type": "enemy2p",
+      "pos": [
+        26,
+        26,
+        3
+      ]
+    },
+    {
+      "type": "enemy2p",
+      "pos": [
+        30,
+        28,
         1
       ]
     },
     {
       "type": "chest",
       "pos": [
-        13,
-        17,
-        0
+        29,
+        27,
+        1
       ]
     }
   ],
@@ -14770,6 +14786,49 @@
       1
     ],
     "18,15": [
+      1
+    ],
+    "25,27": [
+      1
+    ],
+    "25,26": [
+      1,
+      0
+    ],
+    "26,26": [
+      0
+    ],
+    "27,26": [
+      0
+    ],
+    "28,26": [
+      1
+    ],
+    "28,27": [
+      1
+    ],
+    "28,28": [
+      1
+    ],
+    "27,29": [
+      0
+    ],
+    "26,29": [
+      0
+    ],
+    "25,29": [
+      0
+    ],
+    "25,28": [
+      1
+    ],
+    "30,30": [
+      1
+    ],
+    "30,29": [
+      1
+    ],
+    "30,28": [
       1
     ]
   }

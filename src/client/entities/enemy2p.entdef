@@ -8,9 +8,9 @@ traits:
   attack: 6
   defense: 5
 - id: drawable
-  biasL: [-0.25, 0.3]
+  biasL: [-0.20, 0.3]
   biasF: [0, -0.25]
-  biasR: [-0.25, 0.5]
+  biasR: [-0.20, 0.5]
 - id: drawable_sprite
   anim_data:
     idle:
