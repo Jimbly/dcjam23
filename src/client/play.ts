@@ -1663,7 +1663,7 @@ function calcDanger(): number {
   for (let ent_id_str in entities) {
     let ent = entities[ent_id_str]!;
     if (ent.data.floor === floor_id &&
-      ent.is_enemy && ent.isAlive()
+      ent.is_enemy && ent.isAlive() && ent.type_id !== 'chest'
     ) {
       nearest = min(nearest, v2dist(pos, ent.data.pos) - ent.danger_dist);
     }
@@ -1846,7 +1846,7 @@ function playCrawl(): void {
 
   }
 
-  tickMusic(false, Boolean(frame_combat));
+  tickMusic(false, Boolean(frame_combat && frame_combat.type_id !== 'chest'));
   tickBells(Boolean(frame_combat));
 
   let button_x0: number;

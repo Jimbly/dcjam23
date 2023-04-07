@@ -12,3 +12,5 @@ wall_swaps:
   solid: path_solid
   secret_door: path_secret_door
   secret_door_unvisited: path_secret_door
+  stairs_in: path_stairs_up
+  stairs_out: path_stairs_down
