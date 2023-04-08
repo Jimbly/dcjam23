@@ -158,11 +158,22 @@ export function main(): void {
       door_spir: 'door_spir',
       flee: 'flee',
       pedastal: 'pedastal',
-      footstep: ['footstep/footstep1', 'footstep/footstep2', 'footstep/footstep3', 'footstep/footstep4'],
+      footstep: [{
+        file: 'footstep/footstep1',
+        volume: 0.25,
+      }, {
+        file: 'footstep/footstep2',
+        volume: 1,
+      }, {
+        file: 'footstep/footstep3',
+        volume: 1,
+      }, {
+        file: 'footstep/footstep4',
+        volume: 0.5,
+      }],
       hit_enemy: ['hit_enemy/1', 'hit_enemy/2', 'hit_enemy/3'],
       hit_player: ['hit_player/1', 'hit_player/2', 'hit_player/3'],
       bells_phys: 'bells_phys',
-      bells_spir: 'bells_phys',
     },
   })) {
     return;
