@@ -6558,9 +6558,9 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open1",
       "walls": [
-        "open",
+        "solid",
         "open",
         "solid",
         "solid"
@@ -7026,10 +7026,10 @@
       ]
     },
     {
-      "id": "solid",
+      "id": "path_open1",
       "walls": [
-        "open",
         "solid",
+        "open",
         "solid",
         "open"
       ]
@@ -7494,12 +7494,12 @@
       ]
     },
     {
-      "id": "open",
+      "id": "path_open1",
       "walls": [
         "solid",
         "secret_door",
         "solid",
-        "solid"
+        "open"
       ]
     },
     {
@@ -15184,10 +15184,18 @@
         23,
         3
       ]
+    },
+    {
+      "type": "chest",
+      "pos": [
+        51,
+        13,
+        1
+      ]
     }
   ],
   "state": {},
-  "vstyle": "path",
+  "vstyle": "under",
   "seed": "78414291",
   "props": {
     "title": "Undivide"

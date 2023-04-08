@@ -7,7 +7,7 @@ visuals:
   type: simple_floor
   opts:
     spritesheet: path
-    tile: floor
+    tile: underfloor
 
 corners: # pillars and floor/ceiling details
   # one:

@@ -1,0 +1,26 @@
+---
+fog_color: '#191c0e'
+background_color: '#191c0e'
+background_img: backdrop_path
+fog_params:
+- 0.002
+- 0.002
+- 300.0
+cell_swaps:
+  open: under_open
+  floorswitch: path_floorswitch
+  floorswitch_on: path_floorswitch_on
+  path_open1: under_open1
+  path_open2: under_open2
+  path_open3: under_open3
+  path_open4: under_open4
+wall_swaps:
+  door: under_door
+  door_locked: path_door_locked
+  door_locked_unlocked: path_door_unlocked
+  solid: under_solid
+  secret_door: under_secret_door
+  secret_door_unvisited: under_secret_door
+  stairs_in: under_stairs_up
+  stairs_out: path_stairs_down
+  path_oneway: under_oneway

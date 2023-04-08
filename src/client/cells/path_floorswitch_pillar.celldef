@@ -6,7 +6,7 @@ visuals:
   type: simple_floor
   opts:
     spritesheet: path
-    tile: floor
+    tile: underfloor
 - pass: default
   type: simple_floor
   opts:
