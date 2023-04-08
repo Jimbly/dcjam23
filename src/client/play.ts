@@ -63,20 +63,22 @@ import {
 } from 'glov/common/util';
 import {
   Vec2,
-  v2dist,
-  v2distSq,
+  Vec3,
   v2set,
   v2sub,
+  v3copy,
+  v3same,
   vec2,
   vec4,
 } from 'glov/common/vmath';
 import { getEffCell } from '../common/crawler_script';
 import {
+  BLOCK_MOVE,
+  BLOCK_VIS,
   CrawlerCell,
   CrawlerLevel,
   DIR_CELL,
   DirType,
-  JSVec2,
   crawlerLoadData,
   dirFromDelta,
   dirMod,
@@ -1744,8 +1746,70 @@ function drawHints(): void {
   }
 }
 
+
+let last_can_hear: [number, number, number] = [0,0,0];
+let can_hear: Record<number, number> = {};
+let can_hear_w: number = 0;
+const MAX_CAN_HEAR_SEARCH = 7;
+function updateCanHearMap(): void {
+  let { floor_id, level } = crawlerGameState();
+  let me = myEntOptional();
+  if (!me || !level) {
+    return;
+  }
+  let { pos } = me.data;
+  let key: Vec3 = [floor_id, pos[0], pos[1]];
+  if (v3same(last_can_hear, key)) {
+    return;
+  }
+  v3copy(last_can_hear, key);
+  let { w } = level;
+  can_hear_w = w;
+  const DIDX = [1, w, -1, -w];
+  can_hear = {};
+  let todo: number[] = [];
+  let done: Record<number, boolean> = {};
+  function search(posidx: number, dist: number): void {
+    can_hear[posidx] = dist;
+    done[posidx] = true;
+    if (dist < MAX_CAN_HEAR_SEARCH) {
+      todo.push(posidx, dist);
+    }
+  }
+  let script_api = crawlerScriptAPI();
+  search(pos[0] + pos[1] * w, 0);
+  while (todo.length) {
+    let p = todo[0];
+    let d = todo[1];
+    todo.splice(0, 2);
+    let x = p % w;
+    let y = (p - x) / w;
+    for (let ii = 0 as DirType; ii < 4; ++ii) {
+      let neighbor = p + DIDX[ii];
+      if (done[neighbor]) {
+        continue;
+      }
+      if (level.wallsBlock([x, y], ii, script_api) === (BLOCK_VIS | BLOCK_MOVE)) {
+        // blocked completely
+      } else {
+        search(neighbor, d + 1);
+      }
+    }
+  }
+}
+
 function calcDanger(): number {
-  let { floor_id, pos } = crawlerGameState();
+  updateCanHearMap();
+  // for (let xx = 0; xx < can_hear_w; ++xx) {
+  //   for (let yy = 0; yy < 30; ++yy) {
+  //     let idx = xx + yy * can_hear_w;
+  //     let d = can_hear[idx];
+  //     if (d !== undefined) {
+  //       tiny_font.draw({ x: xx*8, y: game_height - yy * 8, z: 2000, text: String(d) });
+  //     }
+  //   }
+  // }
+  let { floor_id/*, pos*/ } = crawlerGameState();
   let { entities } = entityManager();
   let nearest = Infinity;
   for (let ent_id_str in entities) {
@@ -1753,9 +1817,14 @@ function calcDanger(): number {
     if (ent.data.floor === floor_id &&
       ent.is_enemy && ent.isAlive() && ent.type_id !== 'chest'
     ) {
-      nearest = min(nearest, v2dist(pos, ent.data.pos) - ent.danger_dist);
+      // nearest = min(nearest, v2dist(pos, ent.data.pos) - ent.danger_dist);
+      let d = can_hear[ent.data.pos[0] + ent.data.pos[1] * can_hear_w];
+      if (d !== undefined) {
+        nearest = min(nearest, d - ent.danger_dist);
+      }
     }
   }
+
   return nearest;
 }
 
@@ -1852,6 +1921,7 @@ function tickBells(is_danger: boolean): void {
   if (is_danger || !soundResumed()) {
     return;
   }
+  updateCanHearMap();
   if (bell_last_play && !bell_last_play.playing()) {
     bell_last_play = null;
   }
@@ -1863,11 +1933,21 @@ function tickBells(is_danger: boolean): void {
   for (let ii = 0; ii < BELLS.length; ++ii) {
     let bell = BELLS[ii];
     if (bell[2] === floor_id) {
-      let dsq = v2distSq(bell as JSVec2, game_state.pos);
-      if (dsq < nearest_dist) {
-        nearest = ii;
-        nearest_dist = dsq;
+      let bx = bell[0] as number;
+      let by = bell[1] as number;
+      let d = can_hear[bx + by * can_hear_w];
+      if (d !== undefined) {
+        let dsq = d * d;
+        if (dsq < nearest_dist) {
+          nearest = ii;
+          nearest_dist = dsq;
+        }
       }
+      // let dsq = v2distSq(bell as JSVec2, game_state.pos);
+      // if (dsq < nearest_dist) {
+      //   nearest = ii;
+      //   nearest_dist = dsq;
+      // }
     }
   }
 
