@@ -518,7 +518,7 @@ function crawlerLoadGame(data: SavedGameData): boolean {
   let need_init_pos = false;
   if (!player_ent) {
     need_init_pos = true;
-    player_ent = entity_manager.addEntityFromSerialized(new_player_data);
+    player_ent = entity_manager.addEntityFromSerialized(clone(new_player_data));
   }
   entity_manager.setMyEntID(player_ent.id);
   crawlerEntitiesOnEntStart();

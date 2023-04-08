@@ -49,8 +49,14 @@ let title_alpha = {
 };
 
 const FOR_LOGO = false;
-
+let want_hof = false;
 function title(dt: number): void {
+  if (want_hof) {
+    want_hof = false;
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    engine.setState(stateHighScores);
+    return;
+  }
   const { font } = ui;
   main.chat_ui.run({
     hide: true,
@@ -287,7 +293,7 @@ const SCORE_COLUMNS = [
   { name: '', width: 12, align: ALIGN.HFIT | ALIGN.HRIGHT | ALIGN.VCENTER },
   { name: 'Name', width: 60, align: ALIGN.HFIT | ALIGN.VCENTER },
   { name: 'Victory?', width: 24 },
-  { name: 'Money', width: 32 },
+  { name: 'Net Worth', width: 32 },
 ];
 const style_score = fontStyleColored(null, 0xFFFFFFaa);
 const style_me = fontStyleColored(null, dawnbringer.font_colors[8]);
@@ -377,6 +383,10 @@ function stateHighScores(): void {
     color_me_background: [1,1,1,0.2],
   });
 
+}
+
+export function goToHallOfFame(): void {
+  want_hof = true;
 }
 
 

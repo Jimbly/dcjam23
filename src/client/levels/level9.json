@@ -2364,7 +2364,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "solid",
+        "open",
         "open",
         "open"
       ]
@@ -2783,19 +2783,10 @@
     {
       "id": "solid",
       "walls": [
-        "solid",
+        "open",
         "solid",
         "solid",
         "open"
-      ]
-    },
-    {
-      "id": "open",
-      "walls": [
-        "solid",
-        "open",
-        "solid",
-        "solid"
       ]
     },
     {
@@ -2803,7 +2794,16 @@
       "walls": [
         "open",
         "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
         "solid",
+        "open",
         "open"
       ]
     },
@@ -3227,7 +3227,7 @@
         "open",
         "solid",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -5379,7 +5379,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "solid",
         "solid"
       ]
@@ -5801,17 +5801,8 @@
     {
       "id": "open",
       "walls": [
-        "solid",
         "open",
-        "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "solid",
-        "solid",
+        "open",
         "solid",
         "open"
       ]
@@ -5821,7 +5812,16 @@
       "walls": [
         "open",
         "open",
-        "path_solid2",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
+        "open",
         "path_solid3"
       ]
     },
@@ -6240,13 +6240,16 @@
       ]
     },
     {
-      "id": "open",
+      "id": "pedastal",
       "walls": [
         "open",
-        "solid",
         "open",
-        "solid"
-      ]
+        "open",
+        "open"
+      ],
+      "props": {
+        "key_cell": "final"
+      }
     },
     {
       "id": "open",
@@ -6665,19 +6668,19 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "open",
         "solid",
         "open"
       ]
     },
     {
-      "id": "solid",
+      "id": "open",
       "walls": [
-        "solid",
         "open",
         "solid",
-        "solid"
+        "open",
+        "open"
       ]
     },
     {
@@ -6685,7 +6688,7 @@
       "walls": [
         "open",
         "path_solid3",
-        "path_solid2",
+        "open",
         "open"
       ]
     },
@@ -7118,7 +7121,7 @@
         "open",
         "solid",
         "solid",
-        "open"
+        "solid"
       ]
     },
     {

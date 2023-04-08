@@ -757,6 +757,9 @@ export class CrawlerController {
     }
     this.impulse_queue = [];
   }
+  cancelQueuedMoves(): void {
+    this.impulse_queue = [];
+  }
 
   forceMove(dir: DirType): void {
     this.cancelAllMoves();

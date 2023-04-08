@@ -360,7 +360,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       let cc = me.data.chest_count++;
       let loot;
       if (cc >= LOOT_TABLE.length) {
-        loot = [0, (cc - 6) * 100];
+        loot = [0, 400 + (cc - LOOT_TABLE.length) * 51];
       } else {
         loot = LOOT_TABLE[cc];
       }

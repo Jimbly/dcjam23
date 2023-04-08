@@ -117,6 +117,7 @@ import { FSAPI, fileBaseName } from 'glov/common/fsapi';
 import { DataObject } from 'glov/common/types';
 import { callEach, clone, empty, ridx } from 'glov/common/util';
 import {
+  ROVec2,
   Vec2,
   Vec3,
   v2set,
@@ -619,7 +620,7 @@ export class CrawlerLevel {
     // console.log(this.toDebugString());
   }
 
-  wallsBlock(pos: Vec2, dir: DirType, script_api: CrawlerScriptAPI): BlockType {
+  wallsBlock(pos: ROVec2, dir: DirType, script_api: CrawlerScriptAPI): BlockType {
     let cur_cell = this.getCell(pos[0], pos[1]);
     let ret = BLOCK_OPEN; // 0
     if (cur_cell) {

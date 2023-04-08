@@ -1777,6 +1777,7 @@ function updateCanHearMap(): void {
     }
   }
   let script_api = crawlerScriptAPI();
+  script_api.setLevel(level);
   search(pos[0] + pos[1] * w, 0);
   while (todo.length) {
     let p = todo[0];
@@ -1789,7 +1790,9 @@ function updateCanHearMap(): void {
       if (done[neighbor]) {
         continue;
       }
-      if (level.wallsBlock([x, y], ii, script_api) === (BLOCK_VIS | BLOCK_MOVE)) {
+      let check_pos = [x, y] as const;
+      script_api.setPos(check_pos);
+      if (level.wallsBlock(check_pos, ii, script_api) === (BLOCK_VIS | BLOCK_MOVE)) {
         // blocked completely
       } else {
         search(neighbor, d + 1);
@@ -2288,6 +2291,9 @@ export function play(dt: number): void {
 
   const map_view = mapViewActive();
   let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || upgrade_up || dialogMoveLocked();
+  if (overlay_menu_up || isMenuUp()) {
+    controller.cancelQueuedMoves();
+  }
   if (!(map_view || isMenuUp() || overlay_menu_up)) {
     spotSuppressPad();
   }

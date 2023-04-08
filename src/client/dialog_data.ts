@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-use-before-define:off */
+import { postTick } from 'glov/client/engine';
 import { inputTouchMode } from 'glov/client/input';
 import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
@@ -21,6 +22,7 @@ import {
   setScore,
 } from './play';
 import { statusPush, statusSet } from './status';
+import { goToHallOfFame } from './title';
 
 type DialogFunc = (() => void) | ((param: string) => void) | ((param: string) => CrawlerScriptEventMapIcon);
 
@@ -338,8 +340,12 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
             let me = myEnt();
             me.data.town_counter++;
             me.data.money += quest.need.cost;
-            statusPush(`+${quest.need.cost} Coins`);
-            statusPush(`-${quest.need.count} ${good_name}`);
+            postTick({
+              fn: () => {
+                statusPush(`+${quest.need.cost} Coins`);
+                statusPush(`-${quest.need.count} ${good_name}`);
+              }
+            });
             keySet(key);
             setScore();
           },
@@ -403,15 +409,16 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
     });
   },
   final: function () {
+    autosave();
     dialogPush({
       name: '',
-      text: 'I have reclaimed that which was lost.  Perhaps now I am whole again.' +
-        '  For now...',
+      text: 'I have reclaimed that which was lost.  Perhaps now I am whole again.\n\n' +
+        'Congratulations!  You win!  Thank you very much for playing!',
       buttons: [{
         label: 'Rest. (Return to main menu)',
         cb: function () {
-          autosave();
           urlhash.go('');
+          goToHallOfFame();
         },
       }, {
         label: 'I\'ll explore some more.',
