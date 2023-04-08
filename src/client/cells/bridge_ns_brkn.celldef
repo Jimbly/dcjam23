@@ -10,16 +10,20 @@ default_events:
 - bridge
 
 visuals:
-- pass: bg
-  type: simple_floor
+- type: simple_wall
   opts:
     spritesheet: path
-    tile: bridge_ns_brkn
-# - pass: bg
-#   type: simple_ceiling
-#   opts:
-#     spritesheet: path
-#     tile: ceiling
+    tile: bridge_hanging
+    offs: [0, 1]
+    force_rot: 3
+    detail_layer: 1
+- type: simple_wall
+  opts:
+    spritesheet: path
+    tile: bridge_hanging
+    offs: [0, 1]
+    force_rot: 1
+    detail_layer: 1
 
 replace:
   - func: KEY

@@ -111,6 +111,14 @@ const DY = [0,1,0,-1];
 const DEBUG_VIS = false;
 const VIS_RADIUS = 3;
 
+let wall_rots = [
+  qRotateZ(quat(), unit_quat, 0),
+  qRotateZ(quat(), unit_quat, PI/2),
+  qRotateZ(quat(), unit_quat, PI),
+  qRotateZ(quat(), unit_quat, 3*PI/2),
+];
+
+
 let split_dist_sq: number;
 
 let mat_obj = mat4();
@@ -494,6 +502,7 @@ type SimpleDetailRenderOpts = {
   height?: number;
   offs?: [number, number];
   detail_layer?: number;
+  force_rot?: number;
 } & SimpleVisualOpts;
 
 const FLOOR_DETAIL_Z = 0.025;
@@ -527,6 +536,10 @@ function drawSimpleWall(
   temp_pos[1] -= offs[0] * DIM + (1 - scale) * HDIM;
   temp_pos[2] -= offs[1] * DIM + (1 - scale) * HDIM + (1 - height) * DIM;
   v2set(temp_size, DIM*scale, DIM*scale*height);
+
+  if (vopts.force_rot !== undefined) {
+    rot = wall_rots[vopts.force_rot];
+  }
 
   qTransformVec3(temp_pos, temp_pos, rot);
   qTransformVec3(temp_right, wall_face_right, rot);
@@ -913,13 +926,6 @@ export function crawlerRenderInit(param: {
   angle_offs = (param.angle_offs || 0) * PI/180;
   v2copy(pos_offs, param.pos_offs || [0,-0.95]);
 }
-
-let wall_rots = [
-  qRotateZ(quat(), unit_quat, 0),
-  qRotateZ(quat(), unit_quat, PI/2),
-  qRotateZ(quat(), unit_quat, PI),
-  qRotateZ(quat(), unit_quat, 3*PI/2),
-];
 
 let draw_pos = vec3(0,0,0);
 let vhdim = vec3(HDIM, HDIM, HDIM);
