@@ -1818,16 +1818,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -1836,7 +1827,16 @@
       "id": "solid",
       "walls": [
         "open",
+        "solid",
         "open",
+        "open"
+      ]
+    },
+    {
+      "id": "solid",
+      "walls": [
+        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -1955,9 +1955,36 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "solid",
         "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "under_open4",
+      "walls": [
+        "door",
+        "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "solid",
+        "door",
         "solid"
       ]
     },
@@ -1967,33 +1994,6 @@
         "open",
         "open",
         "solid",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "open"
       ]
     },
@@ -2111,7 +2111,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -2120,7 +2120,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
@@ -2129,7 +2129,7 @@
         "open",
         "open",
         "open",
-        "open"
+        "solid"
       ]
     },
     {
