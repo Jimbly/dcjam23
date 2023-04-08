@@ -8,10 +8,12 @@ visuals:
   opts:
     spritesheet: spirit
     tile: floor
-# - pass: bg
-#   type: simple_ceiling
-#   opts:
-#     spritesheet: spirit
-#     tile: ceiling
+- pass: bg
+  type: simple_ceiling
+  opts:
+    spritesheet: spirit
+    tile: [ceiling1, ceiling2, ceiling3, ceiling4, ceiling5, ceiling6, ceiling7]
+    times: 1000
+    do_blend: 1000
 
 corners: # pillars and floor/ceiling details

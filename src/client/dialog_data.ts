@@ -163,8 +163,8 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
   swelc2: function () {
     dialogPush({
       name: 'Greeter',
-      text: 'Well, the developer ran out of time, and the artists left him mid-project, and' +
-      ' let us just pretend it was a difficult crossing.',
+      text: 'Well, it is just a jam game,' +
+      ' let us pretend it was a difficult crossing.',
       buttons: [{
         label: 'Fair enough...  What is this place?',
         cb: 'swelc3',
@@ -174,7 +174,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
   swelc3: function () {
     dialogPush({
       name: 'Greeter',
-      text: 'You really are new... This is Spiriton, one of the three cities in the Spiritual Realm.' +
+      text: 'You really are green... This is Spiriton, one of the three cities in the Spiritual Realm.' +
         '  Being entirely noncorporeal ourselves, we are unable to travel to the Physical Realm, so we will pay' +
         ' handsomely for any goods you brought with you.',
       buttons: [{
@@ -188,7 +188,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
       name: 'Greeter',
       text: 'Me?  Nothing specific, but Merchant in the market will buy anything physical, and will pay more' +
         ' the more difficult the path from the city to where it can be purchased.  Paths are more difficult' +
-        ' due to the amount of Supplies required to patch up the bridge long enough to cross.',
+        ' due to the amount of Supplies required to temporarily patch up the bridges.',
       buttons: [{
         label: 'I repaired a bridge on the way here...',
         cb: 'swelc5',
@@ -200,7 +200,7 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
       name: 'Greeter',
       text: 'Sadly, the bridge will probably crumble again by the time you get back to it.  Time passes oddly' +
         ' inside towns, for those such as us.  The most difficult journeys may require up to 12 Supplies between' +
-        ' towns, but from here 3 Supplies is enough to get to all of the neighboring towns.',
+        ' towns, but from here, 3 Supplies will be enough to get to all our neighbors.',
       buttons: [{
         label: 'Thanks for the information!',
       }],
@@ -272,6 +272,33 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
         text_have: 'That Table Leg seems just right...  Here\'s 26 for it, help a gal out?',
         text_thanks: 'Ahhh... thanks.',
         name: 'Molly',
+      },
+      6: {
+        need: {
+          type: 'phys4',
+          count: 1,
+          cost: 500,
+        },
+        name: 'Farmer',
+      },
+      7: { // spir 2
+        need: {
+          type: 'phys7',
+          count: 3,
+          cost: 2500,
+        },
+        name: 'Collector',
+      },
+      8: { // spir 3
+        need: {
+          type: 'phys1',
+          count: 1,
+          cost: 1700,
+        },
+        text_need: 'I will grant you 1700 units of currency if you bring me 1 Dinglehopper from Physopolis.',
+        text_have: 'Ah, a Dinglehopper!  Or, at least, close enough.  I will grant you 1700 units of currency for it.',
+        text_thanks: 'Now I feel like I am a little more part of your world.',
+        name: 'Arial',
       },
     };
     let quest = QUEST[quest_key];

@@ -119,7 +119,7 @@ export function dialogRun(dt: number): number {
   let dims = font.dims(style, w - HPAD * 2, 0, size, text);
   y += h - dims.h - STATUS_PAD_BOTTOM - buttons_h;
   let text_len = ceil(counter / 18);
-  let text_full = text_len >= text.length;
+  let text_full = text_len >= (text.length + 20);
   if (!transient) {
     if (!text_full && !active_state.ff_down) {
       if (ff()) {

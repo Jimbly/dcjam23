@@ -57,9 +57,9 @@ const NAMES: Record<string, Record<number, string>> = {
     1: 'Tuldor',
     2: 'Medjer',
     3: 'Norken',
-    4: 'Innkeep',
-    5: 'Brewer',
-    6: 'Barman',
+    4: 'Throne',
+    5: 'Power',
+    6: 'Dominion',
   },
   upgrade: {
     1: 'Frodrurth',
