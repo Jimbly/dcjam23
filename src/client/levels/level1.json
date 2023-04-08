@@ -1359,6 +1359,12 @@
         "open",
         "open",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "dialog",
+          "param": "kbhint Hint: Press F11 to toggle Fullscreen."
+        }
       ]
     },
     {

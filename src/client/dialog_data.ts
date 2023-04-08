@@ -1,4 +1,5 @@
 /* eslint @typescript-eslint/no-use-before-define:off */
+import { inputTouchMode } from 'glov/client/input';
 import * as urlhash from 'glov/client/urlhash';
 import { dataError } from 'glov/common/data_error';
 import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
@@ -60,6 +61,15 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
   },
   greet: function (param: string) {
     statusSet('greet', param, dialogTextStyle()).counter = 3000;
+  },
+  kbhint: function (param: string) {
+    if (!inputTouchMode()) {
+      dialogPush({
+        name: '',
+        text: param,
+        transient: true,
+      });
+    }
   },
   welcome: function () {
     if (keyGet('mcguff1')) {
