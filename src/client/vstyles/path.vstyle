@@ -1,6 +1,7 @@
 ---
 fog_color: '#191c0e'
 background_color: '#191c0e'
+background_img: backdrop_path
 cell_swaps:
   open: path_open
   floorswitch: path_floorswitch
