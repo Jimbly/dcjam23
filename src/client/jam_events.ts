@@ -24,6 +24,7 @@ import { dialog, dialogMapIcon } from './dialog_data';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {
+  autosave,
   bridgeRepairCost,
   myEnt,
   playerConsumeGood,
@@ -89,6 +90,7 @@ crawlerScriptRegisterEvent({
       if (!api.keyGet(param)) {
         api.keySet(param);
         playUISound('unlock');
+        autosave();
         //api.status('key_pickup', `Acquired key "${param}"`);
       }
     }

@@ -85,6 +85,7 @@ import {
   crawlerRenderGameViewAngle,
   crawlerRenderViewportGet,
   crawlerSetFogColor,
+  crawlerSetFogParams,
   render,
 } from './crawler_render';
 import { crawlerRenderEntities } from './crawler_render_entities';
@@ -773,6 +774,7 @@ function uiClearColor(): void {
 
 let entity_split: boolean;
 let default_bg_color = vec3();
+let default_fog_params = vec3(0.003, 0.001, 800.0);
 export function crawlerRenderFramePrep(): void {
   let opts_3d: {
     fov: number;
@@ -808,6 +810,7 @@ export function crawlerRenderFramePrep(): void {
   let { level } = game_state;
   let clear = default_bg_color;
   let fog = default_bg_color;
+  let fog_params = default_fog_params;
   let vstyle: VstyleDesc | null = null;
   if (level) {
     vstyle = level.vstyle;
@@ -815,9 +818,11 @@ export function crawlerRenderFramePrep(): void {
   if (vstyle) {
     clear = vstyle.background_color;
     fog = vstyle.fog_color;
+    fog_params = vstyle.fog_params;
   }
   gl.clearColor(clear[0], clear[1], clear[2], 0);
   crawlerSetFogColor(fog);
+  crawlerSetFogParams(fog_params);
   engine.start3DRendering(opts_3d);
   if (vstyle && vstyle.background_img) {
     let tex = textureLoad({

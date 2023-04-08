@@ -2,6 +2,10 @@
 fog_color: '#5b6ee1'
 background_color: '#5b6ee1'
 background_img: backdrop_phys
+fog_params:
+- 0.0015
+- 0.001
+- 400.0
 cell_swaps:
   open: phys_open
 wall_swaps:

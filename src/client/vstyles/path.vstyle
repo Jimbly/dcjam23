@@ -2,6 +2,10 @@
 fog_color: '#191c0e'
 background_color: '#191c0e'
 background_img: backdrop_path
+fog_params:
+- 0.002
+- 0.002
+- 300.0
 cell_swaps:
   open: path_open
   floorswitch: path_floorswitch

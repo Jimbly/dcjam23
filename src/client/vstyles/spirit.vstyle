@@ -1,6 +1,10 @@
 ---
 background_color: '#0000'
 fog_color: '#000'
+fog_params:
+- 0.003
+- 0.001
+- 400.0
 cell_swaps:
   open: spirit_open
 wall_swaps:

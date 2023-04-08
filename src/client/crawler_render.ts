@@ -288,6 +288,10 @@ export function crawlerSetFogColor(v: Vec3): void {
   v3copy(fog_color, v);
 }
 
+export function crawlerSetFogParams(v: Vec3): void {
+  v3copy(fog_params, v);
+}
+
 export function crawlerRenderStartup(): void {
   shadersAddGlobal('player_pos', player_pos);
   shadersAddGlobal('lod_bias', global_lod_bias);

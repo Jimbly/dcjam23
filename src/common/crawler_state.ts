@@ -86,6 +86,7 @@ export type VstyleDesc = {
   id: string;
   cell_swaps: Partial<Record<string, string>>;
   wall_swaps: Partial<Record<string, string>>;
+  fog_params: Vec3;
   fog_color: Vec3;
   background_color: Vec3;
   background_img?: string;
@@ -406,6 +407,7 @@ let identity_vstyle: VstyleDesc = {
   id: '',
   cell_swaps: {},
   wall_swaps: {},
+  fog_params: vec3(0.003, 0.001, 800.0),
   background_color: vec3(0,0,0),
   fog_color: vec3(0,0,0),
 };
@@ -1080,6 +1082,7 @@ function vstyleLoad(filename: string): VstyleDesc {
   vstyle_desc.cell_swaps = vstyle_desc.cell_swaps || {};
   vstyle_desc.wall_swaps = vstyle_desc.wall_swaps || {};
   vstyle_desc.background_color = vstyle_desc.background_color || identity_vstyle.background_color;
+  vstyle_desc.fog_params = vstyle_desc.fog_params || identity_vstyle.fog_params;
   vstyle_desc.fog_color = vstyle_desc.fog_color || identity_vstyle.fog_color;
   return vstyle_desc;
 }
