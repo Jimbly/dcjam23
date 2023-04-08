@@ -16,7 +16,7 @@ float Gaus(float pos, float scale) {
   return exp2(scale*pos*pos);
 }
 
-const float SHADE = 0.75;
+const float SHADE = 0.80;
 const float EASING = 1.25;
 
 #define DO_WARP
