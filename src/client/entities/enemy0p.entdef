@@ -4,7 +4,7 @@ traits:
 - id: enemy
 - id: patrol
 - id: stats_default
-  hp: 6
+  hp: 5
   attack: 3
   defense: 2
 - id: drawable

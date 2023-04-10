@@ -1733,6 +1733,11 @@ export function bridgeRepairCost(cell: CrawlerCell): number {
   return cost;
 }
 
+export function canRepairBridge2(): boolean {
+  let me = myEntOptional();
+  return me && me.data.journeys > 0 || false;
+}
+
 function drawHints(): void {
   let cell = controller.getCellInFront();
   if (!cell) {
@@ -1742,7 +1747,11 @@ function drawHints(): void {
   let cell_desc = getEffCell(crawlerScriptAPI(), cell);
   if (cell_desc.code === 'BRIDGE') {
     let cost = bridgeRepairCost(cell);
-    statusSet('bridge', `Repair cost: ${cost} Suppl${cost === 1 ? 'y' : 'ies'}`).fade();
+    if (canRepairBridge2() || cost !== 2) {
+      statusSet('bridge', `Repair cost: ${cost} Suppl${cost === 1 ? 'y' : 'ies'}`).fade();
+    } else {
+      statusSet('bridge', 'This way is blocked until after visiting Spiriton.').fade();
+    }
   }
 }
 

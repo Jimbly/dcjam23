@@ -26,6 +26,7 @@ import { GOODS } from './goods';
 import {
   autosave,
   bridgeRepairCost,
+  canRepairBridge2,
   myEnt,
   playerConsumeGood,
   playerHasGood,
@@ -272,6 +273,9 @@ crawlerScriptRegisterFunc('BRIDGE', function (
     return false;
   }
   let count = bridgeRepairCost(cell);
+  if (count === 2 && !canRepairBridge2()) {
+    return false;
+  }
   return playerHasGood({
     type: 'supply',
     count,
