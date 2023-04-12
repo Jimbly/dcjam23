@@ -153,11 +153,11 @@ export function cleanupCombat(dt: number): void {
 
 const LOOT_TABLE = [
   // Lbeta
-  [2, 0],
   [0, 20],
-  // Lgamma
   [2, 0],
+  // Lgamma
   [0, 30],
+  [2, 0],
   // Ldelta
   [1, 0],
   [0, 50],
@@ -188,9 +188,6 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       // mercs get chance for first hit
       combat_state.merc_timers[ii] = MERC_ATTACK_TIME * 0.5 + random() * (MERC_ATTACK_TIME * 0.5 + MERC_ATTACK_TIME_R);
       combat_state.merc_timers2[ii] = 0;
-    }
-    if (target.type_id === 'chest' && !mercs.length) {
-      target.data.stats.hp = 0;
     }
   }
 
@@ -240,6 +237,10 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
   }
 
   let alive_mercs = mercs.filter(isAlive);
+
+  if (target.type_id === 'chest' && !alive_mercs.length) {
+    target.data.stats.hp = 0;
+  }
 
   function drawDamageAt(pos: Vec2, dam: number, rise: boolean): void {
     if (rise) {
@@ -310,7 +311,7 @@ export function doCombat(target: Entity, dt: number, paused: boolean, flee_edge:
       let merg_target = alive_mercs[merc_target_idx];
 
       let dam = damage(stats, merg_target);
-      if (engine.defines.INVINCIBLE) {
+      if (engine.defines.INVINCIBLE || target.type_id === 'chest') {
         dam = 0;
       }
       merg_target.hp = max(0, merg_target.hp - dam);
