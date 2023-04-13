@@ -398,8 +398,10 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
     }
     dialogPush({
       name,
-      text: 'Hey there!  Don\'t leave just yet, make sure you have' +
-        ` ${reasons.join(' and ')}.`,
+      // eslint-disable-next-line prefer-template
+      text: 'Hey there!  Don\'t leave just yet, ' +
+       (playerHasKeyGood('mcguff1') ? 'sell your keepsake at the General Store to get started.' :
+       `make sure you have ${reasons.join(' and ')}.`),
       buttons: [{
         label: 'Okay',
         cb: function () {
