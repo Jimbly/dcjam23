@@ -5613,7 +5613,7 @@
       "id": "solid",
       "walls": [
         "open",
-        "open",
+        "solid",
         "open",
         "open"
       ]
@@ -6035,15 +6035,6 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
         "open",
         "open",
@@ -6064,16 +6055,31 @@
       "walls": [
         "open",
         "solid",
+        "open",
+        "solid"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "solid",
+        "open",
         "open",
         "door"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Hint: Save your game!"
+        }
       ]
     },
     {
-      "id": "open",
+      "id": "solid",
       "walls": [
+        "open",
         "solid",
-        "open",
-        "open",
+        "solid",
         "solid"
       ]
     },
@@ -6082,7 +6088,7 @@
       "walls": [
         "solid",
         "solid",
-        "solid",
+        "open",
         "solid"
       ]
     },
@@ -6482,15 +6488,6 @@
         "open",
         "open",
         "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "solid"
       ]
     },
@@ -6542,10 +6539,19 @@
     {
       "id": "open",
       "walls": [
-        "solid",
+        "open",
         "open",
         "open",
         "solid"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "open",
+        "path_chasm",
+        "path_chasm_double"
       ]
     },
     {
@@ -6929,15 +6935,6 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
         "open",
         "open",
@@ -6974,9 +6971,18 @@
     {
       "id": "open",
       "walls": [
-        "solid",
         "open",
         "open",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "path_chasm_double",
+        "path_chasm",
+        "path_chasm",
         "open"
       ]
     },
@@ -7370,15 +7376,6 @@
     {
       "id": "solid",
       "walls": [
-        "open",
-        "open",
-        "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
         "solid",
         "open",
         "open",
@@ -7399,6 +7396,15 @@
       "walls": [
         "open",
         "solid",
+        "open",
+        "open"
+      ]
+    },
+    {
+      "id": "open",
+      "walls": [
+        "open",
+        "open",
         "open",
         "open"
       ]
@@ -7428,6 +7434,12 @@
         "open",
         "open",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Hint: All patrols can be avoided with patience."
+        }
       ]
     },
     {
@@ -7814,15 +7826,6 @@
         "open",
         "open",
         "open",
-        "open"
-      ]
-    },
-    {
-      "id": "solid",
-      "walls": [
-        "open",
-        "open",
-        "open",
         "solid"
       ]
     },
@@ -7830,7 +7833,7 @@
       "id": "solid",
       "walls": [
         "path_chasm_double",
-        "path_chasm_double",
+        "open",
         "open",
         "solid"
       ]
@@ -7841,6 +7844,15 @@
         "open",
         "open",
         "path_chasm_double",
+        "path_chasm"
+      ]
+    },
+    {
+      "id": "path_chasm",
+      "walls": [
+        "open",
+        "open",
+        "open",
         "path_chasm"
       ]
     },
@@ -8273,7 +8285,7 @@
         "open",
         "open",
         "path_chasm_double",
-        "path_chasm_double"
+        "open"
       ]
     },
     {
@@ -14518,18 +14530,18 @@
       ]
     },
     {
-      "type": "chest",
+      "type": "enemy0p",
       "pos": [
-        2,
-        14,
-        0
+        4,
+        16,
+        1
       ]
     },
     {
-      "type": "enemy0p",
+      "type": "chest",
       "pos": [
-        5,
-        16,
+        46,
+        20,
         3
       ]
     },
@@ -14640,9 +14652,9 @@
     {
       "type": "chest",
       "pos": [
-        46,
-        20,
-        3
+        1,
+        14,
+        0
       ]
     }
   ],
@@ -14653,34 +14665,25 @@
     "title": "The Divide"
   },
   "paths": {
-    "7,17": [
-      0
-    ],
+    "7,17": [],
     "6,17": [
       0
     ],
     "5,17": [
       0
     ],
-    "5,16": [
-      1
-    ],
+    "5,16": [],
     "5,15": [
-      1,
       0
     ],
     "6,15": [
       0
     ],
     "7,15": [
-      0
-    ],
-    "8,15": [
       1
     ],
-    "8,16": [
-      1
-    ],
+    "8,15": [],
+    "8,16": [],
     "7,13": [
       0
     ],
@@ -14926,6 +14929,20 @@
     ],
     "42,17": [
       1
-    ]
+    ],
+    "4,15": [
+      0,
+      1
+    ],
+    "4,16": [
+      1
+    ],
+    "4,17": [
+      0
+    ],
+    "7,16": [
+      1
+    ],
+    "8,14": []
   }
 }
