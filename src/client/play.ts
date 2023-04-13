@@ -680,7 +680,7 @@ function inventoryMenu(): boolean {
   let z = Z.OVERLAY_UI;
 
   let local_buy_max = Boolean((buy_mode_max ? 1 : 0) ^ (shift() ? 1 : 0));
-  if (trader && ui.buttonText({
+  if (trader && data.journeys && ui.buttonText({
     x: floor(OVERLAY_X0 + (OVERLAY_W - ui.button_width) / 2),
     y: OVERLAY_Y0 + OVERLAY_H - ui.button_height - OVERLAY_PAD,
     z,
