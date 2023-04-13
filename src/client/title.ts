@@ -380,7 +380,7 @@ function stateHighScores(): void {
     style_me,
     style_header,
     color_line: [1,1,1,1],
-    color_me_background: [1,1,1,0.2],
+    color_me_background: [0.2,0.2,0.2,1],
   });
 
 }
