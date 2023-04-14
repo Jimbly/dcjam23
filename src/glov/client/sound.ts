@@ -534,25 +534,29 @@ export function soundPlayMusic(soundname: string, volume: number, transition: nu
   }
   transition = transition || FADE_DEFAULT;
   soundLoad(soundname, { streaming: true, loop: true }, (err) => {
-    assert(!err);
-    let sound = sounds[soundname];
-    assert(sound);
-    if (music[0].sound === sound) {
-      // Same sound, just adjust volume, if required
-      music[0].target_volume = volume;
-      if (!transition) {
-        if (!volume) {
-          sound.stop(music[0].id);
-          music[0].sound = null;
-        } else {
-          let sys_volume = music[0].sys_volume = volume * musicVolume() * volume_override;
-          sound.volume(sys_volume, music[0].id);
-          if (!sound.playing()) {
-            sound.play(undefined, sys_volume);
+    let sound = null;
+    if (err) {
+      // Likely case: MP3 not supported, no WAV fallback
+    } else {
+      sound = sounds[soundname];
+      assert(sound);
+      if (music[0].sound === sound) {
+        // Same sound, just adjust volume, if required
+        music[0].target_volume = volume;
+        if (!transition) {
+          if (!volume) {
+            sound.stop(music[0].id);
+            music[0].sound = null;
+          } else {
+            let sys_volume = music[0].sys_volume = volume * musicVolume() * volume_override;
+            sound.volume(sys_volume, music[0].id);
+            if (!sound.playing()) {
+              sound.play(undefined, sys_volume);
+            }
           }
         }
+        return;
       }
-      return;
     }
     // fade out previous music, if any
     if (music[0].current_volume) {
@@ -568,17 +572,21 @@ export function soundPlayMusic(soundname: string, volume: number, transition: nu
       music[0].sound.stop(music[0].id);
     }
     music[0].sound = sound;
-    music[0].target_volume = volume;
-    let start_vol = (transition & FADE_IN) ? 0 : volume;
-    music[0].current_volume = start_vol;
-    if (soundResumed()) {
-      let sys_volume = start_vol * musicVolume() * volume_override;
-      music[0].id = sound.play(undefined, sys_volume);
-      // sound.volume(sys_volume, music[0].id);
-      music[0].sys_volume = sys_volume;
-      music[0].need_play = false;
+    if (sound) {
+      music[0].target_volume = volume;
+      let start_vol = (transition & FADE_IN) ? 0 : volume;
+      music[0].current_volume = start_vol;
+      if (soundResumed()) {
+        let sys_volume = start_vol * musicVolume() * volume_override;
+        music[0].id = sound.play(undefined, sys_volume);
+        // sound.volume(sys_volume, music[0].id);
+        music[0].sys_volume = sys_volume;
+        music[0].need_play = false;
+      } else {
+        music[0].need_play = true;
+      }
     } else {
-      music[0].need_play = true;
+      music[0].target_volume = music[0].current_volume = 0;
     }
   });
 }
