@@ -14,10 +14,9 @@ export function crawlerEntityTraitsCommonStartup(
       is_player: true,
     },
   });
-  // ent_factory.registerTrait('enemy', {
-  //   properties: {
-  //     is_enemy: true,
-  //     respawns: true, // JAM: Need way to register this *after*!
-  //   },
-  // });
+  ent_factory.registerTrait('enemy', {
+    properties: {
+      is_enemy: true,
+    },
+  });
 }

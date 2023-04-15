@@ -385,6 +385,10 @@ export function crawlerGetSpawnDescs(): SpawnDescs {
 
 let ent_factory: TraitFactory<Entity, DataObject>;
 
+export function crawlerEntFactory<T extends Entity=Entity>(): TraitFactory<T, DataObject> {
+  return ent_factory as TraitFactory<T, DataObject>;
+}
+
 const example_ent_data = { pos: [0, 0, 0] };
 
 function onEntDefReload(type_id: string): void {
@@ -465,19 +469,18 @@ cmd_parse.register({
   }
 });
 
+export function crawlerEntityClientStartupEarly(): void {
+  ent_factory = traitFactoryCreate<Entity, DataObject>();
+  crawlerTraitsInit(ent_factory);
+}
+
 
 export function crawlerEntityTraitsClientStartup<TBaseClass extends EntityCrawlerClient>(param: {
-  ent_factory?: TraitFactory<Entity, DataObject>;
   name?: string;
   Ctor: Constructor<TBaseClass>;
   channel_type?: string;
 }): void {
-  if (param.ent_factory) {
-    ent_factory = param.ent_factory;
-  } else {
-    ent_factory = traitFactoryCreate<Entity, DataObject>();
-  }
-  crawlerTraitsInit(ent_factory);
+  assert(ent_factory);
 
   ent_factory.initialize({
     name: param.name || 'EntityCrawlerClient',

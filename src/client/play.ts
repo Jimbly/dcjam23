@@ -54,12 +54,7 @@ import * as urlhash from 'glov/client/urlhash';
 import walltime from 'glov/client/walltime';
 import { webFSAPI } from 'glov/client/webfs';
 import {
-  TraitFactory,
-  traitFactoryCreate,
-} from 'glov/common/trait_factory';
-import {
   ClientChannelWorker,
-  DataObject,
   EntityID,
 } from 'glov/common/types';
 import {
@@ -104,8 +99,8 @@ import {
 } from './crawler_comm';
 import { CrawlerController } from './crawler_controller';
 import {
-  EntityCrawlerClient,
   crawlerEntitiesAt,
+  crawlerEntityClientStartupEarly,
   crawlerEntityManager,
   crawlerEntityTraitsClientStartup,
   crawlerMyEnt,
@@ -2542,11 +2537,10 @@ export function playStartup(tiny_font_in: Font): void {
     play_state: play,
     on_init_level_offline: initLevel,
   });
-  let ent_factory = traitFactoryCreate<Entity, DataObject>();
-  jamTraitsStartup(ent_factory);
-  aiTraitsClientStartup(ent_factory);
+  crawlerEntityClientStartupEarly();
+  jamTraitsStartup();
+  aiTraitsClientStartup();
   crawlerEntityTraitsClientStartup({
-    ent_factory: ent_factory as unknown as TraitFactory<EntityCrawlerClient, DataObject>,
     name: 'EntityDemoClient',
     Ctor: EntityDemoClient,
   });

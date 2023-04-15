@@ -19,7 +19,7 @@ import {
   DirTypeOrCell,
   JSVec3,
 } from '../common/crawler_state';
-import { crawlerMyEntOptional } from './crawler_entity_client';
+import { crawlerEntFactory, crawlerMyEntOptional } from './crawler_entity_client';
 import { dialog, dialogMapIcon } from './dialog_data';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
@@ -36,9 +36,6 @@ import {
   startUpgrade,
 } from './play';
 import { statusPush } from './status';
-
-import type { TraitFactory } from 'glov/common/trait_factory';
-import type { DataObject } from 'glov/common/types';
 
 export function statusShort(text: string): void {
   statusPush(text).counter = 3000;
@@ -298,7 +295,8 @@ export type EntityTrader = EntityDemoClient & {
   trader_opts: TraderOpts;
 };
 
-export function jamTraitsStartup(ent_factory: TraitFactory<Entity, DataObject>): void {
+export function jamTraitsStartup(): void {
+  let ent_factory = crawlerEntFactory<Entity>();
   ent_factory.registerTrait<TraderOpts, TraderState>('trader', {
     properties: {
       is_trader: true,

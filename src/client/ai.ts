@@ -21,10 +21,10 @@ import {
   WEST,
   dirMod,
 } from '../common/crawler_state';
+import { crawlerEntFactory } from './crawler_entity_client';
 import { EntityDemoClient } from './entity_demo_client';
 
 import type { CrawlerScriptAPI } from '../common/crawler_script';
-import type { TraitFactory } from 'glov/common/trait_factory';
 import type { DataObject } from 'glov/common/types';
 
 const { floor, random } = Math;
@@ -98,7 +98,8 @@ function ignoreErrors(): void {
   // nothing
 }
 
-export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObject>): void {
+export function aiTraitsClientStartup(): void {
+  let ent_factory = crawlerEntFactory<Entity>();
   ent_factory.registerTrait<WanderOpts, WanderState>('wander', {
     methods: {
       aiWander: function (this: EntityWander, game_state: CrawlerState, script_api: CrawlerScriptAPI) {
@@ -130,10 +131,9 @@ export function aiTraitsClientStartup(ent_factory: TraitFactory<Entity, DataObje
     }
   });
 
-  ent_factory.registerTrait('enemy', {
+  ent_factory.extendTrait('enemy', {
     properties: {
-      is_enemy: true,
-      respawns: true, // JAM: Need way to register this *after*!
+      respawns: true,
     },
   });
 
