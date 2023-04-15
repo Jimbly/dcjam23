@@ -682,6 +682,7 @@ function buildModeSetVstyle(id: string): void {
 type DescPair = ['wall', WallDesc] | ['cell', CellDesc] | ['spawn', SpawnDesc];
 
 let font: Font;
+let button_height: number;
 const palette_style_base = fontStyle(null, {
   glow_xoffs: 2,
   glow_yoffs: 2,
@@ -784,7 +785,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
     let tab = tab_str as PaletteConfigTab;
     if (button({
       x: x + TAB_W * idx, y, z,
-      w: TAB_W,
+      w: TAB_W, h: button_height,
       disabled: palette_config_tab === tab,
       base_name: palette_config_tab === tab ? 'buttonselected' : 'button',
       text: tab,
@@ -795,7 +796,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
       localStorageSet('pal_tab', tab);
     }
   });
-  y += ui.button_height;
+  y += button_height;
 
   let scroll_y_start = y;
   palette_config_scroll.begin({
@@ -1341,7 +1342,6 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   if (!level) {
     return;
   }
-  const button_height = 11; // JAM ui.button_height;
   if (keyDownEdge(KEYS.Z) && keyDown(KEYS.CTRL)) {
     buildModeUndo();
   }
@@ -1649,8 +1649,12 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
   });
 }
 
-export function crawlerBuildModeStartup(build_font?: Font): void {
-  font = build_font || ui.font;
+export function crawlerBuildModeStartup(params: {
+  font?: Font;
+  button_height?: number;
+}): void {
+  font = params.font || ui.font;
+  button_height = params.button_height || ui.button_height;
   event_items = crawlerScriptListEvents().map((id: string) => ({
     name: id,
     tag: id,

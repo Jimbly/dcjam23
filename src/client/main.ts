@@ -212,7 +212,10 @@ export function main(): void {
   });
 
   jamEventsStartup();
-  crawlerBuildModeStartup(build_font);
+  crawlerBuildModeStartup({
+    font: build_font,
+    button_height: 11,
+  });
   playStartup(tiny_font);
   engine.setState(titleInit);
   titleStartup();
