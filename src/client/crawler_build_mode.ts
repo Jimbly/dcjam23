@@ -24,6 +24,7 @@ import {
 import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import {
   MenuItem,
+  SelectionBoxDisplay,
   dropDown,
 } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
@@ -1071,6 +1072,10 @@ function addProps(level_props?: string[], cell_props?: string[]): void {
   }
 }
 
+let dropdown_display: Partial<SelectionBoxDisplay> = {
+  xpad: 2,
+};
+
 function showCurrentCell(param: {
   level: CrawlerLevel;
   x: number;
@@ -1153,6 +1158,7 @@ function showCurrentCell(param: {
       for (let ii = 0; ii < events.length; ++ii) {
         let event = events[ii];
         let new_id = dropDown({
+          display: dropdown_display,
           x, y, z,
           width: w1,
           entry_height: font_height,
@@ -1220,6 +1226,7 @@ function showCurrentCell(param: {
         let prop_key = prop_keys[ii];
         let value = props[prop_key];
         let new_id = dropDown({
+          display: dropdown_display,
           x, y, z,
           width: w1,
           entry_height: font_height,
@@ -1442,6 +1449,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
     }
 
     let new_vstyle = dropDown({
+      display: dropdown_display,
       auto_reset: false,
       x, y, z,
       width: w,
@@ -1583,6 +1591,7 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
       let prop_key = prop_keys[ii];
       let value = props[prop_key];
       let new_id = dropDown({
+        display: dropdown_display,
         x, y, z,
         width: w1,
         entry_height: font_height,
