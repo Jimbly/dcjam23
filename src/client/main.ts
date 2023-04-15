@@ -215,6 +215,10 @@ export function main(): void {
   crawlerBuildModeStartup({
     font: build_font,
     button_height: 11,
+    level_props: [
+      'realm',
+      'is_town',
+    ],
   });
   playStartup(tiny_font);
   engine.setState(titleInit);

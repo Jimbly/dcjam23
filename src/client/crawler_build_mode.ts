@@ -1035,7 +1035,7 @@ function setLastProp(prop: { key: string; text: string }): void {
 
 let event_items: MenuItem[];
 let default_event_name: string;
-let prop_key_items: MenuItem[] = [
+let cell_prop_key_items: MenuItem[] = [
   'key_cell',
   'key_north',
   'key_south',
@@ -1044,11 +1044,32 @@ let prop_key_items: MenuItem[] = [
   'new',
 ].map((name) => ({ name, tag: name }));
 let level_prop_key_items: MenuItem[] = [
-  'realm', // JAM
-  'is_town', // JAM
   'title',
   'new',
 ].map((name) => ({ name, tag: name }));
+
+function addProps(level_props?: string[], cell_props?: string[]): void {
+  if (level_props) {
+    let last = level_prop_key_items.pop();
+    for (let ii = 0; ii < level_props.length; ++ii) {
+      level_prop_key_items.push({
+        name: level_props[ii],
+        tag: level_props[ii],
+      });
+    }
+    level_prop_key_items.push(last!);
+  }
+  if (cell_props) {
+    let last = cell_prop_key_items.pop();
+    for (let ii = 0; ii < cell_props.length; ++ii) {
+      cell_prop_key_items.push({
+        name: cell_props[ii],
+        tag: cell_props[ii],
+      });
+    }
+    cell_prop_key_items.push(last!);
+  }
+}
 
 function showCurrentCell(param: {
   level: CrawlerLevel;
@@ -1203,7 +1224,7 @@ function showCurrentCell(param: {
           width: w1,
           entry_height: font_height,
           font_height: font_height * 0.75,
-          items: prop_key_items,
+          items: cell_prop_key_items,
         }, prop_key, { suppress_return_during_dropdown: true });
         if (new_id) {
           crawlerBuildModeBegin();
@@ -1652,6 +1673,8 @@ export function crawlerBuildModeUI(frame: Box & { map_view: boolean }): void {
 export function crawlerBuildModeStartup(params: {
   font?: Font;
   button_height?: number;
+  level_props?: string[];
+  cell_props?: string[];
 }): void {
   font = params.font || ui.font;
   button_height = params.button_height || ui.button_height;
@@ -1659,6 +1682,7 @@ export function crawlerBuildModeStartup(params: {
     name: id,
     tag: id,
   }));
+  addProps(params.level_props, params.cell_props);
   default_event_name = crawlerScriptListEvents()[0];
 }
 
