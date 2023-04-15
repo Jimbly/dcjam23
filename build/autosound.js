@@ -51,7 +51,7 @@ function steroToMono(channels) {
 module.exports = function (options) {
   options = options || {};
   options.inputs = options.inputs || ['wav', 'mp3']; // priority order
-  options.outputs = options.outputs || ['wav', 'ogg', 'mp3'];
+  options.outputs = options.outputs || ['ogg', 'mp3'];
   options.wav_max_size = options.wav_max_size || 512*1025;
   options.ogg_quality = options.ogg_quality || 0; // -1 ... 1
   options.mp3_kbps = options.mp3_kbps || 128;
@@ -102,8 +102,10 @@ module.exports = function (options) {
     let ext_exists = {};
     job.depReset();
 
-    // Always pass through source audio files
-    job.out(file);
+    if (options.outputs.includes(my_ext)) {
+      // Always pass through source audio files, if they're an output extension
+      job.out(file);
+    }
 
     asyncEach(all_exts, function (ext, next) {
       if (ext === my_ext) {

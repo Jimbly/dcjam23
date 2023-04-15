@@ -9,7 +9,7 @@ export const FADE = FADE_OUT + FADE_IN;
 import assert from 'assert';
 import { ErrorCallback } from 'glov/common/types';
 import { callEach, defaults, ridx } from 'glov/common/util';
-import { is_firefox } from './browser';
+import { is_firefox, is_itch_app } from './browser';
 import { cmd_parse } from './cmds';
 import { fbInstantOnPause } from './fbinstant';
 import { filewatchOn } from './filewatch';
@@ -93,8 +93,9 @@ let num_loading = 0;
 
 const default_params = {
   // Note: as of Firefox v71 (2019), all major browsers support MP3
-  ext_list: ['mp3', 'ogg', 'wav'], // (recommended) try loading .mp3 versions first, then fallback to .wav
+  // ext_list: ['mp3', 'wav'], // (recommended) try loading .mp3 versions first, then fallback to .wav
   //  also covers all browsers: ['webm', 'mp3']
+  ext_list: ['ogg', 'mp3'], // (recommended) autosound build task => ogg and mp3 from wav, load ogg first (smaller)
   fade_rate: DEFAULT_FADE_RATE,
 };
 let sound_params: {
@@ -188,10 +189,11 @@ export function soundReplaceFromDataURL(key: string, dataurl: string): void {
 
 export function soundLoad(soundid: SoundID | SoundID[], opts?: SoundLoadOpts, cb?: ErrorCallback<never, string>): void {
   opts = opts || {};
-  if (opts.streaming && is_firefox) {
+  if (opts.streaming && (is_firefox || is_itch_app)) {
     // TODO: Figure out workaround and fix!
     //   On slow connections, sounds set to streaming sometimes never load on Firefox,
     //   possibly related to preload options or something ('preload=meta' not guaranteed to fire 'canplay')
+    // Additionally, HTML5 audio simply fails from within the Itch.io app
     opts.streaming = false;
   }
   const { streaming, loop } = opts;
