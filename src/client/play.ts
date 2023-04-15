@@ -28,7 +28,13 @@ import { ScrollArea, scrollAreaCreate } from 'glov/client/scroll_area';
 import { MenuItem } from 'glov/client/selection_box';
 import * as settings from 'glov/client/settings';
 import { SimpleMenu, simpleMenuCreate } from 'glov/client/simple_menu';
-import { FADE, GlovSoundSetUp, soundPlay, soundPlayMusic, soundResumed, soundTick } from 'glov/client/sound';
+import {
+  FADE,
+  GlovSoundSetUp,
+  soundPlay,
+  soundPlayMusic,
+  soundResumed,
+} from 'glov/client/sound';
 import {
   spotSuppressPad,
 } from 'glov/client/spot';
@@ -2676,32 +2682,4 @@ export function playStartup(tiny_font_in: Font): void {
 
   score_system.init(encodeScore, parseScore, level_list, 'DCJ23');
   score_system.updateHighScores();
-
-  // JAM: something more general here for better Itch.io support?
-  let music_tick_timer: ReturnType<typeof setTimeout> | null = null;
-  let want_mute = false;
-  let last_time: number;
-  function musicForceTick(): void {
-    if (!want_mute) {
-      music_tick_timer = null;
-      return;
-    }
-    tickMusic(false, false);
-    let now = Date.now();
-    soundTick(now - last_time);
-    last_time = now;
-    music_tick_timer = setTimeout(musicForceTick, 100);
-  }
-  engine.onEnterBackground(() => {
-    last_time = Date.now();
-    want_mute = true;
-    forceNoMusic(true);
-    if (!music_tick_timer) {
-      music_tick_timer = setTimeout(musicForceTick, 100);
-    }
-  });
-  engine.onExitBackground(() => {
-    want_mute = false;
-    forceNoMusic(false);
-  });
 }
