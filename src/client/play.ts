@@ -2147,7 +2147,7 @@ function playCrawl(): void {
     disable_player_impulse: Boolean(frame_combat || locked_dialog),
     show_buttons: !frame_combat && !locked_dialog,
     do_debug_move: engine.defines.LEVEL_GEN || build_mode,
-    show_debug: Boolean(settings.show_fps),
+    show_debug: settings.show_fps ? { x: VIEWPORT_X0, y: VIEWPORT_Y0 + (build_mode ? 3 : 0) } : null,
   });
 
   // Check for intentional events

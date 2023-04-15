@@ -164,7 +164,7 @@ export type PlayerMotionParam = {
   button_y0: number;
   no_visible_ui: boolean;
   show_buttons: boolean;
-  show_debug: boolean;
+  show_debug: { x: number; y: number } | null;
   disable_move: boolean;
   disable_player_impulse: boolean;
   button_w: number;
@@ -365,8 +365,7 @@ export class CrawlerController {
 
     if (param.show_debug && !this.getTransitioningFloor()) {
       const { game_state, entity_manager } = this;
-      let x = 3; // JAM
-      let y = 8; // JAM
+      let { x, y } = param.show_debug;
       let z = Z.DEBUG;
       let my_ent = entity_manager.hasMyEnt() ? entity_manager.getMyEnt() : null;
       ui.print(null, x, y, z, `Pos: ${game_state.pos[0]},${game_state.pos[1]}` +
