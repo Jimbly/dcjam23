@@ -1,4 +1,8 @@
-import { Font, FontStyle, fontStyleColored } from 'glov/client/font';
+import {
+  Font,
+  FontStyle,
+  fontStyle,
+} from 'glov/client/font';
 import {
   KEYS,
   PAD,
@@ -17,8 +21,7 @@ import {
 import { JSVec2, JSVec3 } from '../common/crawler_state';
 import { buildModeActive } from './crawler_build_mode';
 import { crawlerMyEnt } from './crawler_entity_client';
-import { crawlerGameState, crawlerScriptAPI } from './crawler_play';
-import * as dawnbringer from './dawnbringer32';
+import { crawlerScriptAPI } from './crawler_play';
 import { dialog } from './dialog_data';
 
 const { ceil, round } = Math;
@@ -50,16 +53,13 @@ let active_state: DialogState;
 let temp_color = vec4(1, 1, 1, 1);
 let font: Font;
 
-let style_text_phys = fontStyleColored(null, dawnbringer.font_colors[21]);
-let style_text_spirit = fontStyleColored(null, dawnbringer.font_colors[0]);
-export function dialogTextStyle(): FontStyle {
-  let level = crawlerGameState().level;
-  if (level && level.props && level.props.realm === 'spirit') {
-    return style_text_spirit;
-  } else {
-    return style_text_phys;
-  }
+let style_default = fontStyle(null, {});
+function dialogDefaultTextStyle(): FontStyle {
+  return style_default;
 }
+type DialogTextStyleCB = (dialog: DialogParam) => FontStyle;
+let text_style_cb: DialogTextStyleCB = dialogDefaultTextStyle;
+
 
 function ff(): boolean {
   return keyDown(KEYS.SPACE) || keyDown(KEYS.ENTER) ||
@@ -111,7 +111,7 @@ export function dialogRun(dt: number, viewport: UIBox & { pad_top: number; pad_b
   let num_buttons = buttons && buttons.length || 0;
   let buttons_h = num_buttons * ui.button_height + (num_buttons ? BUTTON_HEAD + (num_buttons - 1) * BUTTON_PAD : 0);
   let size = ui.font_height;
-  let style = dialogTextStyle();
+  let style = text_style_cb(active_dialog);
   let dims = font.dims(style, w - HPAD * 2, 0, size, text);
   y += h - dims.h - pad_bottom - buttons_h;
   let text_len = ceil(counter / 18);
@@ -208,9 +208,13 @@ export function dialogPush(param: DialogParam): void {
 }
 
 export function dialogReset(): void {
-  //
+  active_dialog = null;
 }
 
-export function dialogStartup(font_in: Font): void {
-  font = font_in;
+export function dialogStartup(param: {
+  font: Font;
+  text_style_cb?: DialogTextStyleCB;
+}): void {
+  ({ font } = param);
+  text_style_cb = param.text_style_cb || dialogDefaultTextStyle;
 }

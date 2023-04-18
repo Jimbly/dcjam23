@@ -2127,7 +2127,6 @@ function playCrawl(): void {
 
   if (buildModeActive()) {
     inventory_up = recruit_up = upgrade_up = false;
-    dialogReset();
   }
 
   if (frame_combat && engagedEnemy() !== crawlerEntInFront()) {
@@ -2526,6 +2525,17 @@ settings.register({
   },
 });
 
+let style_text_phys = fontStyleColored(null, dawnbringer.font_colors[21]);
+let style_text_spirit = fontStyleColored(null, dawnbringer.font_colors[0]);
+export function dialogTextStyle(): FontStyle {
+  let level = crawlerGameState().level;
+  if (level && level.props && level.props.realm === 'spirit') {
+    return style_text_spirit;
+  } else {
+    return style_text_phys;
+  }
+}
+
 export function playStartup(tiny_font_in: Font): void {
   ({ font } = ui);
   tiny_font = tiny_font_in;
@@ -2665,7 +2675,10 @@ export function playStartup(tiny_font_in: Font): void {
 
   renderAppStartup();
   combatStartup(tiny_font);
-  dialogStartup(font);
+  dialogStartup({
+    font,
+    text_style_cb: dialogTextStyle,
+  });
   crawlerLoadData(webFSAPI());
   crawlerMapViewStartup(false, dawnbringer.colors[8]);
 

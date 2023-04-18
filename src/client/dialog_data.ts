@@ -9,12 +9,13 @@ import {
   crawlerController,
   crawlerScriptAPI,
 } from './crawler_play';
-import { dialogPush, dialogTextStyle } from './dialog_system';
+import { dialogPush } from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
 import { SUPPLY_GOOD } from './jam_events';
 import {
   autosave,
+  dialogTextStyle,
   myEnt,
   playerConsumeGood,
   playerHasGood,
