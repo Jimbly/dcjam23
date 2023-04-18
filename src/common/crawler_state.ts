@@ -54,6 +54,7 @@ export type CellDesc = {
   open_vis: boolean;
   advertised_wall?: string; // This indicates a special door coming into it, but also that it's a special "zone"
   advertised_wall_desc?: WallDesc;
+  sound_id?: string | null; // for footsteps / play upon player enter; default 'footstep'
   default_wall?: string;
   default_wall_desc: WallDesc;
   default_spawn?: string;

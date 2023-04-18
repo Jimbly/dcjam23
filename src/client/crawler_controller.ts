@@ -568,14 +568,10 @@ export class CrawlerController {
           }
         }
       } else {
-        script_api.is_visited = true; // Always visited for AI
-        if (this.on_player_move) {
-          this.on_player_move(cur.pos, new_pos, next.action_dir);
-        }
+        this.onPlayerMove(cur.pos, new_pos, next.action_dir);
         this.pushInterpState(new_pos, next.rot, action_type, next);
         let action_id = do_debug_move ? 'move_debug' : 'move';
         let new_pos_triplet: JSVec3 = [new_pos[0], new_pos[1], next.rot];
-        // JAM: refactor sound playback here
         this.playerMoveStart(action_id, new_pos_triplet);
         this.applyPlayerMove(action_id, new_pos_triplet, this.resyncPosOnError.bind(this));
       }
@@ -586,6 +582,30 @@ export class CrawlerController {
       this.pushInterpState(cur.pos, next.rot, action_type, next);
       let action_id = do_debug_move ? 'move_debug' : 'move';
       this.applyPlayerMove(action_id, [cur.pos[0], cur.pos[1], next.rot]);
+    }
+  }
+
+  onPlayerMove(old_pos: Vec2, new_pos: Vec2, move_dir: DirType): void {
+    let { game_state } = this;
+    let level = game_state.level!;
+    let cell1 = level.getCell(old_pos[0], old_pos[1]);
+    let wall1 = cell1 && cell1.walls[move_dir];
+    let cell2 = level.getCell(new_pos[0], new_pos[1]);
+    let wall2 = cell2 && cell2.walls[dirMod(move_dir + 2)];
+    if (wall1 && wall1.swapped.sound_id) {
+      playUISound(wall1.swapped.sound_id);
+    } else if (wall2 && wall2.swapped.sound_id) {
+      playUISound(wall2.swapped.sound_id);
+    }
+
+    if (cell2 && cell2.desc.swapped.sound_id === null) {
+      // no sound
+    } else {
+      playUISound(cell2 && cell2.desc.swapped.sound_id || 'footstep');
+    }
+
+    if (this.on_player_move) {
+      this.on_player_move(old_pos, new_pos, move_dir);
     }
   }
 
@@ -872,7 +892,6 @@ export class CrawlerController {
   playerMoveStart(action_id: string, new_pos: JSVec3): void {
     const { game_state, script_api } = this;
     let new_cell = game_state.level!.getCell(new_pos[0], new_pos[1]);
-    playUISound('footstep');
     if (new_cell && new_cell.events) {
       assert(new_cell.events.length);
       if (action_id === 'move_debug') {
