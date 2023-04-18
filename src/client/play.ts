@@ -1495,13 +1495,6 @@ function engagedEnemy(): Entity | null {
   return null;
 }
 
-export function onEnterCell(pos: Vec2): void {
-  // if (engagedEnemy()) {
-  //   controller.cancelAllMoves();
-  // }
-}
-
-
 function moveBlocked(): boolean {
   return false;
 }
