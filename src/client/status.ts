@@ -2,12 +2,10 @@ import assert from 'assert';
 import { getFrameDt, getFrameIndex } from 'glov/client/engine';
 import { Font, FontStyle, fontStyleColored } from 'glov/client/font';
 import * as ui from 'glov/client/ui';
+import { UIBox } from 'glov/client/ui';
 import { vec4 } from 'glov/common/vmath';
 
-const { floor } = Math;
-
-const STATUS_PAD_TOP = 2;
-const STATUS_PAD_BOTTOM = 4;
+const { round } = Math;
 
 class StatusMessage {
   counter = 0;
@@ -61,7 +59,9 @@ export function statusSet(key: string, text: string, style?: FontStyle): StatusM
 let last_frame: number;
 let temp_color = vec4(1, 1, 1, 1);
 
-export function statusTick(x: number, y: number, z: number, w: number, h: number): void {
+export function statusTick(viewport: UIBox & { pad_top: number; pad_bottom: number }): void {
+  let { x, y, w, h, z, pad_top, pad_bottom } = viewport;
+  z = z || Z.STATUS;
   let dt = getFrameDt();
   let frame = getFrameIndex();
   if (frame !== last_frame + 1) {
@@ -84,7 +84,7 @@ export function statusTick(x: number, y: number, z: number, w: number, h: number
     }
     let size = ui.font_height;
     let dims = font.dims(msg.style, w, 0, size, msg.text);
-    y -= STATUS_PAD_TOP + STATUS_PAD_BOTTOM + dims.h;
+    y -= pad_bottom + dims.h;
     font.draw({
       style: msg.style,
       size,
@@ -97,11 +97,13 @@ export function statusTick(x: number, y: number, z: number, w: number, h: number
     text_w += 6;
     temp_color[3] = alpha;
     ui.panel({
-      x: x + floor((w - text_w)/2) - 1,
-      y: y - STATUS_PAD_TOP, z: z - 1,
+      x: x + round((w - text_w)/2) - 1,
+      y: y - pad_top, z: z - 1,
       w: text_w + 2,
-      h: dims.h + STATUS_PAD_TOP + STATUS_PAD_BOTTOM,
+      h: dims.h + pad_top + pad_bottom,
       color: temp_color,
     });
+    y -= pad_top;
   }
+  viewport.h = y - viewport.y;
 }

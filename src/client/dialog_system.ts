@@ -9,6 +9,7 @@ import {
   padButtonDown,
 } from 'glov/client/input';
 import * as ui from 'glov/client/ui';
+import { UIBox } from 'glov/client/ui';
 import {
   v2same,
   vec4,
@@ -20,11 +21,9 @@ import { crawlerGameState, crawlerScriptAPI } from './crawler_play';
 import * as dawnbringer from './dawnbringer32';
 import { dialog } from './dialog_data';
 
-const { ceil, floor } = Math;
+const { ceil, round } = Math;
 
 const FADE_TIME = 1000;
-const STATUS_PAD_TOP = 2;
-const STATUS_PAD_BOTTOM = 4;
 
 export type DialogButton = {
   label: string;
@@ -78,17 +77,14 @@ export function dialogMoveLocked(): boolean {
 const HPAD = 4;
 const BUTTON_HEAD = 4;
 const BUTTON_PAD = 1;
-export function dialogRun(dt: number): number {
+export function dialogRun(dt: number, viewport: UIBox & { pad_top: number; pad_bottom: number }): boolean {
   if (buildModeActive()) {
     active_dialog = null;
   }
-  let x = 11;
-  let y = 141;
-  let w = 240;
-  let h = 61;
-  let z = Z.DIALOG;
+  let { x, y, w, h, z, pad_top, pad_bottom } = viewport;
+  z = z || Z.STATUS;
   if (!active_dialog) {
-    return 0;
+    return false;
   }
   let { transient, text, name, buttons } = active_dialog;
   if (name) {
@@ -106,7 +102,7 @@ export function dialogRun(dt: number): number {
   if (active_state.fade_time) {
     if (dt >= active_state.fade_time) {
       active_dialog = null;
-      return 0;
+      return false;
     }
     active_state.fade_time -= dt;
     alpha = active_state.fade_time / FADE_TIME;
@@ -117,7 +113,7 @@ export function dialogRun(dt: number): number {
   let size = ui.font_height;
   let style = dialogTextStyle();
   let dims = font.dims(style, w - HPAD * 2, 0, size, text);
-  y += h - dims.h - STATUS_PAD_BOTTOM - buttons_h;
+  y += h - dims.h - pad_bottom - buttons_h;
   let text_len = ceil(counter / 18);
   let text_full = text_len >= (text.length + 20);
   if (!transient) {
@@ -182,18 +178,18 @@ export function dialogRun(dt: number): number {
   if (transient && dims.h === ui.font_height) {
     let text_w = dims.w;
     ui.panel({
-      x: x + floor((w - text_w)/2) - HPAD,
-      y: y - STATUS_PAD_TOP, z: z - 1,
+      x: x + round((w - text_w)/2) - HPAD,
+      y: y - pad_top, z: z - 1,
       w: text_w + HPAD * 2,
-      h: dims.h + STATUS_PAD_TOP + STATUS_PAD_BOTTOM,
+      h: dims.h + pad_top + pad_bottom,
       color: temp_color,
     });
   } else {
     ui.panel({
       x,
-      y: y - STATUS_PAD_TOP, z: z - 1,
+      y: y - pad_top, z: z - 1,
       w,
-      h: dims.h + STATUS_PAD_TOP + STATUS_PAD_BOTTOM + buttons_h,
+      h: dims.h + pad_top + pad_bottom + buttons_h,
       color: temp_color,
     });
   }
@@ -202,7 +198,8 @@ export function dialogRun(dt: number): number {
     eatAllInput();
   }
 
-  return y - STATUS_PAD_TOP;
+  viewport.h = (y - pad_top) - viewport.y;
+  return true;
 }
 
 export function dialogPush(param: DialogParam): void {

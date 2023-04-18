@@ -2008,10 +2008,27 @@ function playCrawl(): void {
   } as Record<ValidKeys, number>;
 
   let dt = getScaledFrameDt();
-  let dialog_y = dialogRun(dt);
+
+  const frame_map_view = mapViewActive();
+  const is_fullscreen_ui = inventoryMenu() || recruit_up || upgrade_up;
+  let dialog_viewport = {
+    x: VIEWPORT_X0 + 8,
+    w: render_width - 16,
+    y: VIEWPORT_Y0,
+    h: render_height + 4,
+    z: Z.STATUS,
+    pad_top: 2,
+    pad_bottom: 4,
+  };
+  if (is_fullscreen_ui || frame_map_view) {
+    dialog_viewport.x = 0;
+    dialog_viewport.w = game_width;
+    dialog_viewport.y = 0;
+    dialog_viewport.h = game_height - 3;
+  }
+  dialogRun(dt, dialog_viewport);
 
   const build_mode = buildModeActive();
-  let frame_map_view = mapViewActive();
   let frame_combat = engagedEnemy();
   let locked_dialog = dialogMoveLocked();
   let overlay_menu_up = pause_menu_up || inventory_up || recruit_up || upgrade_up;
@@ -2196,7 +2213,6 @@ function playCrawl(): void {
     playUISound('button_click');
     mapViewToggle();
   }
-  let is_fullscreen_ui = inventoryMenu() || recruit_up || upgrade_up;
   recruitMenu();
   upgradeMenu();
   let game_state = crawlerGameState();
@@ -2231,15 +2247,16 @@ function playCrawl(): void {
     drawHints();
   }
 
-  if (is_fullscreen_ui || frame_map_view) {
-    statusTick(0, 0, Z.STATUS, game_width, game_height - 1);
-  } else {
-    if (dialog_y) {
-      statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 2, Z.STATUS, render_width, dialog_y - VIEWPORT_Y0);
-    } else {
-      statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 6, Z.STATUS, render_width, render_height);
-    }
-  }
+  statusTick(dialog_viewport);
+  // if (is_fullscreen_ui || frame_map_view) {
+  //   statusTick(0, 0, Z.STATUS, game_width, game_height - 1);
+  // } else {
+  //   if (dialog_y) {
+  //     statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 2, Z.STATUS, render_width, dialog_y - VIEWPORT_Y0);
+  //   } else {
+  //     statusTick(VIEWPORT_X0, VIEWPORT_Y0 + 6, Z.STATUS, render_width, render_height);
+  //   }
+  // }
 
   profilerStopFunc();
 }
