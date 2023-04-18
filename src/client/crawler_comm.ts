@@ -202,6 +202,9 @@ function crawlerCommHandshake(): void {
 function startLocalCrawl(): void {
   current_channel = 'local';
   state = STATE_JOINED;
+  if (crawlerEntityManagerOnline()) {
+    crawlerEntityManagerOnline().reinit({}); // Also need to remove anything hanging around in case we switch to hybrid
+  }
   crawlerPlayInitOffline();
 }
 

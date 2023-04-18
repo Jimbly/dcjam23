@@ -66,7 +66,6 @@ import {
   crawlerEntitiesOnEntStart,
   crawlerEntityManager,
   crawlerEntityManagerOffline,
-  crawlerEntityManagerOnline,
   crawlerMyActionSend,
   crawlerMyEnt,
   entityPosManager,
@@ -632,9 +631,6 @@ function crawlerPlayInitOfflineEarly(): void {
     level_provider: getLevelForFloorFromWebFS,
   });
 
-  if (crawlerEntityManagerOnline()) {
-    crawlerEntityManagerOnline().reinit({}); // Also need to remove anything hanging around in case we switch to hybrid
-  }
   crawlerEntityManager().reinit({
     on_broadcast: on_broadcast,
   });
