@@ -20,7 +20,8 @@ import {
   JSVec3,
 } from '../common/crawler_state';
 import { crawlerEntFactory, crawlerMyEntOptional } from './crawler_entity_client';
-import { dialog, dialogMapIcon } from './dialog_data';
+import { dialogMapIcon } from './dialog_data';
+import { dialog } from './dialog_system';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
 import {

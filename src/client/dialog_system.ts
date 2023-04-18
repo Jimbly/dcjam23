@@ -8,12 +8,15 @@ import {
   PAD,
   eatAllInput,
   inputPadMode,
+  inputTouchMode,
   keyDown,
   mouseDownAnywhere,
   padButtonDown,
 } from 'glov/client/input';
 import * as ui from 'glov/client/ui';
 import { UIBox } from 'glov/client/ui';
+import { dataError } from 'glov/common/data_error';
+import { merge } from 'glov/common/util';
 import {
   v2same,
   vec4,
@@ -22,7 +25,6 @@ import { JSVec2, JSVec3 } from '../common/crawler_state';
 import { buildModeActive } from './crawler_build_mode';
 import { crawlerMyEnt } from './crawler_entity_client';
 import { crawlerScriptAPI } from './crawler_play';
-import { dialog } from './dialog_data';
 
 const { ceil, round } = Math;
 
@@ -163,6 +165,7 @@ export function dialogRun(dt: number, viewport: UIBox & { pad_top: number; pad_b
         active_dialog = null;
         if (button.cb) {
           if (typeof button.cb === 'string') {
+            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             dialog(button.cb);
           } else {
             button.cb();
@@ -209,6 +212,39 @@ export function dialogPush(param: DialogParam): void {
 
 export function dialogReset(): void {
   active_dialog = null;
+}
+
+export type DialogFunc = (param: string) => void;
+let DIALOGS: Partial<Record<string, DialogFunc>> = {
+  sign: function (param: string) {
+    dialogPush({
+      name: '',
+      text: param,
+      transient: true,
+    });
+  },
+  kbhint: function (param: string) {
+    if (!inputTouchMode()) {
+      dialogPush({
+        name: '',
+        text: param,
+        transient: true,
+      });
+    }
+  },
+};
+
+export function dialogRegister(data: Record<string, DialogFunc>): void {
+  merge(DIALOGS, data);
+}
+
+export function dialog(id: string, param?: string): void {
+  let dlg = DIALOGS[id];
+  if (!dlg) {
+    dataError(`Unknown dialog "${id}"`);
+    return;
+  }
+  dlg(param || '');
 }
 
 export function dialogStartup(param: {

@@ -1,15 +1,13 @@
 /* eslint @typescript-eslint/no-use-before-define:off */
 import { postTick } from 'glov/client/engine';
-import { inputTouchMode } from 'glov/client/input';
 import * as urlhash from 'glov/client/urlhash';
-import { dataError } from 'glov/common/data_error';
 import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
 import { NORTH } from '../common/crawler_state';
 import {
   crawlerController,
   crawlerScriptAPI,
 } from './crawler_play';
-import { dialogPush } from './dialog_system';
+import { dialogPush, dialogRegister } from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
 import { SUPPLY_GOOD } from './jam_events';
@@ -24,8 +22,6 @@ import {
 } from './play';
 import { statusPush, statusSet } from './status';
 import { goToHallOfFame } from './title';
-
-type DialogFunc = (() => void) | ((param: string) => void) | ((param: string) => CrawlerScriptEventMapIcon);
 
 function leaveTownBlocked(): string[] | null {
   let { data } = myEnt();
@@ -53,26 +49,28 @@ function keySet(k: string): void {
   crawlerScriptAPI().keySet(k);
 }
 
-
-const DIALOGS: Partial<Record<string, DialogFunc>> = {
-  sign: function (param: string) {
-    dialogPush({
-      name: '',
-      text: param,
-      transient: true,
-    });
+const DIALOG_ICONS: Partial<Record<string, (param: string) => CrawlerScriptEventMapIcon>> = {
+  quest: function (quest_key: string): CrawlerScriptEventMapIcon {
+    let key = `quest${quest_key}`;
+    if (keyGet(key)) {
+      return CrawlerScriptEventMapIcon.NONE;
+    } else {
+      return CrawlerScriptEventMapIcon.EXCLAIMATION;
+    }
   },
+  leavetown: function (): CrawlerScriptEventMapIcon {
+    if (leaveTownBlocked()) {
+      return CrawlerScriptEventMapIcon.X;
+    } else {
+      return CrawlerScriptEventMapIcon.NONE;
+    }
+  },
+};
+
+
+dialogRegister({
   greet: function (param: string) {
     statusSet('greet', param, dialogTextStyle()).counter = 3000;
-  },
-  kbhint: function (param: string) {
-    if (!inputTouchMode()) {
-      dialogPush({
-        name: '',
-        text: param,
-        transient: true,
-      });
-    }
   },
   welcome: function () {
     if (keyGet('mcguff1')) {
@@ -221,14 +219,6 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
   },
 
 
-  quest_icon: function (quest_key: string): CrawlerScriptEventMapIcon {
-    let key = `quest${quest_key}`;
-    if (keyGet(key)) {
-      return CrawlerScriptEventMapIcon.NONE;
-    } else {
-      return CrawlerScriptEventMapIcon.EXCLAIMATION;
-    }
-  },
   quest: function (quest_key: string) {
     let key = `quest${quest_key}`;
     type Quest = {
@@ -361,13 +351,6 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
       });
     }
   },
-  leavetown_icon: function (): CrawlerScriptEventMapIcon {
-    if (leaveTownBlocked()) {
-      return CrawlerScriptEventMapIcon.X;
-    } else {
-      return CrawlerScriptEventMapIcon.NONE;
-    }
-  },
   leavetown: function () {
     const NAMES: Record<number, string> = {
       1: 'Mags',
@@ -428,19 +411,10 @@ const DIALOGS: Partial<Record<string, DialogFunc>> = {
       }],
     });
   },
-};
-
-export function dialog(id: string, param?: unknown): void {
-  let dlg = DIALOGS[id];
-  if (!dlg) {
-    dataError(`Unknown dialog "${id}"`);
-    return;
-  }
-  (dlg as ((param: unknown) => void))(param);
-}
+});
 
 export function dialogMapIcon(id: string, param?: unknown): CrawlerScriptEventMapIcon {
-  let dlg = DIALOGS[`${id}_icon`];
+  let dlg = DIALOG_ICONS[id];
   if (!dlg) {
     return CrawlerScriptEventMapIcon.NONE;
   }
