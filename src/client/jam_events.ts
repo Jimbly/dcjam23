@@ -20,7 +20,6 @@ import {
   JSVec3,
 } from '../common/crawler_state';
 import { crawlerEntFactory, crawlerMyEntOptional } from './crawler_entity_client';
-import { dialogMapIcon } from './dialog_data';
 import { dialog } from './dialog_system';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
@@ -201,45 +200,6 @@ crawlerScriptRegisterEvent({
 });
 
 crawlerScriptRegisterEvent({
-  key: 'sign',
-  when: CrawlerScriptWhen.PRE,
-  map_icon: CrawlerScriptEventMapIcon.NONE,
-  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    dialog('sign', param || '...');
-  },
-});
-
-crawlerScriptRegisterEvent({
-  key: 'dialog', // id [string parameter]
-  when: CrawlerScriptWhen.PRE,
-  map_icon: (param: string) => {
-    let idx = param.indexOf(' ');
-    let id = param;
-    if (idx !== -1) {
-      id = param.slice(0, idx);
-      param = param.slice(idx + 1);
-    } else {
-      param = '';
-    }
-    return dialogMapIcon(id, param);
-  },
-  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
-    if (!param) {
-      return api.status('dialog', 'Missing dialog ID');
-    }
-    let idx = param.indexOf(' ');
-    let id = param;
-    if (idx !== -1) {
-      id = param.slice(0, idx);
-      param = param.slice(idx + 1);
-    } else {
-      param = '';
-    }
-    dialog(id, param);
-  },
-});
-
-crawlerScriptRegisterEvent({
   key: 'bridge',
   when: CrawlerScriptWhen.PRE,
   map_icon: CrawlerScriptEventMapIcon.NONE,
@@ -281,10 +241,6 @@ crawlerScriptRegisterFunc('BRIDGE', function (
   });
 });
 
-
-export function jamEventsStartup(): void {
-  // ?
-}
 
 export type TraderOpts = {
 };

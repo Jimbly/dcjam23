@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { isInteger } from 'glov/common/util';
+import { isInteger, merge } from 'glov/common/util';
 import {
   CrawlerScriptAPI,
   CrawlerScriptEventMapIcon,
@@ -14,6 +14,19 @@ import {
   DirTypeOrCell,
   dirMod,
 } from './crawler_state';
+
+export type DialogIconFunc = (param: string, script_api: CrawlerScriptAPI) => CrawlerScriptEventMapIcon;
+let DIALOG_ICONS: Partial<Record<string, DialogIconFunc>> = {};
+export function dialogIconsRegister(data: Record<string, DialogIconFunc>): void {
+  merge(DIALOG_ICONS, data);
+}
+export function dialogMapIcon(id: string, param: string, script_api: CrawlerScriptAPI): CrawlerScriptEventMapIcon {
+  let dlg = DIALOG_ICONS[id];
+  if (!dlg) {
+    return CrawlerScriptEventMapIcon.NONE;
+  }
+  return dlg(param || '', script_api);
+}
 
 
 crawlerScriptRegisterFunc('KEY', function (
@@ -211,5 +224,44 @@ crawlerScriptRegisterEvent({
       return;
     }
     api.forceMove(rot);
+  },
+});
+
+crawlerScriptRegisterEvent({
+  key: 'sign',
+  when: CrawlerScriptWhen.PRE,
+  map_icon: CrawlerScriptEventMapIcon.NONE,
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    api.dialog('sign', param || '...');
+  },
+});
+
+crawlerScriptRegisterEvent({
+  key: 'dialog', // id [string parameter]
+  when: CrawlerScriptWhen.PRE,
+  map_icon: (api: CrawlerScriptAPI, param: string) => {
+    let idx = param.indexOf(' ');
+    let id = param;
+    if (idx !== -1) {
+      id = param.slice(0, idx);
+      param = param.slice(idx + 1);
+    } else {
+      param = '';
+    }
+    return dialogMapIcon(id, param, api);
+  },
+  func: (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => {
+    if (!param) {
+      return api.status('dialog', 'Missing dialog ID');
+    }
+    let idx = param.indexOf(' ');
+    let id = param;
+    if (idx !== -1) {
+      id = param.slice(0, idx);
+      param = param.slice(idx + 1);
+    } else {
+      param = '';
+    }
+    api.dialog(id, param);
   },
 });

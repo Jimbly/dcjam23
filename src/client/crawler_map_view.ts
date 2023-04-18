@@ -19,6 +19,7 @@ import {
   vec2,
 } from 'glov/common/vmath';
 import {
+  CrawlerScriptAPI,
   CrawlerScriptEventMapIcon,
   crawlerScriptEventFunc,
   crawlerScriptRegisterFunc,
@@ -59,7 +60,7 @@ const MAP_TILE_SIZE = 7;
 const MAP_STEP_SIZE = 6;
 const MAP_CENTER_OFFS = 3;
 
-function crawlerScriptEventsGetIcon(events: CrawlerCellEvent[]): CrawlerScriptEventMapIcon {
+function crawlerScriptEventsGetIcon(api: CrawlerScriptAPI, events: CrawlerCellEvent[]): CrawlerScriptEventMapIcon {
   let ret = CrawlerScriptEventMapIcon.NONE;
   for (let ii = 0; ii < events.length; ++ii) {
     let event = events[ii];
@@ -71,7 +72,7 @@ function crawlerScriptEventsGetIcon(events: CrawlerCellEvent[]): CrawlerScriptEv
         if (buildModeActive()) {
           map_icon = CrawlerScriptEventMapIcon.NONE;
         } else {
-          map_icon = map_icon(param);
+          map_icon = map_icon(api, param || '');
         }
       }
       ret = max(ret, map_icon);
@@ -324,7 +325,7 @@ export function crawlerMapViewDraw(
       }
       if (detail_visible && cell.events) {
         // Draw any event icons
-        let event_icon = crawlerScriptEventsGetIcon(cell.events);
+        let event_icon = crawlerScriptEventsGetIcon(script_api, cell.events);
         if (build_mode && !event_icon && !(detail && detail_visible)) {
           event_icon = CrawlerScriptEventMapIcon.QUESTION;
         }

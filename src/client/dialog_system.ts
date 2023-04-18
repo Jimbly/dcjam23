@@ -21,6 +21,7 @@ import {
   v2same,
   vec4,
 } from 'glov/common/vmath';
+import { CrawlerScriptAPI } from '../common/crawler_script';
 import { JSVec2, JSVec3 } from '../common/crawler_state';
 import { buildModeActive } from './crawler_build_mode';
 import { crawlerMyEnt } from './crawler_entity_client';
@@ -214,7 +215,7 @@ export function dialogReset(): void {
   active_dialog = null;
 }
 
-export type DialogFunc = (param: string) => void;
+export type DialogFunc = (param: string, script_api: CrawlerScriptAPI) => void;
 let DIALOGS: Partial<Record<string, DialogFunc>> = {
   sign: function (param: string) {
     dialogPush({
@@ -233,10 +234,10 @@ let DIALOGS: Partial<Record<string, DialogFunc>> = {
     }
   },
 };
-
 export function dialogRegister(data: Record<string, DialogFunc>): void {
   merge(DIALOGS, data);
 }
+
 
 export function dialog(id: string, param?: string): void {
   let dlg = DIALOGS[id];
@@ -244,7 +245,7 @@ export function dialog(id: string, param?: string): void {
     dataError(`Unknown dialog "${id}"`);
     return;
   }
-  dlg(param || '');
+  dlg(param || '', crawlerScriptAPI());
 }
 
 export function dialogStartup(param: {

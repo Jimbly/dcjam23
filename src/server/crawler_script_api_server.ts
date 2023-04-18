@@ -63,6 +63,9 @@ export class CrawlerScriptAPIServerImpl implements CrawlerScriptAPI {
   status(key: string, message: string): void {
     // No-op on server
   }
+  dialog(key: string, param?: string): void {
+    // No-op on server for now?
+  }
   getRand(): RandProvider {
     if (this.need_reseed) {
       this.need_reseed = false;

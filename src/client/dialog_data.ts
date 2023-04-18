@@ -1,13 +1,15 @@
-/* eslint @typescript-eslint/no-use-before-define:off */
 import { postTick } from 'glov/client/engine';
 import * as urlhash from 'glov/client/urlhash';
-import { CrawlerScriptEventMapIcon } from '../common/crawler_script';
+import { dialogIconsRegister } from '../common/crawler_events';
+import { CrawlerScriptAPI, CrawlerScriptEventMapIcon } from '../common/crawler_script';
 import { NORTH } from '../common/crawler_state';
 import {
   crawlerController,
-  crawlerScriptAPI,
 } from './crawler_play';
-import { dialogPush, dialogRegister } from './dialog_system';
+import {
+  dialogPush,
+  dialogRegister,
+} from './dialog_system';
 import { Good } from './entity_demo_client';
 import { GOODS } from './goods';
 import { SUPPLY_GOOD } from './jam_events';
@@ -41,18 +43,10 @@ function leaveTownBlocked(): string[] | null {
   return reasons.length ? reasons : null;
 }
 
-function keyGet(k: string): boolean {
-  return crawlerScriptAPI().keyGet(k);
-}
-
-function keySet(k: string): void {
-  crawlerScriptAPI().keySet(k);
-}
-
-const DIALOG_ICONS: Partial<Record<string, (param: string) => CrawlerScriptEventMapIcon>> = {
-  quest: function (quest_key: string): CrawlerScriptEventMapIcon {
+dialogIconsRegister({
+  quest: function (quest_key: string, script_api: CrawlerScriptAPI): CrawlerScriptEventMapIcon {
     let key = `quest${quest_key}`;
-    if (keyGet(key)) {
+    if (script_api.keyGet(key)) {
       return CrawlerScriptEventMapIcon.NONE;
     } else {
       return CrawlerScriptEventMapIcon.EXCLAIMATION;
@@ -65,15 +59,15 @@ const DIALOG_ICONS: Partial<Record<string, (param: string) => CrawlerScriptEvent
       return CrawlerScriptEventMapIcon.NONE;
     }
   },
-};
+});
 
 
 dialogRegister({
   greet: function (param: string) {
     statusSet('greet', param, dialogTextStyle()).counter = 3000;
   },
-  welcome: function () {
-    if (keyGet('mcguff1')) {
+  welcome: function (ignored: string, script_api: CrawlerScriptAPI) {
+    if (script_api.keyGet('mcguff1')) {
       // already activated, completely hide
       return;
     }
@@ -128,15 +122,15 @@ dialogRegister({
     });
   },
 
-  spiritonwelcome: function () {
-    if (keyGet('swelc')) {
+  spiritonwelcome: function (ignored: string, script_api: CrawlerScriptAPI) {
+    if (script_api.keyGet('swelc')) {
       return dialogPush({
         name: 'Greeter',
         text: 'Welcome to Spiriton!  Remember, 3 Supplies is enough to get to our neighbors.',
         transient: true,
       });
     }
-    keySet('swelc');
+    script_api.keySet('swelc');
     dialogPush({
       name: 'Greeter',
       text: 'Oh my!  What do we have here?  A traveler from the Physical realm?',
@@ -219,7 +213,7 @@ dialogRegister({
   },
 
 
-  quest: function (quest_key: string) {
+  quest: function (quest_key: string, script_api: CrawlerScriptAPI) {
     let key = `quest${quest_key}`;
     type Quest = {
       text_have?: string;
@@ -308,7 +302,7 @@ dialogRegister({
     if (!quest) {
       return void statusSet('error', `Unknown quest "${key}"`);
     }
-    if (keyGet(key)) {
+    if (script_api.keyGet(key)) {
       return dialogPush({
         name: quest.name,
         text: quest.text_thanks || 'Thanks for helping me out earlier!',
@@ -337,7 +331,7 @@ dialogRegister({
                 statusPush(`-${quest.need.count} ${good_name}`);
               }
             });
-            keySet(key);
+            script_api.keySet(key);
             setScore();
           },
         }],
@@ -412,11 +406,3 @@ dialogRegister({
     });
   },
 });
-
-export function dialogMapIcon(id: string, param?: unknown): CrawlerScriptEventMapIcon {
-  let dlg = DIALOG_ICONS[id];
-  if (!dlg) {
-    return CrawlerScriptEventMapIcon.NONE;
-  }
-  return (dlg as ((param: unknown) => CrawlerScriptEventMapIcon))(param);
-}

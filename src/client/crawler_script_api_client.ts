@@ -28,6 +28,7 @@ import {
   OnlineMode,
   crawlerMyEnt,
 } from './crawler_entity_client';
+import { dialog } from './dialog_system';
 import { statusSet } from './status';
 
 export type CrawlerScriptLocalData = {
@@ -86,6 +87,9 @@ class CrawlerScriptAPIClientBase {
   }
   status(key: string, message: string): void {
     statusSet(key, message);
+  }
+  dialog(key: string, param?: string): void {
+    dialog(key, param);
   }
   getRand(): RandProvider {
     if (this.need_reseed) {

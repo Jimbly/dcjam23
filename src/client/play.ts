@@ -142,6 +142,7 @@ import {
 import { crawlerScriptAPIDummyServer } from './crawler_script_api_client';
 import { crawlerOnScreenButton } from './crawler_ui';
 import * as dawnbringer from './dawnbringer32';
+import './dialog_data'; // for side effects
 import {
   dialogMoveLocked,
   dialogReset,

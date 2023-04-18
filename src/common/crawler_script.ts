@@ -21,6 +21,7 @@ export type CrawlerScriptAPI = {
   keySet(key: string): void;
   keyGet(key: string): boolean;
   status(key: string, message: string): void;
+  dialog(key: string, param?: string): void;
   getRand(): RandProvider;
   getFloor(): number;
   floorDelta(delta: number, pos_key: string, keep_rot: boolean): void;
@@ -94,11 +95,12 @@ export enum CrawlerScriptEventMapIcon {
 }
 
 export type CrawlerScriptEvent = (api: CrawlerScriptAPI, cell: CrawlerCell, param: string) => void;
+export type CrawlerScriptMapIconCB = (api: CrawlerScriptAPI, param: string) => CrawlerScriptEventMapIcon;
 export type CrawlerScriptEventInfo = {
   key: string;
   func: CrawlerScriptEvent;
   when: CrawlerScriptWhen; // Default = PRE
-  map_icon: CrawlerScriptEventMapIcon | ((param: string) => CrawlerScriptEventMapIcon); // Default = NONE
+  map_icon: CrawlerScriptEventMapIcon | CrawlerScriptMapIconCB; // Default = NONE
 };
 export type CrawlerScriptEventInfoParam = WithRequired<Partial<CrawlerScriptEventInfo>, 'key' | 'func'>;
 let event_funcs: Partial<Record<string, CrawlerScriptEventInfo>> = {};
