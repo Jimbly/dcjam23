@@ -80,6 +80,7 @@ export function main(): void {
     settings.set('filter', 1);
     settings.set('entity_split', 1);
   }
+  settings.runTimeDefault('volume_music', 0.4);
 
   // const font_info_04b03x2 = require('./img/font/04b03_8x2.json');
   // const font_info_04b03x1 = require('./img/font/04b03_8x1.json');

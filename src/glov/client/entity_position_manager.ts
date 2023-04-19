@@ -221,7 +221,7 @@ class EntityPositionManagerImpl implements Required<EntityPositionManagerOpts> {
     this.vsub(this.temp_vec, a, b);
     for (let ii = 0; ii < this.dim_rot; ++ii) {
       let jj = this.dim_pos + ii;
-      let delta = this.temp_vec[jj] % TWO_PI; // JAM: Test this!  Should be better
+      let delta = this.temp_vec[jj] % TWO_PI;
       this.temp_vec[jj] = 2 * delta % TWO_PI - delta;
     }
     return this.vlength(this.temp_vec);

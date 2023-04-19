@@ -131,7 +131,7 @@ settings.register({
 
 settings.register({
   volume_music: {
-    default_value: 0.4, // JAM
+    default_value: 1,
     type: cmd_parse.TYPE_FLOAT,
     range: [0,1],
   },
