@@ -2656,7 +2656,13 @@ export function playStartup(tiny_font_in: Font): void {
     text_style_cb: dialogTextStyle,
   });
   crawlerLoadData(webFSAPI());
-  crawlerMapViewStartup(false, dawnbringer.colors[8]);
+  crawlerMapViewStartup({
+    allow_pathfind: false,
+    color_rollover: dawnbringer.colors[8],
+    build_mode_entity_icons: {
+      chest: 23,
+    },
+  });
 
   const ENCODE_SEC = 100000;
   const ENCODE_MONEY = 100000;

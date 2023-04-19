@@ -13,6 +13,7 @@ import * as ui from 'glov/client/ui';
 import {
   drawLine,
 } from 'glov/client/ui';
+import { merge } from 'glov/common/util';
 import {
   ROVec4,
   rovec4,
@@ -59,6 +60,10 @@ let allow_pathfind: boolean = true;
 const MAP_TILE_SIZE = 7;
 const MAP_STEP_SIZE = 6;
 const MAP_CENTER_OFFS = 3;
+
+let build_mode_entity_icons: Partial<Record<string, number>> = {
+  def: 19,
+};
 
 function crawlerScriptEventsGetIcon(api: CrawlerScriptAPI, events: CrawlerCellEvent[]): CrawlerScriptEventMapIcon {
   let ret = CrawlerScriptEventMapIcon.NONE;
@@ -126,7 +131,7 @@ export function mapViewLastProgress(): number {
 
 let mouse_pos = vec2();
 let moved_since_fullscreen = false;
-let color_map_rollover = rovec4(1,1,1,1);
+let color_rollover = rovec4(1,1,1,1);
 let color_path = rovec4(1,0.5,0,1);
 
 let style_map_name = fontStyle(null, {
@@ -164,13 +169,19 @@ export function crawlerMapViewDraw(
   let fullscreen = w === engine.game_width;
 
   if (!fullscreen) {
-    let { ret, state } = ui.buttonShared({
-      x, y, w, h, // JAM : h + compass_h,
+    let hover_area = {
+      x, y, w, h,
       disabled: button_disabled,
-    });
+    };
+    if (compass_y === hover_area.y + hover_area.h) {
+      hover_area.h += compass_h;
+    }
+    let { ret, state } = ui.buttonShared(hover_area);
     if (state === 'rollover') {
-      ui.drawRect(x - 1, y - 1, x + w + 1, y + h /*JAM+ compass_h*/ + 1,
-        Z.MAP - 1, color_map_rollover);
+      ui.drawRect(hover_area.x - 1, hover_area.y - 1,
+        hover_area.x + hover_area.w + 1,
+        hover_area.y + hover_area.h + 1,
+        Z.MAP - 1, color_rollover);
     }
     if (ret) {
       mapViewToggle();
@@ -480,7 +491,7 @@ export function crawlerMapViewDraw(
         z: z - 0.01,
         w: MAP_TILE_SIZE,
         h: MAP_TILE_SIZE,
-        frame: 19 + (ent.type === 'chest' ? 4 : 0), // JAM
+        frame: build_mode_entity_icons[ent.type as string] || build_mode_entity_icons.def,
       });
     }
   }
@@ -593,10 +604,15 @@ export function crawlerMapViewDraw(
   spriteClipPop();
 }
 
-export function crawlerMapViewStartup(allow_pathfind_in: boolean, color_rollover?: ROVec4): void {
-  allow_pathfind = allow_pathfind_in;
-  if (color_rollover) {
-    color_map_rollover = color_rollover;
+export function crawlerMapViewStartup(param: {
+  allow_pathfind?: boolean;
+  color_rollover?: ROVec4;
+  build_mode_entity_icons?: Partial<Record<string, number>>;
+}): void {
+  allow_pathfind = param.allow_pathfind ?? true;
+  color_rollover = param.color_rollover || color_rollover;
+  if (param.build_mode_entity_icons) {
+    merge(build_mode_entity_icons, param.build_mode_entity_icons);
   }
   map_sprite = spriteCreate({
     name: 'map_tileset',
