@@ -20,6 +20,7 @@ import {
   JSVec3,
 } from '../common/crawler_state';
 import { crawlerEntFactory, crawlerMyEntOptional } from './crawler_entity_client';
+import { DrawableSpriteOpts, DrawableSpriteState } from './crawler_render_entities';
 import { dialog } from './dialog_system';
 import { EntityDemoClient, Good, StatsData } from './entity_demo_client';
 import { GOODS } from './goods';
@@ -284,4 +285,9 @@ export function jamTraitsStartup(): void {
     }
   });
 
+  ent_factory.extendTrait<DrawableSpriteOpts, DrawableSpriteState>('drawable_sprite', {
+    default_opts: {
+      hybrid: true,
+    }
+  });
 }

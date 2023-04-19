@@ -253,7 +253,7 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
       draw: drawableDraw,
     },
     default_opts: {
-      lod_bias: [-1, 0], // JAM
+      lod_bias: [-4, 0],
       biasL: [-0.2, 0.25],
       biasF: [-0.25, 0],
       biasR: [-0.3, 0.4],
@@ -288,7 +288,7 @@ function crawlerTraitsInit(ent_factory: TraitFactory<Entity, DataObject>): void 
           times: 1000,
         },
       },
-      hybrid: true, // JAM
+      hybrid: false,
       sprite_data: {
         name: 'required',
         ws: [1],
