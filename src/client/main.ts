@@ -20,6 +20,8 @@ import { game_height, game_width } from './globals';
 import { playStartup } from './play';
 import { titleInit, titleStartup } from './title';
 
+const { round } = Math;
+
 Z.BACKGROUND = 1;
 Z.SPRITES = 10;
 Z.PARTICLES = 20;
@@ -193,6 +195,7 @@ export function main(): void {
   }
 
   ui.scaleSizes(15 / 32);
+  ui.setModalSizes(0, round(game_width * 0.8), round(game_height * 0.23), 0, 0);
   ui.setFontHeight(11);
   ui.setPanelPixelScale(1);
   v4set(ui.color_panel, 1, 1, 1, 1);

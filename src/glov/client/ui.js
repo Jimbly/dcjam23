@@ -1868,7 +1868,7 @@ export function scaleSizes(scale) {
   button_img_size = button_height;
   modal_button_width = round(button_width / 2);
   modal_width = round(600 * scale);
-  modal_y0 = round(100 * scale); // JAM
+  modal_y0 = round(200 * scale);
   modal_title_scale = 1.2;
   modal_pad = round(16 * scale);
   tooltip_width = round(400 * scale);
