@@ -4872,7 +4872,7 @@
       "id": "path_open1",
       "walls": [
         "solid",
-        "secret_door",
+        "open",
         "open",
         "solid"
       ]
@@ -5294,10 +5294,10 @@
     {
       "id": "path_open1",
       "walls": [
-        "path_solid3",
+        "path_solid2",
         "open",
-        "path_solid3",
-        "secret_door"
+        "path_solid1",
+        "open"
       ]
     },
     {
@@ -5730,7 +5730,7 @@
       "id": "path_open1",
       "walls": [
         "solid",
-        "open",
+        "secret_door",
         "solid",
         "open"
       ]
@@ -6165,12 +6165,12 @@
       ]
     },
     {
-      "id": "path_open1",
+      "id": "open",
       "walls": [
         "path_solid1",
         "open",
         "solid",
-        "open"
+        "secret_door"
       ]
     },
     {
@@ -6568,30 +6568,36 @@
       "walls": [
         "open",
         "open",
-        "path_solid3",
+        "solid",
         "open"
       ]
     },
     {
       "id": "open",
       "walls": [
-        "secret_door",
+        "open",
         "solid",
         "open",
         "solid"
+      ],
+      "events": [
+        {
+          "id": "sign",
+          "param": "Hint: Where there is danger, safer hidden routes may be found."
+        }
       ]
     },
     {
-      "id": "path_open2",
+      "id": "open",
       "walls": [
         "open",
         "solid",
-        "secret_door",
+        "open",
         "secret_door"
       ]
     },
     {
-      "id": "path_open1",
+      "id": "open",
       "walls": [
         "open",
         "path_solid2",
@@ -6600,7 +6606,7 @@
       ]
     },
     {
-      "id": "path_open2",
+      "id": "open",
       "walls": [
         "solid",
         "solid",
