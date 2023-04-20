@@ -27,7 +27,7 @@ import { buildModeActive } from './crawler_build_mode';
 import { crawlerMyEnt } from './crawler_entity_client';
 import { crawlerScriptAPI } from './crawler_play';
 
-const { ceil, round } = Math;
+const { ceil, max, round } = Math;
 
 const FADE_TIME = 1000;
 
@@ -77,6 +77,28 @@ export function dialogMoveLocked(): boolean {
   return Boolean(active_dialog && !active_dialog.transient);
 }
 
+function dimsSplit(style: FontStyle, w: number, size: number, text: string): {
+  w: number;
+  h: number;
+  numlines: number;
+  lines: string[];
+} {
+  let max_x1 = 0;
+  let lines: string[] = [];
+  function lineCallback(x0: number, linenum: number, line: string, x1: number): void {
+    max_x1 = max(max_x1, x1);
+    lines.push(line);
+  }
+  let numlines = font.wrapLines(style, w, 0, size, text, 0, lineCallback);
+  return {
+    w: max_x1,
+    h: numlines * size,
+    numlines,
+    lines,
+  };
+}
+
+
 const HPAD = 4;
 const BUTTON_HEAD = 4;
 const BUTTON_PAD = 1;
@@ -115,10 +137,12 @@ export function dialogRun(dt: number, viewport: UIBox & { pad_top: number; pad_b
   let buttons_h = num_buttons * ui.button_height + (num_buttons ? BUTTON_HEAD + (num_buttons - 1) * BUTTON_PAD : 0);
   let size = ui.font_height;
   let style = text_style_cb(active_dialog);
-  let dims = font.dims(style, w - HPAD * 2, 0, size, text);
+  let dims = dimsSplit(style, w - HPAD * 2, size, text);
+  let { lines } = dims;
   y += h - dims.h - pad_bottom - buttons_h;
   let text_len = ceil(counter / 18);
   let text_full = text_len >= (text.length + 20);
+  let align;
   if (!transient) {
     if (!text_full && !active_state.ff_down) {
       if (ff()) {
@@ -131,25 +155,25 @@ export function dialogRun(dt: number, viewport: UIBox & { pad_top: number; pad_b
       // Eat these keys until released
       active_state.ff_down = ff();
     }
-    font.draw({
-      style,
-      size,
-      x: x + HPAD, y, z, w: w - HPAD * 2,
-      align: font.ALIGN.HLEFT|font.ALIGN.HWRAP,
-      text: text_full ? text : text.slice(0, text_len),
-      alpha,
-    });
+    align = font.ALIGN.HLEFT|font.ALIGN.HWRAP;
   } else {
+    align = font.ALIGN.HCENTER|font.ALIGN.HWRAP;
+  }
+  let yy = y;
+  for (let ii = 0; ii < lines.length && text_len > 0; ++ii) {
+    let line = lines[ii];
     font.draw({
       style,
       size,
-      x: x + HPAD, y, z, w: w - HPAD * 2,
-      align: font.ALIGN.HCENTER|font.ALIGN.HWRAP,
-      text: text_full ? text : text.slice(0, text_len),
+      x: x + HPAD, y: yy, z, w: w - HPAD * 2,
+      align,
+      text: text_len >= line.length ? line : line.slice(0, text_len),
       alpha,
     });
+    yy += size;
+    text_len -= line.length + 1;
   }
-  let yy = y + dims.h + BUTTON_HEAD;
+  yy = y + dims.h + BUTTON_HEAD;
 
   if (text_full && !active_state.ff_down) {
     for (let ii = 0; ii < num_buttons; ++ii) {
