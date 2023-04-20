@@ -8,4 +8,4 @@ xcopy /s dist\game\build.prod\client\ ..\..\SRC2\web\dashingstrike.com\LudumDare
 @for /F usebackq %%a in (`git rev-parse HEAD`) do SET VER=%%a
 "%TORTOISE_PATH%" /command:commit /path:..\..\SRC2\web\dashingstrike.com\LudumDare\DCJ2023  /logmsg:"Jam update from git %VER%"
 
-@echo Now, deploy flightplan web-prd.
+@echo Now, deploy flightplan web-prod.

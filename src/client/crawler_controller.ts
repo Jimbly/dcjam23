@@ -1357,9 +1357,17 @@ export class CrawlerController {
   forceFaceDir(dir: DirType | null): void {
     if (dir !== null) {
       if (dir !== this.force_face_dir) {
-        this.force_face_dir = dir;
-        this.force_face_counter = FORCE_FACE_TIME;
-        this.force_face_starting = true;
+        if (this.force_face_dir !== null && this.force_face_counter) {
+          // let it finish first
+        } else if (this.force_face_dir !== null && this.force_face_starting) {
+          // fade out first
+          this.force_face_counter = FORCE_FACE_TIME;
+          this.force_face_starting = false;
+        } else {
+          this.force_face_dir = dir;
+          this.force_face_counter = FORCE_FACE_TIME;
+          this.force_face_starting = true;
+        }
       }
     } else if (this.force_face_dir !== null) {
       if (!this.force_face_starting) {
