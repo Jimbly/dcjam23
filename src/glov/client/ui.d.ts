@@ -106,7 +106,6 @@ export interface PanelParam extends UIBoxColored {
   sprite?: Sprite;
 }
 export function panel(param: PanelParam): void;
-export function uiPanel(param: PanelParam): void;
 
 export type TooltipValue = Text | ((param:unknown) => (Text | null));
 export interface TooltipParam {

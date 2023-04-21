@@ -47,8 +47,8 @@ import * as ui from 'glov/client/ui';
 import {
   ButtonStateString,
   isMenuUp,
+  panel,
   playUISound,
-  uiPanel,
 } from 'glov/client/ui';
 import * as urlhash from 'glov/client/urlhash';
 import walltime from 'glov/client/walltime';
@@ -1039,12 +1039,12 @@ function inventoryMenu(): boolean {
   inventory_scroll.end(y);
 
   if (trader) {
-    uiPanel({
+    panel({
       x: OVERLAY_X0, y: OVERLAY_Y0,
       w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
     });
   } else {
-    uiPanel({
+    panel({
       x: OVERLAY_PLAYER_X0, y: OVERLAY_Y0,
       w: OVERLAY_SUB_W, h: OVERLAY_H, z: z - 1,
     });
@@ -1225,7 +1225,7 @@ function recruitMenu(): void {
       data.town_counter++;
     }
 
-    uiPanel({
+    panel({
       x, y, z, w: 72 + 56 + 3, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
@@ -1293,7 +1293,7 @@ function recruitMenu(): void {
       mercs.splice(ii, 1);
     }
 
-    uiPanel({
+    panel({
       x, y, z, w: 90 + 56 + 3, h: MERC_H,
       sprite: ui.sprites.panel_mini,
     });
@@ -1301,7 +1301,7 @@ function recruitMenu(): void {
   }
 
 
-  uiPanel({
+  panel({
     x: OVERLAY_X0, y: OVERLAY_Y0,
     w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
   });
@@ -1462,13 +1462,13 @@ function upgradeMenu(): void {
 
     y += 5;
 
-    // uiPanel({
+    // panel({
     //   x, y, z, w: 72 + 56 + 3, h: MERC_H,
     //   sprite: ui.sprites.panel_mini,
     // });
   }
 
-  uiPanel({
+  panel({
     x: OVERLAY_X0, y: OVERLAY_Y0,
     w: OVERLAY_W, h: OVERLAY_H, z: z - 1,
   });
@@ -1694,7 +1694,7 @@ function drawMercs(): void {
       yy = lerp(weight * 0.5, yy, attack_y);
     }
     let dead = merc && merc.hp <= 0;
-    uiPanel({
+    panel({
       x: xx, y: yy, z: dead ? z-0.1 : z-0.2, w: MERC_W, h: MERC_H,
       sprite: dead ? ui.sprites.panel_mini_red : ui.sprites.panel_mini,
     });
