@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-redeclare
 /* globals HTMLElement, Event */
 
-import { ROVec4, Vec4 } from 'glov/common/vmath';
+import { ROVec4 } from 'glov/common/vmath';
 import { EditBoxOptsAll } from './edit_box';
 import { ALIGN, Font, FontStyle, Text } from './font';
 import { Box } from './geom_types';
@@ -59,7 +59,6 @@ export const font_height: number;
 export const button_width: number;
 export const button_height: number;
 export const panel_pixel_scale: number;
-export const color_panel: Vec4;
 export function buttonWasFocused(): boolean;
 export function colorSetSetShades(rollover: number, down: number, disabled: number): void;
 export function loadUISprite(name: string, ws: number[], hs: number[]): void;
@@ -341,6 +340,7 @@ export function setModalSizes(
 export function setTooltipWidth(tooltip_width: number, tooltip_panel_pixel_scale: number): void;
 export function uiGetFontStyleFocused(): FontStyle;
 export function uiSetFontStyleFocused(new_style: FontStyle): void;
+export function uiSetPanelColor(color: ROVec4): void;
 
 type UISpriteSet = {
   color_set_shades?: [number, number, number];

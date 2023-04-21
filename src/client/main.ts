@@ -12,7 +12,7 @@ import { spriteSetGet } from 'glov/client/sprite_sets';
 import { spritesheetTextureOpts } from 'glov/client/spritesheet';
 import { textureDefaultFilters } from 'glov/client/textures';
 import * as ui from 'glov/client/ui';
-import { v4set } from 'glov/common/vmath';
+import { uiSetPanelColor } from 'glov/client/ui';
 // import './client_cmds.js'; // for side effects
 import { crawlerBuildModeStartup } from './crawler_build_mode';
 import { crawlerOnPixelyChange } from './crawler_play.js';
@@ -198,7 +198,7 @@ export function main(): void {
   ui.setModalSizes(0, round(game_width * 0.8), round(game_height * 0.23), 0, 0);
   ui.setFontHeight(11);
   ui.setPanelPixelScale(1);
-  v4set(ui.color_panel, 1, 1, 1, 1);
+  uiSetPanelColor([1, 1, 1, 1]);
   // ui.uiSetFontStyleFocused(fontStyle(ui.uiGetFontStyleFocused(), {
   //   outline_width: 2.5,
   //   outline_color: dawnbringer.font_colors[8],
