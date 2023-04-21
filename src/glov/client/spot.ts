@@ -421,10 +421,10 @@ const spot_nav_keys_extended: SpotNavKeys = {
   [SPOT_NAV_NEXT]: spot_nav_keys_base[SPOT_NAV_NEXT],
 };
 function keyDownShifted(key: number): boolean {
-  return keyDown(KEYS.SHIFT) && keyDown(key);
+  return keyDown(KEYS.SHIFT) && keyDownEdge(key);
 }
 function keyDownUnshifted(key: number): boolean {
-  return !keyDown(KEYS.SHIFT) && keyDown(key);
+  return !keyDown(KEYS.SHIFT) && keyDownEdge(key);
 }
 function compileSpotNavKeysEntry(entry: SpotNavKeysEntry): () => boolean {
   let fns: ((() => boolean) | (() => number))[] = [];

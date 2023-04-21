@@ -1,28 +1,29 @@
 // Portions Copyright 2020 Jimb Esser (https://github.com/Jimbly/)
 // Released under MIT License: https://opensource.org/licenses/MIT
-/* eslint-disable import/order */
-const assert = require('assert');
-const { asyncParallel } = require('glov-async');
-const camera2d = require('./camera2d.js');
-const { cmd_parse } = require('./cmds.js');
-const engine = require('./engine.js');
-const glov_font = require('./font.js');
-const { isFriend } = require('./social.js');
-const input = require('./input.js');
-const { link } = require('./link.js');
-const local_storage = require('./local_storage.js');
-const { getStringIfLocalizable } = require('./localization.js');
+
+import assert from 'assert';
+import { asyncParallel } from 'glov-async';
+import { clamp, defaults, deprecate, matchAll } from 'glov/common/util';
+import { v3copy, vec4 } from 'glov/common/vmath';
+import * as camera2d from './camera2d';
+import { getAbilityChat } from './client_config';
+import { cmd_parse } from './cmds';
+import * as engine from './engine';
+import * as glov_font from './font';
+import * as input from './input';
+import { link } from './link';
+import * as local_storage from './local_storage';
+import { getStringIfLocalizable } from './localization';
+import { netClient, netClientId, netSubs, netUserId } from './net';
+import { scrollAreaCreate } from './scroll_area';
+import * as settings from './settings';
+import { isFriend } from './social';
+import { spotUnfocus } from './spot';
+import * as ui from './ui';
+import { profanityFilter, profanityStartup } from './words/profanity';
+
 const { ceil, floor, max, min, round } = Math;
-const { netClient, netClientId, netSubs, netUserId } = require('./net.js');
-const { profanityFilter, profanityStartup } = require('./words/profanity.js');
-const { scrollAreaCreate } = require('./scroll_area.js');
-const settings = require('./settings.js');
-const {
-  spotUnfocus,
-} = require('./spot.js');
-const ui = require('./ui.js');
-const { clamp, defaults, deprecate, matchAll } = require('glov/common/util.js');
-const { vec4, v3copy } = require('glov/common/vmath.js');
+
 deprecate(exports, 'create', 'chatUICreate');
 
 export const CHAT_FLAG_EMOTE = 1;
@@ -413,6 +414,9 @@ ChatUI.prototype.focus = function () {
 };
 
 ChatUI.prototype.runLate = function () {
+  if (!getAbilityChat()) {
+    return;
+  }
   this.did_run_late = true;
   if (input.keyDownEdge(input.KEYS.RETURN)) {
     this.focus();
@@ -640,6 +644,9 @@ ChatUI.prototype.setZOverride = function (z) {
 ChatUI.prototype.run = function (opts) {
   const UI_SCALE = ui.font_height / 24;
   opts = opts || {};
+  if (!getAbilityChat()) {
+    opts.hide = true;
+  }
   const border = opts.border || this.border || (8 * UI_SCALE);
   const SPACE_ABOVE_ENTRY = border;
   const scroll_grow = opts.scroll_grow || 0;
@@ -1212,8 +1219,10 @@ export function chatUICreate(params) {
   });
   cmd_parse.register({
     cmd: 'me',
-    help: 'Emote',
-    usage: '$HELP\n  Example: /me jumps up and down!',
+    help: 'Sends a message emoting an action. Can also perform animated emotes.',
+    usage: '$HELP\n  Example: /me jumps up and down!\n' +
+    '    /me waves\n' +
+    '    /me sits',
     func: emote,
   });
   // Also alias /em
