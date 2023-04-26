@@ -290,4 +290,17 @@ export function jamTraitsStartup(): void {
       hybrid: true,
     }
   });
+
+  ent_factory.extendTrait('enemy', {
+    properties: {
+      respawns: true,
+    },
+  });
+
+  ent_factory.extendTrait('patrol', {
+    properties: {
+      danger_dist: 2,
+      respawns: false,
+    },
+  });
 }

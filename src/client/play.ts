@@ -2542,8 +2542,8 @@ export function playStartup(tiny_font_in: Font): void {
     default_vstyle: 'path',
   });
   crawlerEntityClientStartupEarly();
-  jamTraitsStartup();
   aiTraitsClientStartup();
+  jamTraitsStartup();
   crawlerEntityTraitsClientStartup({
     name: 'EntityDemoClient',
     Ctor: EntityDemoClient,

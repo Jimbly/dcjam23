@@ -131,16 +131,8 @@ export function aiTraitsClientStartup(): void {
     }
   });
 
-  ent_factory.extendTrait('enemy', {
-    properties: {
-      respawns: true,
-    },
-  });
-
   ent_factory.registerTrait<PatrolOpts, PatrolState>('patrol', {
     properties: {
-      danger_dist: 2,
-      respawns: false,
       ai_move_min_time: 667,
       ai_move_rand_time: 0,
     },
