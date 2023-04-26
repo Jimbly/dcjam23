@@ -709,12 +709,14 @@ export function crawlerPlayInitOffline(): void {
 }
 
 let level_generator_test: LevelGenerator;
+let default_vstyle: string;
 export function crawlerInitBuildModeLevelGenerator(): LevelGenerator {
   if (!level_generator_test) {
     assert(crawl_room);
     let room_public_data = crawl_room.getChannelData('public') as { seed: string };
     level_generator_test = levelGeneratorCreate({
       seed: room_public_data.seed,
+      default_vstyle,
     });
   }
   game_state.level_provider = level_generator_test.provider;
@@ -915,12 +917,14 @@ export function crawlerPlayStartup(param: {
   offline_data?: CrawlerOfflineData;
   play_state: EngineState;
   on_init_level_offline?: InitLevelFunc;
+  default_vstyle?: string;
 }): void {
   on_broadcast = param.on_broadcast || undefined;
   play_init_online = param.play_init_online;
   play_init_offline = param.play_init_offline;
   offline_data = param.offline_data;
   play_state = param.play_state;
+  default_vstyle = param.default_vstyle || 'demo';
   on_init_level_offline = param.on_init_level_offline || null;
   window.addEventListener('beforeunload', beforeUnload, false);
   viewport_sprite = spriteCreate({ texs: [textureWhite()] });

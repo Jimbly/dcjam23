@@ -2539,6 +2539,7 @@ export function playStartup(tiny_font_in: Font): void {
     },
     play_state: play,
     on_init_level_offline: initLevel,
+    default_vstyle: 'path',
   });
   crawlerEntityClientStartupEarly();
   jamTraitsStartup();
