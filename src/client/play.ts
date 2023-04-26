@@ -645,9 +645,25 @@ let inventory_goods: string[];
 let inventory_scroll: ScrollArea;
 let buy_mode_max = false;
 let inventory_profit = 0;
-function inventoryMenu(): boolean {
+function inventoryMenuFindTrader(): Entity | null {
+  let me = myEnt();
+  let data = me.data;
+  let other_ents = crawlerEntitiesAt(entityManager(), data.pos, data.floor, true) as Entity[];
+  let trader: Entity | null = null;
+  for (let ii = 0; ii < other_ents.length; ++ii) {
+    let ent = other_ents[ii];
+    if (ent.is_trader) {
+      trader = ent;
+    }
+  }
+  return trader;
+}
+function inventoryMenuIsFullscreen(): boolean {
+  return inventory_up && Boolean(inventoryMenuFindTrader());
+}
+function inventoryMenu(): void {
   if (!inventory_up) {
-    return false;
+    return;
   }
   recruit_up = false;
   upgrade_up = false;
@@ -660,15 +676,8 @@ function inventoryMenu(): boolean {
   inventory_last_frame = getFrameIndex();
   let me = myEnt();
   let data = me.data;
-  let other_ents = crawlerEntitiesAt(entityManager(), data.pos, data.floor, true) as Entity[];
-  let trader: Entity | null = null;
   let floor_id = crawlerGameState().floor_id;
-  for (let ii = 0; ii < other_ents.length; ++ii) {
-    let ent = other_ents[ii];
-    if (ent.is_trader) {
-      trader = ent;
-    }
-  }
+  let trader = inventoryMenuFindTrader();
 
   if (trader) {
     if (trader.data.last_init !== data.journeys) {
@@ -1049,7 +1058,6 @@ function inventoryMenu(): boolean {
       w: OVERLAY_SUB_W, h: OVERLAY_H, z: z - 1,
     });
   }
-  return Boolean(trader);
 }
 
 let style_dead = fontStyleColored(null, dawnbringer.font_colors[25]);
@@ -2003,7 +2011,7 @@ function playCrawl(): void {
   let dt = getScaledFrameDt();
 
   const frame_map_view = mapViewActive();
-  const is_fullscreen_ui = inventoryMenu() || recruit_up || upgrade_up;
+  const is_fullscreen_ui = inventoryMenuIsFullscreen() || recruit_up || upgrade_up;
   let dialog_viewport = {
     x: VIEWPORT_X0 + 8,
     w: render_width - 16,
@@ -2205,6 +2213,7 @@ function playCrawl(): void {
     playUISound('button_click');
     mapViewToggle();
   }
+  inventoryMenu();
   recruitMenu();
   upgradeMenu();
   let game_state = crawlerGameState();
