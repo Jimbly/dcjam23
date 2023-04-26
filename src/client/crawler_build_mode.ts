@@ -1,4 +1,5 @@
 import assert from 'assert';
+import * as camera2d from 'glov/client/camera2d';
 import { cmd_parse } from 'glov/client/cmds';
 import * as engine from 'glov/client/engine';
 import {
@@ -84,7 +85,6 @@ import {
   crawlerSetLevelGenMode,
 } from './crawler_play';
 import { crawlerRenderGetThumbnail } from './crawler_render';
-import { game_height } from './globals';
 import { statusPush } from './status';
 
 const { floor, min } = Math;
@@ -764,10 +764,10 @@ type PaletteConfigTab = 'all' | 'wall' | 'cell' | 'spawn';
 let palette_config_tab: PaletteConfigTab = (localStorageGet('pal_tab') as PaletteConfigTab) || 'all';
 
 function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
-  const x0 = 2;
-  const y0 = 2;
+  const x0 = camera2d.x0() + 2;
+  const y0 = camera2d.y0() + 2;
   const w = x1 - x0;
-  const y1 = game_height - 2;
+  const y1 = camera2d.y1() - 2;
   let x = x0;
   let y = y0;
   let z = Z.UI + 100;
@@ -805,6 +805,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
   });
   x = 1;
   y = 1;
+  const mapped_x1 = x1 - x0 - palette_config_scroll.barWidth() - 1;
 
 
   let show_all = palette_config_tab === 'all';
@@ -906,7 +907,7 @@ function showPaintPaletteConfig(level: CrawlerLevel, x1: number): void {
     }
 
     x += col_width + 1;
-    if (x + col_width > x1) {
+    if (x + col_width > mapped_x1) {
       x = 1;
       y += col_width + 1;
     }
