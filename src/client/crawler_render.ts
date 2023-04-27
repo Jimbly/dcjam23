@@ -473,7 +473,7 @@ function simpleGetSpriteParam(
 
   return [sprite, {
     frame,
-    bucket, // todo: custom op for bucket / opaque / soft alpha
+    bucket,
     shader: shader || crawlerRenderGetShader(ShaderType.SpriteFragment),
     vshader: crawlerRenderGetShader(ShaderType.SpriteVertex),
     facing: FACE_CUSTOM,
