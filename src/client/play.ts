@@ -2046,7 +2046,6 @@ function playCrawl(): void {
       h: MOVE_BUTTONS_Y0 - build_y - 2,
       map_view: frame_map_view,
     });
-
   }
 
   tickMusic(false, Boolean(frame_combat && frame_combat.type_id !== 'chest'));
