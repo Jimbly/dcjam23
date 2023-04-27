@@ -574,10 +574,14 @@ export function crawlerPlayInitHybridBuild(room: ClientChannelWorker): void {
   controller.reloadLevel();
 }
 
+let was_pixely_2 = false;
 export function crawlerBuildModeActivate(build_mode: boolean): void {
   buildModeSetActive(build_mode);
   if (build_mode) {
-    settings.set('pixely', 3);
+    if (settings.pixely === 2) {
+      was_pixely_2 = true;
+      settings.set('pixely', 3);
+    }
     if (game_state.level_provider === getLevelForFloorFromWebFS) {
       // One-time switch to server-provided levels and connect to the room
       assert(!crawl_room);
@@ -593,7 +597,10 @@ export function crawlerBuildModeActivate(build_mode: boolean): void {
       assert.equal(onlineMode(), OnlineMode.ONLINE_ONLY);
     }
   } else {
-    settings.set('pixely', 2);
+    if (was_pixely_2) {
+      settings.set('pixely', 2);
+      was_pixely_2 = false;
+    }
     if (onlineMode() === OnlineMode.ONLINE_BUILD) {
       crawlerEntitiesInit(OnlineMode.OFFLINE);
       controller.buildModeSwitch({

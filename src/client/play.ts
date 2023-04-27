@@ -2672,6 +2672,12 @@ export function playStartup(tiny_font_in: Font): void {
     build_mode_entity_icons: {
       chest: 23,
     },
+    style_map_name: fontStyle(null, {
+      color: dawnbringer.font_colors[21],
+      outline_width: 3,
+      outline_color: dawnbringer.font_colors[0],
+    }),
+    compass_border_w: 8,
   });
 
   const ENCODE_SEC = 100000;

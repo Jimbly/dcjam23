@@ -1,6 +1,9 @@
 import assert from 'assert';
 import * as engine from 'glov/client/engine';
-import { fontStyle } from 'glov/client/font';
+import {
+  FontStyle,
+  fontStyle,
+} from 'glov/client/font';
 import * as input from 'glov/client/input';
 import { shaderCreate } from 'glov/client/shaders';
 import {
@@ -46,7 +49,6 @@ import { buildModeActive } from './crawler_build_mode';
 import { crawlerEntityManager } from './crawler_entity_client';
 import { crawlerController, crawlerSetLevelGenMode } from './crawler_play';
 import { CrawlerScriptAPIClient } from './crawler_script_api_client';
-import * as dawnbringer from './dawnbringer32';
 
 type Shader = ReturnType<typeof shaderCreate>;
 
@@ -134,11 +136,13 @@ let moved_since_fullscreen = false;
 let color_rollover = rovec4(1,1,1,1);
 let color_path = rovec4(1,0.5,0,1);
 
-let style_map_name = fontStyle(null, {
-  color: dawnbringer.font_colors[21],
+let style_map_name: FontStyle | null = fontStyle(null, {
+  color: 0xFFFFFFff,
   outline_width: 3,
-  outline_color: dawnbringer.font_colors[0],
+  outline_color: 0x000000ff,
 });
+
+let compass_border_w = 6;
 
 export function crawlerMapViewDraw(
   game_state: CrawlerState,
@@ -202,8 +206,10 @@ export function crawlerMapViewDraw(
   last_progress = total_enemies ? max(0, 1 - (num_enemies / total_enemies)) : 1;
   let floor_title = level.props.title || `Floor ${game_state.floor_id}`;
   if (fullscreen) {
-    ui.font.drawSizedAligned(null, x, y + 2, z + 1, ui.font_height,
-      ui.font.ALIGN.HCENTER, w, 0, floor_title);
+    if (style_map_name) {
+      ui.font.drawSizedAligned(style_map_name, x, y + 2, z + 1, ui.font_height,
+        ui.font.ALIGN.HCENTER, w, 0, floor_title);
+    }
     if (full_vis) {
       ui.font.drawSizedAligned(null, x, y + h - (ui.font_height + 2)*2, z + 1, ui.font_height,
         ui.font.ALIGN.HCENTER, w, 0, `${num_enemies}/${total_enemies}`);
@@ -230,12 +236,12 @@ export function crawlerMapViewDraw(
     // overlays
     compass_sprite.draw({
       x: compass_x - 2, y: compass_y, z: z+3,
-      w: 8, h: compass_h,
+      w: compass_border_w, h: compass_h,
       frame: 1,
     });
     compass_sprite.draw({
       x: compass_x + 54-6, y: compass_y, z: z+3,
-      w: 8, h: compass_h,
+      w: compass_border_w, h: compass_h,
       frame: 2,
     });
     // background
@@ -256,7 +262,7 @@ export function crawlerMapViewDraw(
     });
   }
 
-  if (!fullscreen) {
+  if (!fullscreen && style_map_name) {
     ui.font.drawSizedAligned(style_map_name, x, y + 1, z + 1, ui.font_height,
       ui.font.ALIGN.HCENTER, w, 0, floor_title);
   }
@@ -608,9 +614,14 @@ export function crawlerMapViewStartup(param: {
   allow_pathfind?: boolean;
   color_rollover?: ROVec4;
   build_mode_entity_icons?: Partial<Record<string, number>>;
+  style_map_name?: FontStyle | null;
+  compass_border_w?: number;
 }): void {
   allow_pathfind = param.allow_pathfind ?? true;
   color_rollover = param.color_rollover || color_rollover;
+  if (param.style_map_name !== undefined) {
+    style_map_name = param.style_map_name;
+  }
   if (param.build_mode_entity_icons) {
     merge(build_mode_entity_icons, param.build_mode_entity_icons);
   }
@@ -621,9 +632,10 @@ export function crawlerMapViewStartup(param: {
     filter_min: gl.NEAREST,
     filter_mag: gl.NEAREST,
   });
+  compass_border_w = param.compass_border_w || 6;
   compass_sprite = spriteCreate({
     name: 'compass',
-    ws: [160,8,8,256-8-8-160],
+    ws: [160,compass_border_w,compass_border_w,256-compass_border_w-compass_border_w-160],
     hs: [11,11,10],
     filter_min: gl.NEAREST,
     filter_mag: gl.NEAREST,
